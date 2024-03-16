@@ -7,6 +7,9 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\InheritanceType('SINGLE_TABLE')]
@@ -18,7 +21,8 @@ use Doctrine\ORM\Mapping as ORM;
     'admin' => Admin::class,
 ])]
 #[ApiResource]
-abstract class User
+#[UniqueEntity(fields: ['username'], message: 'There is already an account with this username')]
+abstract class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -28,6 +32,9 @@ abstract class User
     #[ORM\Column(length: 50, unique: true)]
     protected ?string $username = null;
 
+    /**
+     * @var string The hashed password
+     */
     #[ORM\Column(length: 255)]
     protected ?string $password = null;
 
@@ -59,7 +66,20 @@ abstract class User
         return $this;
     }
 
-    public function getPassword(): ?string
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->username;
+    }
+
+    /**
+     * @see PasswordAuthenticatedUserInterface
+     */
+    public function getPassword(): string
     {
         return $this->password;
     }
@@ -70,6 +90,16 @@ abstract class User
 
         return $this;
     }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials(): void
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
+    }
+
 
     public function getEmail(): ?string
     {
@@ -111,5 +141,34 @@ abstract class User
         }
 
         return $this;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
+    {
+
+        $instanceRole = match ($this::class) {
+            Patient::class => 'ROLE_PATIENT',
+            Doctor::class => 'ROLE_DOCTOR',
+            Pharmacy::class => 'ROLE_PHARMACY',
+            Admin::class => 'ROLE_ADMIN'
+        };
+        return [
+            'ROLE_USER',
+            $instanceRole,
+        ];
+    }
+
+    /**
+     * Returning a salt is only needed, if you are not using a modern
+     * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
+     *
+     * @see UserInterface
+     */
+    public function getSalt(): ?string
+    {
+        return null;
     }
 }
