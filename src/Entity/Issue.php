@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\IssueRepository;
+use DOMDocument;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -81,6 +82,15 @@ class Issue
         $this->content = $content;
 
         return $this;
+    }
+
+    public function getPlainContent(): ?string
+    {
+        $dom = new DOMDocument();
+        libxml_use_internal_errors(true);
+        $dom->loadHTML($this->content);
+        libxml_clear_errors();
+        return $dom->textContent;
     }
 
     public function getCategory(): ?string
