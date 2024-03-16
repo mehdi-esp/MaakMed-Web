@@ -9,8 +9,8 @@ trait RegularUser
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $activationCode = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?bool $isVerified = null;
+    #[ORM\Column]
+    private bool $isVerified = false;
 
     #[ORM\Column(nullable: true)]
     private ?int $number = null;
@@ -27,12 +27,12 @@ trait RegularUser
         return $this;
     }
 
-    public function getIsVerified(): ?bool
+    public function getIsVerified(): bool
     {
         return $this->isVerified;
     }
 
-    public function setIsVerified(?bool $isVerified): static
+    public function setIsVerified(bool $isVerified): static
     {
         $this->isVerified = $isVerified;
 
