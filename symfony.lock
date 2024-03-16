@@ -294,6 +294,9 @@
             "config/routes/ux_live_component.yaml"
         ]
     },
+    "symfony/ux-turbo": {
+        "version": "v2.16.0"
+    },
     "symfony/ux-twig-component": {
         "version": "2.16",
         "recipe": {
