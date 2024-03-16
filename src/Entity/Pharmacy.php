@@ -26,6 +26,7 @@ class Pharmacy extends User
 
     public function __construct()
     {
+        parent::__construct();
         $this->inventoryEntries = new ArrayCollection();
         $this->invoices = new ArrayCollection();
     }

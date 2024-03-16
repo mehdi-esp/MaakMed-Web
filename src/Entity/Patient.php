@@ -30,6 +30,7 @@ class Patient extends User
 
     public function __construct()
     {
+        parent::__construct();
         $this->subscriptions = new ArrayCollection();
         $this->invoices = new ArrayCollection();
         $this->visits = new ArrayCollection();
