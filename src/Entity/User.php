@@ -73,7 +73,7 @@ abstract class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->username;
+        return (string)$this->username;
     }
 
     /**
@@ -149,11 +149,11 @@ abstract class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRoles(): array
     {
 
-        $instanceRole = match ($this::class) {
-            Patient::class => 'ROLE_PATIENT',
-            Doctor::class => 'ROLE_DOCTOR',
-            Pharmacy::class => 'ROLE_PHARMACY',
-            Admin::class => 'ROLE_ADMIN'
+        $instanceRole = match (true) {
+            $this instanceof Patient => 'ROLE_PATIENT',
+            $this instanceof Doctor => 'ROLE_DOCTOR',
+            $this instanceof Pharmacy => 'ROLE_PHARMACY',
+            $this instanceof Admin => 'ROLE_ADMIN'
         };
         return [
             'ROLE_USER',
