@@ -21,7 +21,7 @@ class VisitType extends AbstractType
             ->add('patient', EntityType::class, [
                 'class' => Patient::class,
                 'choice_label' =>
-                    fn(Patient $patient) => "{$patient->getFirstName()} {$patient->getFirstName()} {$patient->getLastName()}",
+                    fn(Patient $patient) => "{$patient->getFirstName()} {$patient->getLastName()} {$patient->getNationalId()}",
                 'placeholder' => 'Select a patient',
                 'constraints' => [
                     new NotBlank(['message' => "Please select a patient"]),
