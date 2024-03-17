@@ -21,8 +21,10 @@ class VisitVoter extends Voter
             return true;
         }
 
-        if (in_array($attribute, [self::MANAGE, self::VIEW])
-            && $subject instanceof Visit) {
+        if (
+            in_array($attribute, [self::MANAGE, self::VIEW])
+            && $subject instanceof Visit
+        ) {
             return true;
         }
 
@@ -35,9 +37,11 @@ class VisitVoter extends Voter
     {
         $user = $token->getUser();
 
-        if (!$user instanceof Patient &&
+        if (
+            !$user instanceof Patient &&
             !$user instanceof Doctor &&
-            !$user instanceof Admin) {
+            !$user instanceof Admin
+        ) {
             return false;
         }
 
