@@ -20,7 +20,7 @@ class Visit
     private ?\DateTimeInterface $date = null;
 
     #[ORM\Column(length: 255)]
-    private VisitCategory $type = VisitCategory::ILLNESS;
+    private ?VisitCategory $type = VisitCategory::ILLNESS;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $diagnosis = null;
@@ -54,12 +54,12 @@ class Visit
         return $this;
     }
 
-    public function getType(): VisitCategory
+    public function getType(): ?VisitCategory
     {
         return $this->type;
     }
 
-    public function setType(VisitCategory $type): static
+    public function setType(?VisitCategory $type): static
     {
         $this->type = $type;
 
