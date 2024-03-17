@@ -67,7 +67,7 @@ class InvoiceEntry
         return $this->cost;
     }
 
-    public function setCost(float $cost): static
+    public function setCost(?float $cost): static
     {
         $this->cost = $cost;
 
