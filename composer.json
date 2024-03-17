@@ -107,12 +107,14 @@
     "require-dev": {
         "dama/doctrine-test-bundle": "^8.0",
         "phpunit/phpunit": "^9.5",
+        "psalm/plugin-symfony": "^5.1",
         "symfony/browser-kit": "5.4.*",
         "symfony/css-selector": "5.4.*",
         "symfony/debug-bundle": "5.4.*",
         "symfony/maker-bundle": "^1.0",
         "symfony/phpunit-bridge": "^7.0",
         "symfony/stopwatch": "5.4.*",
-        "symfony/web-profiler-bundle": "5.4.*"
+        "symfony/web-profiler-bundle": "5.4.*",
+        "vimeo/psalm": "^5.23"
     }
 }
