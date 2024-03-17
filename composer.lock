@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2eea2d39eea0b0184a5470f3987b481d",
+    "content-hash": "77c99489985316b35842ab6a9c7c4dac",
     "packages": [
         {
             "name": "api-platform/core",
@@ -1536,6 +1536,71 @@
                 }
             ],
             "time": "2023-10-06T06:47:41+00:00"
+        },
+        {
+            "name": "jungi/framework-extra-bundle",
+            "version": "v1.4.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jungi-php/framework-extra-bundle.git",
+                "reference": "c760fcecb27d75820c427b3ed5be9ad404fc05d2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jungi-php/framework-extra-bundle/zipball/c760fcecb27d75820c427b3ed5be9ad404fc05d2",
+                "reference": "c760fcecb27d75820c427b3ed5be9ad404fc05d2",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.9",
+                "symfony/dependency-injection": "^5.3",
+                "symfony/framework-bundle": "^5.3",
+                "symfony/http-kernel": "^5.3"
+            },
+            "require-dev": {
+                "doctrine/annotations": "^1.6",
+                "symfony/phpunit-bridge": "^5.3",
+                "symfony/property-info": "^5.3",
+                "symfony/serializer": "^5.3"
+            },
+            "suggest": {
+                "doctrine/annotations": "For annotations",
+                "symfony/serializer": "For serializer adapters"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Jungi\\FrameworkExtraBundle\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Piotr Kugla",
+                    "email": "piku235@gmail.com"
+                }
+            ],
+            "description": "attributes and annotations for request and response operations, content negotiation, and more for symfony projects",
+            "keywords": [
+                "body",
+                "conversion",
+                "mapper",
+                "param"
+            ],
+            "support": {
+                "issues": "https://github.com/jungi-php/framework-extra-bundle/issues",
+                "source": "https://github.com/jungi-php/framework-extra-bundle/tree/v1.4.2"
+            },
+            "abandoned": true,
+            "time": "2022-01-03T17:52:01+00:00"
         },
         {
             "name": "monolog/monolog",

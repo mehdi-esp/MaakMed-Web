@@ -64,6 +64,9 @@
             "migrations/.gitignore"
         ]
     },
+    "jungi/framework-extra-bundle": {
+        "version": "v1.4.2"
+    },
     "nelmio/cors-bundle": {
         "version": "2.4",
         "recipe": {
