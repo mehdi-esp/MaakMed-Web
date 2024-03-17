@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: InvoiceRepository::class)]
 #[ApiResource]
+#[ORM\HasLifecycleCallbacks]
 class Invoice
 {
     #[ORM\Id]
@@ -121,5 +122,12 @@ class Invoice
         }
 
         return $this;
+    }
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function computeAndSetReimbursementRate(): void
+    {
+        $reimbursementRate = InvoiceEntry::computeReimbursementRate($this->getInvoiceEntries(), $this->getPatient()?->getActivePlan());
+        $this->setDiscountRate($reimbursementRate);
     }
 }
