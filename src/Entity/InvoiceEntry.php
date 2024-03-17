@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Metadata\ApiResource;
 use App\Repository\InvoiceEntryRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: InvoiceEntryRepository::class)]
@@ -73,4 +74,33 @@ class InvoiceEntry
 
         return $this;
     }
+
+
+    /** @param $entries Collection<int, InvoiceEntry> */
+    public static function computeReimbursementRate(Collection $entries, ?InsurancePlan $plan): float
+    {
+        if ($plan === null) {
+            return 0;
+        }
+
+        $patientPlanReimbursementRate = $plan->getReimbursementRate();
+        $ceiling = $plan->getCeiling();
+
+        $totalCost = 0;
+        $totalReimbursement = 0;
+
+        foreach ($entries as $entry) {
+            $cost = $entry->getCost() * $entry->getQuantity();
+            $totalCost += $cost;
+            $medication = $entry->getMedication();
+            if ($medication->isInsured()) {
+                $totalReimbursement += $cost * $patientPlanReimbursementRate;
+            }
+        }
+
+        $actualReimbursement = min($totalReimbursement, $ceiling);
+
+        return $actualReimbursement / $totalCost;
+    }
+
 }
