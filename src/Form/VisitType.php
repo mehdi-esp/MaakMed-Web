@@ -26,6 +26,7 @@ class VisitType extends AbstractType
                 'constraints' => [
                     new NotBlank(['message' => "Please select a patient"]),
                 ],
+                'disabled' => $builder->getData()?->getId() !== null,
             ])
             ->add('type', EnumType::class, [
                 'class' => VisitCategory::class,
