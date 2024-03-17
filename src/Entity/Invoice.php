@@ -32,7 +32,7 @@ class Invoice
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $creationTime = null;
 
-    #[ORM\OneToMany(mappedBy: 'invoice', targetEntity: InvoiceEntry::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'invoice', targetEntity: InvoiceEntry::class, orphanRemoval: true, cascade: ['persist'])]
     private Collection $invoiceEntries;
 
     public function __construct()
