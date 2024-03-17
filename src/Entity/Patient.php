@@ -68,6 +68,18 @@ class Patient extends User
         return $this->subscriptions;
     }
 
+    public function getActiveSubscription(): ?Subscription
+    {
+        return $this->subscriptions
+            ->filter(fn(Subscription $subscription) => $subscription->getStatus() === 'ACTIVE')
+            ->first() ?: null;
+    }
+
+    public function getActivePlan(): ?InsurancePlan
+    {
+        return $this->getActiveSubscription()?->getPlan();
+    }
+
     public function addSubscription(Subscription $subscription): static
     {
         if (!$this->subscriptions->contains($subscription)) {
