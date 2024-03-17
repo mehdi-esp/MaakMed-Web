@@ -20,7 +20,7 @@ class IssueResponse
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Issue $issue = null;
 
-    #[ORM\ManyToOne(inversedBy: 'issueResponses')]
+    #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $respondent = null;
 
