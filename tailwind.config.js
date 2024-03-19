@@ -15,7 +15,28 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    require("daisyui"),
+  ],
+  daisyui: {
+    themes: [
+      "light",
+      {
+        // XXX: Subject to change
+        maakmed: {
+          primary: '#1DD3B0',
+          secondary: '#086375',
+          accent: '#AFFC41',
+          neutral: "#061b22",
+          background: '#EDEDED',
+          info: "#00b9fe",
+          success: "#00ffce",
+          warning: "#a98a00",
+          error: "#ff005e",
+        },
+      }
+    ]
+  }
 }
 
 

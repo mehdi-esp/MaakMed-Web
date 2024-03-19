@@ -11,6 +11,7 @@
         "@symfony/webpack-encore": "^4.0.0",
         "autoprefixer": "^10.4.18",
         "core-js": "^3.23.0",
+        "daisyui": "^4.7.3",
         "postcss": "^8.4.36",
         "postcss-loader": "^7.3.4",
         "regenerator-runtime": "^0.13.9",
