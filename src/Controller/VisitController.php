@@ -107,6 +107,8 @@ class VisitController extends AbstractController
             $entityManager->persist($visit);
             $entityManager->flush();
 
+            $this->addFlash('success', 'New visit created successfully!');
+
             return $this->redirectToRoute('app_visit_index', [], Response::HTTP_SEE_OTHER);
         }
 
