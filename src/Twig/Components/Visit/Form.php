@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Twig\Components;
+namespace App\Twig\Components\Visit;
 
 use App\Entity\Visit;
 use App\Form\VisitType;
@@ -12,7 +12,7 @@ use Symfony\UX\LiveComponent\DefaultActionTrait;
 use Symfony\Component\Form\FormInterface;
 
 #[AsLiveComponent()]
-final class VisitForm extends AbstractController
+final class Form extends AbstractController
 {
     use DefaultActionTrait;
     use ComponentWithFormTrait;
