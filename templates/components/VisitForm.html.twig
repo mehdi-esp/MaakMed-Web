@@ -1,6 +1,28 @@
+{% form_theme form 'tailwind_2_layout.html.twig' %}
 <div{{ attributes }}>
     {{ form_start(form) }}
-    {{ form_widget(form) }}
+
+    {{ form_row(form.patient, {
+      label_class: 'label',
+      widget_class: "select select-bordered indicator",
+      widget_errors_class: 'select-error',
+      error_item_class: 'text-error',
+    }) }}
+
+    {{ form_row(form.type, {
+      label_class: 'label',
+      widget_class: "select select-bordered indicator",
+      error_item_class: 'text-error',
+      widget_errors_class: 'select-error',
+    }) }}
+
+    {{ form_row(form.diagnosis, {
+      widget_class: "textarea textarea-bordered textarea-lg",
+      label_class: 'label',
+      error_item_class: 'text-error',
+      widget_errors_class: 'textarea-error',
+    }) }}
+    {{ form_rest(form) }}
     <button class="btn">{{ buttonLabel|default('Save') }}</button>
     {{ form_end(form) }}
 </div>

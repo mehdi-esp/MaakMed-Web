@@ -3,66 +3,62 @@
 {% block title %}Visit index{% endblock %}
 
 {% block body %}
-    <h1>Visits</h1>
+    <main class="w-full container mx-auto scroll-smooth mb-8">
+        <div class="prose"><h1 id="visits">Visits</h1></div>
 
-    {% if filters %}
-        <section>
-            <h2>Filters</h2>
-            {% if filters.patient is defined %}
-              <h3>Patient: <a href="{{ path('app_visit_index', {'patient': filters.patient.username}) }}">{{ filters.patient.fullName }}</a></h3>
-            {% endif %}
-            {% if filters.doctor is defined %}
-              <h3>Doctor: <a href="{{ path('app_visit_index', {'doctor': filters.doctor.username}) }}">{{ filters.doctor.fullName }}</a></h3>
-            {% endif %}
-            <a href="{{ path('app_visit_index') }}">Clear Filters</a>
+        {% if is_granted('ROLE_DOCTOR') %}
+            <div class="flex">
+              <a class="btn btn-primary mt-8 mb-12" href="{{ path('app_visit_new') }}">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                </svg>
+                New visit
+              </a>
+            </div>
+        {% endif %}
+
+        {% if filters %}
+            <section class="grid justify-start">
+                <div class="prose">
+                  <h2>Filters</h2>
+                  <ul>
+                    {% if filters.patient is defined %}
+                      <li>Patient: <a href="{{ path('app_visit_index', {'patient': filters.patient.username}) }}">{{ filters.patient.fullName }}</a></li>
+                    {% endif %}
+                    {% if filters.doctor is defined %}
+                      <li>Doctor: <a href="{{ path('app_visit_index', {'doctor': filters.doctor.username}) }}">{{ filters.doctor.fullName }}</a></li>
+                    {% endif %}
+                  </ul>
+                </div>
+                <a class="btn mx-auto" href="{{ path('app_visit_index') }}">Clear Filters</a>
+            </section>
+        {% endif %}
+
+        <section class="container flex flex-wrap gap-4 pt-10">
+          {% for visit in visits %}
+            <twig:VisitCard visit="{{ visit }}" />
+          {% endfor %}
         </section>
-    {% endif %}
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Date</th>
-                {% if is_granted('ROLE_DOCTOR') or is_granted('ROLE_ADMIN') %}
-                    <th>Patient</th>
-                {% endif %}
-                {% if is_granted('ROLE_PATIENT') or is_granted('ROLE_ADMIN') %}
-                    <th>Doctor</th>
-                {% endif %}
-                <th>Type</th>
-                <th>Diagnosis</th>
-                    <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for visit in visits %}
-            <tr>
-                <td>{{ visit.id }}</td>
-                <td>{{ visit.date ? visit.date|date('Y-m-d') : '' }}</td>
-                {% if is_granted('ROLE_DOCTOR') or is_granted('ROLE_ADMIN') %}
-                    <td><a href="{{ path('app_visit_index', {'patient': visit.patient.username}) }}">{{ visit.patient.fullName }}</a></td>
-                {% endif %}
-                {% if is_granted('ROLE_PATIENT') or is_granted('ROLE_ADMIN') %}
-                    <td><a href="{{ path('app_visit_index', {'doctor': visit.doctor.username}) }}">{{ visit.doctor.fullName }}</a></td>
-                {% endif %}
-                <td>{{ visit.type.displayName }}</td>
-                <td>{{ visit.diagnosis }}</td>
-                    <td>
-                        <a href="{{ path('app_visit_show', {'id': visit.id}) }}">show</a>
-                        {% if is_granted('ROLE_DOCTOR') %}
-                            <a href="{{ path('app_visit_edit', {'id': visit.id}) }}">edit</a>
-                        {% endif %}
-                    </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="5">no visits</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    {% if is_granted('ROLE_DOCTOR') %}
-        <a href="{{ path('app_visit_new') }}">Create new</a>
-    {% endif %}
+        <div class="grid justify-end">
+          <a
+            class="fixed bottom-20 start-20 btn rounded-full"
+            role="button"
+            href="#visits"
+            id="btn-back-to-top">
+            <span class="[&>svg]:w-4">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="3"
+                stroke="currentColor">
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M4.5 10.5 12 3m0 0 7.5 7.5M12 3v18" />
+              </svg>
+            </span>
+          </a>
+        </div>
+    </main>
 {% endblock %}
