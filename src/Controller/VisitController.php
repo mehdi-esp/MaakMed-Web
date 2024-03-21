@@ -112,7 +112,11 @@ class VisitController extends AbstractController
             return $this->redirectToRoute('app_visit_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        $response = new Response(null, $form->isSubmitted() ? Response::HTTP_UNPROCESSABLE_ENTITY : Response::HTTP_OK );
+        $response = new Response(
+            status: $form->isSubmitted() ?
+                Response::HTTP_UNPROCESSABLE_ENTITY :
+                Response::HTTP_OK,
+        );
 
         return $this->render('visit/new.html.twig', [
             'visit' => $visit,
@@ -144,7 +148,11 @@ class VisitController extends AbstractController
             return $this->redirectToRoute('app_visit_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        $response = new Response(null, $form->isSubmitted() ? Response::HTTP_UNPROCESSABLE_ENTITY : Response::HTTP_OK );
+        $response = new Response(
+            status: $form->isSubmitted() ?
+                Response::HTTP_UNPROCESSABLE_ENTITY :
+                Response::HTTP_OK
+        );
 
         return $this->render('visit/edit.html.twig', [
             'visit' => $visit,

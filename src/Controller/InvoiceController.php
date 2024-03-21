@@ -60,7 +60,11 @@ class InvoiceController extends AbstractController
             return $this->redirectToRoute('app_invoice_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        $response = new Response(null, $form->isSubmitted() ? Response::HTTP_UNPROCESSABLE_ENTITY : Response::HTTP_OK );
+        $response = new Response(
+            status: $form->isSubmitted() ?
+                Response::HTTP_UNPROCESSABLE_ENTITY :
+                Response::HTTP_OK,
+        );
 
         return $this->render('invoice/new.html.twig', [
             'invoice' => $invoice,
@@ -91,7 +95,11 @@ class InvoiceController extends AbstractController
             return $this->redirectToRoute('app_invoice_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        $response = new Response(null, $form->isSubmitted() ? Response::HTTP_UNPROCESSABLE_ENTITY : Response::HTTP_OK );
+        $response = new Response(
+            status: $form->isSubmitted() ?
+                Response::HTTP_UNPROCESSABLE_ENTITY :
+                Response::HTTP_OK,
+        );
 
         return $this->render('invoice/edit.html.twig', [
             'invoice' => $invoice,
