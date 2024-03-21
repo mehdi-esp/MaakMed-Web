@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Twig\Components;
+namespace App\Twig\Components\Invoice;
 
 use App\Entity\Invoice;
 use App\Form\InvoiceType;
@@ -12,7 +12,7 @@ use Symfony\UX\LiveComponent\DefaultActionTrait;
 use Symfony\UX\LiveComponent\LiveCollectionTrait;
 
 #[AsLiveComponent()]
-final class InvoiceForm extends AbstractController
+final class Form extends AbstractController
 {
     use DefaultActionTrait;
     use LiveCollectionTrait;
