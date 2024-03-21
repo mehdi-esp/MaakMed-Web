@@ -101,7 +101,6 @@ class VisitController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            dump($visit);
             $visit->setDate(new \DateTimeImmutable());
             $visit->setDoctor($doctor);
             $entityManager->persist($visit);
