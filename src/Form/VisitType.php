@@ -48,7 +48,8 @@ class VisitType extends AbstractType
                         ]),
                     ],
                     'help' => "Diagnosis must start with a capital letter and end with a period",
-                ]
+                    'empty_data' => ''
+                ],
             );
     }
 
