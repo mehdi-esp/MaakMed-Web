@@ -5,15 +5,6 @@ module.exports = {
     "./templates/**/*.html.twig",
   ],
   theme: {
-    extend: {
-      colors: {
-        primary: '#1DD3B0',
-        secondary: '#086375',
-        accent: '#AFFC41',
-        light: '#B2FF9E',
-        background: '#EDEDED',
-      },
-    },
   },
   plugins: [
     require('@tailwindcss/forms'),
@@ -23,33 +14,21 @@ module.exports = {
   ],
   daisyui: {
     themes: [
-      "light",
       {
-        // XXX: Subject to change
         maakmed: {
-          primary: '#1DD3B0',
-          secondary: '#086375',
-          accent: '#AFFC41',
-          neutral: "#061b22",
-          background: '#EDEDED',
-          info: "#00b9fe",
-          success: "#00ffce",
-          warning: "#a98a00",
-          error: "#ff005e",
+          primary: '#38b2ac',
+          "primary-content": '#EDEDED',
+          secondary: '#7b92b2',
+          "secondary-content": '#EDEDED',
+          neutral: "#212121",
+          "neutral-content": "#EDEDED",
+          "base-100": "oklch(100% 0 0)",
+          "base-content": "#181a2a",
+          accent: '#5c99d6',
+          "accent-content": '#edf2f7',
         },
-      }
+      },
+      "light"
     ]
   }
 }
-
-
-/* 
- * Our colors
- *
- * #1DD3B0
- * #086375
- * #AFFC41
- * #B2FF9E
- * #EDEDED
- *
- * */
