@@ -1,28 +1,33 @@
-{% form_theme form 'tailwind_2_layout.html.twig' %}
+{% form_theme form 'form/daisyui_layout.html.twig' %}
 <div{{ attributes }}>
+
     {{ form_start(form) }}
 
-    {{ form_row(form.patient, {
-      label_class: 'label',
-      widget_class: "select select-bordered indicator",
-      widget_errors_class: 'select-error',
-      error_item_class: 'text-error',
-    }) }}
+      <div class="container grid gap-4 mt-4">
+          {{ form_errors(form) }}
+          <div class="grid grid-cols-2 gap-4">
+            <div class="col-span-1 flex space-x-2 items-center">
+              {{ form_label(form.patient) }}
+              {{ form_widget(form.patient) }}
+              <twig:Form:ErrorTooltip field="{{ form.patient }}"/>
+            </div>
+            <div class="col-span-1 flex space-x-2 items-center">
+              {{ form_label(form.type) }}
+              {{ form_widget(form.type) }}
+              <twig:Form:ErrorTooltip field="{{ form.type }}" />
+            </div>
+          </div>
+          <div class="divider divider-vertical"></div>
+          <div class="flex items-center space-x-4">
+            <div class="prose"><h3 >Diagnosis</h3></div>
+            <twig:Form:ErrorTooltip field="{{ form.diagnosis }}" />
+          </div>
+          {{ form_widget(form.diagnosis, {
+            attr: {class: 'textarea textarea-bordered textarea-lg w-full min-h-96'}
+          }) }}
+          <button class="btn btn-primary mx-auto">{{ buttonLabel|default('Save') }}</button>
+      </div>
 
-    {{ form_row(form.type, {
-      label_class: 'label',
-      widget_class: "select select-bordered indicator",
-      error_item_class: 'text-error',
-      widget_errors_class: 'select-error',
-    }) }}
-
-    {{ form_row(form.diagnosis, {
-      widget_class: "textarea textarea-bordered textarea-lg",
-      label_class: 'label',
-      error_item_class: 'text-error',
-      widget_errors_class: 'textarea-error',
-    }) }}
     {{ form_rest(form) }}
-    <button class="btn">{{ buttonLabel|default('Save') }}</button>
     {{ form_end(form) }}
 </div>
