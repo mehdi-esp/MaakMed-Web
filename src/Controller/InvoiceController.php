@@ -84,6 +84,12 @@ class InvoiceController extends AbstractController
     #[IsGranted(InvoiceVoter::MANAGE, subject: 'invoice')]
     public function edit(Request $request, Invoice $invoice, EntityManagerInterface $entityManager): Response
     {
+        if ($request->getMethod() === 'POST') {
+            $payload = $request->request->all();
+            $payload['invoice']['submitted'] = true;
+            $request->request->replace($payload);
+        }
+
         $form = $this->createForm(InvoiceType::class, $invoice);
         $form->handleRequest($request);
 

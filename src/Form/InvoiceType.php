@@ -8,6 +8,8 @@ use App\Entity\Patient;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Count;
 use Symfony\Component\Validator\Constraints\GreaterThan;
@@ -43,12 +45,67 @@ class InvoiceType extends AbstractType
                 // 'delete_empty' => true,
                 // 'entry_options' => ['label' => false],
             ]);
+
+        // Fixes ORM/database level errors that are encountered when existing entries are reordered
+        $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
+            $form = $event->getForm();
+
+            /** @var array $data */
+            $data = $event->getData();
+
+            // Flag set in the controller which indicates that the form was user-submitted
+            if (!isset($data['submitted'])) {
+                return;
+            }
+
+            /** @var Invoice $invoice */
+            $invoice = $form->getData();
+
+            if (!isset($data['invoiceEntries']) && !$invoice) {
+                return;
+            }
+
+            $submittedEntries = $data['invoiceEntries'];
+
+            // Do nothing in case of duplicate entries
+            $meds = array_map(
+                fn(array $e) => $e['medication'],
+                array_filter($submittedEntries, fn(array $e) => isset($e['medication']))
+            );
+            if (count($meds) !== count(array_unique($meds))) {
+                return;
+            }
+
+            $data['invoiceEntries'] = [];
+
+            $index = 0;
+
+            foreach ($invoice->getInvoiceEntries() as $index => $entry) {
+                foreach ($submittedEntries as $i => $e) {
+                    if (!isset($e['medication'])) {
+                        continue;
+                    }
+                    $medId = (int)$e['medication'];
+                    if ($entry->getMedication()->getId() === $medId) {
+                        $data['invoiceEntries'][$index] = $e;
+                        unset($submittedEntries[$i]);
+                        break;
+                    }
+                }
+            }
+            foreach ($submittedEntries as $c) {
+                $data['invoiceEntries'][++$index] = $c;
+            }
+
+            $event->setData($data);
+        });
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Invoice::class,
+            'allow_extra_fields' => true
         ]);
     }
 }
