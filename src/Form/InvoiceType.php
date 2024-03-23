@@ -12,6 +12,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Count;
 use Symfony\Component\Validator\Constraints\GreaterThan;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Unique;
 use Symfony\UX\LiveComponent\Form\Type\LiveCollectionType;
 
 class InvoiceType extends AbstractType
@@ -33,6 +34,10 @@ class InvoiceType extends AbstractType
                 'entry_type' => InvoiceEntryType::class,
                 'constraints' => [
                     new Count(['min' => 1, 'minMessage' => "Please add at least one item"]),
+                    new Unique([
+                        'message' => 'Duplicate medication',
+                        'normalizer' => fn(InvoiceEntry $entry) => $entry->getMedication()?->getId()
+                    ])
                 ],
                 // 'empty_data' => fn() => new InvoiceEntry(),
                 // 'delete_empty' => true,
