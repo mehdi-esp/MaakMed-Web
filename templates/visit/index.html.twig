@@ -3,7 +3,7 @@
 {% block title %}Visit index{% endblock %}
 
 {% block body %}
-    <main class="w-full container mx-auto scroll-smooth mb-8">
+    <main class="md:container md:mx-auto px-6 scroll-smooth mb-8">
         <div class="prose"><h1 id="visits">Visits</h1></div>
 
         {% if is_granted('ROLE_DOCTOR') %}
@@ -34,14 +34,14 @@
             </section>
         {% endif %}
 
-        <section class="container flex flex-wrap gap-4 pt-10">
+        <section class="container flex flex-wrap justify-center md:justify-start gap-4 pt-10">
           {% for visit in visits %}
             <twig:Visit:Card visit="{{ visit }}" />
           {% endfor %}
         </section>
         <div class="grid justify-end">
           <a
-            class="fixed bottom-20 start-20 btn rounded-full"
+            class="fixed bottom-4 start-4 md:bottom-16 md:start-16 btn rounded-full"
             role="button"
             href="#visits"
             id="btn-back-to-top">

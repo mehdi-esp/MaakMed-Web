@@ -3,34 +3,48 @@
 {% block title %}Visit{% endblock %}
 
 {% block body %}
-    <h1>Visit</h1>
+  <main class="container grid mx-auto px-4">
+      <div class="prose mx-auto md:mx-0"><h1>Visit</h1></div>
 
-    <table class="table">
-        <tbody>
-        <tr>
-            <th>Id</th>
-            <td>{{ visit.id }}</td>
-        </tr>
-        <tr>
-            <th>Date</th>
-            <td>{{ visit.date ? visit.date|date('Y-m-d') : '' }}</td>
-        </tr>
-        <tr>
-            <th>Type</th>
-            <td>{{ visit.type.displayName }}</td>
-        </tr>
-        <tr>
-            <th>Diagnosis</th>
-            <td>{{ visit.diagnosis }}</td>
-        </tr>
-        </tbody>
-    </table>
+      <table class="table my-4">
+          <tbody>
+          {% if is_granted('ROLE_PATIENT') or is_granted('ROLE_ADMIN') %}
+              <tr>
+                  <th class="text-accent">Doctor</th>
+                  <td>{{ visit.doctor.fullName }}</td>
+              </tr>
+          {% endif %}
+          {% if is_granted('ROLE_DOCTOR') or is_granted('ROLE_ADMIN') %}
+            <tr>
+                <th>Patient</th>
+                <td class="link link-hover link-accent">{{ visit.patient.fullName }}</td>
+            </tr>
+          {% endif %}
+          <tr>
+              <th>Date</th>
+              <td>{{ visit.date ? visit.date|date('Y-m-d') : '' }}</td>
+          </tr>
+          <tr>
+              <th>Type</th>
+              <td>{{ visit.type.displayName }}</td>
+          </tr>
+          <tr>
+              <th>Diagnosis</th>
+              <td>{{ visit.diagnosis }}</td>
+          </tr>
+          </tbody>
+      </table>
 
-    <a href="{{ path('app_visit_index') }}">back to list</a>
+      <div class="flex flex-col space-y-4 items-center">
+          {% if is_granted('ROLE_DOCTOR') %}
+              <div class="flex space-x-4 items-center justify-center">
+                  <a role="button" class="btn btn-primary" href="{{ path('app_visit_edit', {'id': visit.id}) }}">Edit</a>
 
-    {% if is_granted('ROLE_DOCTOR') %}
-        <a href="{{ path('app_visit_edit', {'id': visit.id}) }}">edit</a>
+                  {{ include('visit/_delete_form.html.twig') }}
+              </div>
+          {% endif %}
+          <a class="link link-secondary" href="{{ path('app_visit_index') }}">back to list</a>
+      </div>
+  </main>
 
-        {{ include('visit/_delete_form.html.twig') }}
-    {% endif %}
 {% endblock %}

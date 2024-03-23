@@ -7,18 +7,18 @@
           <span>Patient:</span>
           <a class="link link-hover link-primary truncate"
             href="{{ path('app_visit_index', {'patient': visit.patient.username}) }}"
-          >{{ visit.patient.fullName}}</a>
+          >{{ visit.patient.fullName }}</a>
         {% endif %}
         {% if is_granted('ROLE_PATIENT') or is_granted('ROLE_ADMIN') %}
           <span>Doctor:</span>
           <a class="link link-hover link-primary truncate"
             href="{{ path('app_visit_index', {'doctor': visit.doctor.username}) }}"
-          >{{ visit.doctor.fullName}}</a>
+          >{{ visit.doctor.fullName }}</a>
         {% endif %}
       </header>
       <div class="flex justify-center space-x-4">
-        <a href="{{path('app_visit_index', {'date': visit.date|date('Y-m-d')})}}" class="badge badge-ghost">{{ visit.date|date('F j, Y') }}</a>
-        <a href="{{path('app_visit_index', {'type': visit.type.displayName})}}" class="badge badge-accent">{{ visit.type.displayName }}</a>
+        <a href="{{ path('app_visit_index', {'date': visit.date|date('Y-m-d')}) }}" class="badge badge-ghost">{{ visit.date|date('F j, Y') }}</a>
+        <a href="{{ path('app_visit_index', {'type': visit.type.displayName}) }}" class="badge badge-accent">{{ visit.type.displayName }}</a>
       </div>
       <div class="divider"></div>
       <div class="prose">
@@ -37,7 +37,7 @@
             </li>
           {% endif %}
           <li>
-            <a href="{{ path('app_visit_show', {'id': visit.id}) }}" class="link tooltip" data-tip="Show">
+            <a href="{{ path('app_visit_show', {'id': visit.id}) }}" class="link link-secondary tooltip" data-tip="Show">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
               </svg>
