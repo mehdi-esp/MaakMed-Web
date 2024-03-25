@@ -26,6 +26,11 @@ module.exports = {
           "base-content": "#181a2a",
           accent: '#5c99d6',
           "accent-content": '#edf2f7',
+
+          "error-content": 'oklch(100% 0 0)',
+          "success-content": 'oklch(100% 0 0)',
+          // "warning-content": '#EDEDED',
+          // "info-content": '#EDEDED',
         },
       },
       "light"
