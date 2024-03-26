@@ -1,7 +1,7 @@
 {% use 'form/daisyui_layout.html.twig' %}
 
 {%- block live_collection_widget -%}
-    <table class="table">
+    <table class="table table-xs">
         <thead>
         <tr>
             {% if form|last %}
@@ -42,7 +42,13 @@
             </div>
         </td>
         <td>
-            {{- form_row(button_delete, {attr: {class: 'btn btn-error'}}) -}}
+            {%- set label -%}
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                     stroke="currentColor" class="size-5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14"/>
+                </svg>
+            {%- endset -%}
+            {{- form_widget(button_delete, {label: label, label_html: true, attr: {class: 'btn btn-error btn-sm btn-outline border-[2px] btn-circle'}}) -}}
         </td>
     </tr>
 {%- endblock -%}
