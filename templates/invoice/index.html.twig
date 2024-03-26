@@ -1,53 +1,19 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Invoice index{% endblock %}
+{% block title %}Invoices{% endblock %}
 
 {% block body %}
-    <h1>Invoice index</h1>
+    <main class="container flex flex-col md:mx-auto px-2 md:px-6 mb-8">
+        <div class="prose mx-auto md:mx-0"><h1>Invoices</h1></div>
 
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Id</th>
-            {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PHARMACY') %}
-                <th>Patient</th>
-            {% endif %}
-            {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PATIENT') %}
-                <th>Pharmacy</th>
-            {% endif %}
-            <th>DiscountRate</th>
-            <th>CreationTime</th>
-            <th>actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for invoice in invoices %}
-            <tr>
-                <td>{{ invoice.id }}</td>
-                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PHARMACY') %}
-                    <td>{{ invoice.patient.fullName }}</td>
-                {% endif %}
-                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_PATIENT') %}
-                    <td>{{ invoice.pharmacy.name }}</td>
-                {% endif %}
-                <td>{{ invoice.discountRate }}</td>
-                <td>{{ invoice.creationTime ? invoice.creationTime|date('Y-m-d H:i:s') : '' }}</td>
-                <td>
-                    <a href="{{ path('app_invoice_show', {'id': invoice.id}) }}">show</a>
-                    {% if is_granted('ROLE_PHARMACY') %}
-                        <a href="{{ path('app_invoice_edit', {'id': invoice.id}) }}">edit</a>
-                    {% endif %}
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="4">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+        <div class="container p-2 md:p-5 flex flex-wrap justify-center gap-x-4 gap-y-6">
+            {% for invoice in invoices %}
+                <twig:Invoice:Card invoice="{{ invoice }}"/>
+            {% endfor %}
+        </div>
 
-    {% if is_granted('ROLE_PHARMACY') %}
-        <a href="{{ path('app_invoice_new') }}">Create new</a>
-    {% endif %}
+        {% if is_granted('ROLE_PHARMACY') %}
+            <a role="button" class="btn btn-primary mx-auto" href="{{ path('app_invoice_new') }}">Create new</a>
+        {% endif %}
+    </main>
 {% endblock %}
