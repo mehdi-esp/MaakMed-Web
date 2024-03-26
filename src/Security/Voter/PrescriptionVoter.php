@@ -8,6 +8,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\User\UserInterface;
 use App\Entity\Admin;
 use App\Entity\Pharmacy;
+use App\Entity\Visit  ; 
 use App\Entity\Patient;
 
 class PrescriptionVoter extends Voter
@@ -53,10 +54,10 @@ class PrescriptionVoter extends Voter
         }
 
         if ($attribute === self::VIEW) {
-            return $user instanceof Admin || $subject->getPatient() === $user || $subject->getPharmacy() === $user;
+            return $user instanceof Admin || $subject->getVisit()->getPatient() === $user || $subject->getVisit()->getDoctor() === $user;
         }
         if ($attribute === self::MANAGE) {
-            return $subject->getPharmacy() === $user;
+            return $subject->getVisit()->getDoctor() === $user;
         }
 
         return false;
