@@ -27,6 +27,9 @@ class Prescription
     #[ORM\OneToMany(mappedBy: 'prescription', targetEntity: PrescriptionEntry::class, orphanRemoval: true)]
     private Collection $medications;
 
+    #[ORM\OneToOne(mappedBy: 'prescription', cascade: ['persist', 'remove'])]
+    private ?Visit $visit = null;
+
     public function __construct()
     {
         $this->medications = new ArrayCollection();
@@ -87,6 +90,24 @@ class Prescription
                 $medication->setPrescription(null);
             }
         }
+
+        return $this;
+    }
+
+
+    public function getVisit(): ?Visit
+    {
+        return $this->visit;
+    }
+
+    public function setVisit(Visit $visit): static
+    {
+        // set the owning side of the relation if necessary
+        if ($visit->getPrescription() !== $this) {
+            $visit->setPrescription($this);
+        }
+
+        $this->visit = $visit;
 
         return $this;
     }
