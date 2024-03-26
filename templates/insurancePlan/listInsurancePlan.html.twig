@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}List of InsurancePlans{% endblock %}
+
+{% block body %}
+    <h1 class="text-3xl font-bold text-center mb-4">Insurance Plan</h1>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Cost</th>
+            <th>Reimbursement Rate</th>
+            <th>Ceiling</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for insurancePlan in insurancePlans %}
+            <tr>
+                <td>{{ insurancePlan.name  }}</td>
+                <td>{{ insurancePlan.description }}</td>
+                <td>{{ insurancePlan.cost }}</td>
+                <td>{{ insurancePlan.reimbursementRate }}</td>
+                <td>{{ insurancePlan.ceiling }}</td>
+                <td><a class="btn btn-primary text-white" href="{{ path('app_insurancePlan_edit', {'id': insurancePlan.id}) }}">Update</a></td>
+                <td><a class="btn btn-primary text-white" href="{{path('app_insurancePlan_delete', {'id': insurancePlan.id}) }}" >Delete</a></td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+  {% if is_granted('ROLE_ADMIN') %}
+  <div class="flex items-center justify-center ">
+     <a class="px-8 py-4  btn btn-primary  text-white rounded inline-block mt-8 font-semibold   " href="{{ path('app_insurancePlan_add') }}">Create new Insurance Plan</a>
+  </div>
+  {% endif %}
+{% endblock %}
