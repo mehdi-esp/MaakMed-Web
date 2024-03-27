@@ -9,6 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Regex;
 
 
 class InsurancePlanType extends AbstractType
@@ -19,11 +20,27 @@ class InsurancePlanType extends AbstractType
             ->add('Name', TextType::class, [
                 'constraints' => [
                     new NotBlank(['message' => "Please write the name of your plan"]),
+                    new Regex([
+                        'pattern' => '/^[a-zA-Z0-9 ]*$/',
+                        'message' => 'The name can only contain letters, digits, and spaces',
+                    ]),
+                    new NotBlank([
+                        'message' => 'The name cannot be only spaces',
+                        'normalizer' => 'trim',
+                    ]),
                 ],
             ])
             ->add('Description', TextType::class, [
                 'constraints' => [
                     new NotBlank(['message' => "Please add a description"]),
+                    new Regex([
+                        'pattern' => '/^[a-zA-Z0-9 ]*$/',
+                        'message' => 'The description can only contain letters, digits, and spaces',
+                    ]),
+                    new NotBlank([
+                        'message' => 'The description cannot be only spaces',
+                        'normalizer' => 'trim',
+                    ]),
                 ],
             ])
             ->add('Cost', NumberType::class, [
