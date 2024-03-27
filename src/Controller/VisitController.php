@@ -96,7 +96,6 @@ class VisitController extends AbstractController
         $doctor = $this->getUser();
 
         $visit = new Visit();
-        dump($visit);
         $form = $this->createForm(VisitType::class, $visit);
         $form->handleRequest($request);
 
@@ -138,8 +137,6 @@ class VisitController extends AbstractController
     {
         $form = $this->createForm(VisitType::class, $visit);
         $form->handleRequest($request);
-
-        dump($request->getPreferredFormat());
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();

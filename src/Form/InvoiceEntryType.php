@@ -8,7 +8,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\GreaterThan;
+use Symfony\Component\Validator\Constraints\Positive;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class InvoiceEntryType extends AbstractType
@@ -28,7 +28,7 @@ class InvoiceEntryType extends AbstractType
                 'attr' => ['min' => 1],
                 'constraints' => [
                     new NotBlank(['message' => "Quantity cannot be blank"]),
-                    new GreaterThan(['value' => 0, 'message' => "Quantity must be greater than 0"]),
+                    new Positive(['message' => "Quantity must be greater than 0"]),
                 ],
                 'empty_data' => 1
             ])
@@ -36,7 +36,7 @@ class InvoiceEntryType extends AbstractType
                 'attr' => ['min' => 0.1],
                 'constraints' => [
                     new NotBlank(['message' => "Cost cannot be blank"]),
-                    new GreaterThan(['value' => 0, 'message' => "Cost must be greater than 0"]),
+                    new Positive(['message' => "Cost must be greater than 0"]),
                 ],
             ]);
     }

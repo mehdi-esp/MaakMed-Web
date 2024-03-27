@@ -2,15 +2,17 @@
 
 {% if field.vars.errors|length > 0 %}
     <div class="dropdown dropdown-hover">
-        <svg tabindex="0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-             class="size-{{ size }} stroke-current text-error" stroke-width="1.5" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z"></path>
-        </svg>
+        <div tabindex="0" class="btn btn-circle btn-ghost btn-xs">
+            <svg tabindex="0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                 class="size-{{ size }} stroke-current text-error" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z"></path>
+            </svg>
+        </div>
         <div class="prose dropdown-content z-[1] shadow bg-base-100 rounded-box w-64">
             {{- form_errors(field) -}}
         </div>
     </div>
 {% elseif fillAbsent %}
-    <span class="size-{{ size }} invisible"></span>
+    <div class="btn btn-circle btn-ghost btn-xs invisible"></div>
 {% endif %}
