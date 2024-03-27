@@ -30,6 +30,7 @@ class Prescription
     #[ORM\OneToOne(mappedBy: 'prescription', cascade: ['persist', 'remove'])]
     private ?Visit $visit = null;
 
+    
     public function __construct()
     {
         $this->medications = new ArrayCollection();

@@ -9,8 +9,16 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
+{% for prescription in prescriptions %}
+    <div>
+        <h2>PrescriptionID: {{ prescription.id }}</h2>
+            {% for medication in prescription.medications %}
+            <p>{{ medication.getMedication.name }}</p>
+            <br>
+        {% endfor %}
+        <!-- Add more fields as needed -->
+    </div>
+{% endfor %}
     This friendly message is coming from:
     <ul>
         <li>Your controller at <code><a href="{{ 'C:/Users/moham/Desktop/MaakMed-Web/src/Controller/PrescriptionController.php'|file_link(0) }}">src/Controller/PrescriptionController.php</a></code></li>
