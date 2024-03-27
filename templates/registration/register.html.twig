@@ -6,15 +6,14 @@
 {% block body %}
     <div class="flex justify-center ">
         <div class="sm:w-full sm:max-w-sm">
-            <h1 class=" text-center text-2xl font-bold leading-9 tracking-tight text-gray-900" style="color: #0069AC;">
+            <h1 class="text-center text-2xl font-bold leading-9 tracking-tight text-accent">
                 Register</h1>
-            <h3 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900"
-                style="color: #086475;">Join MaakMed as a ...</h3>
         </div>
     </div>
 
-    <div class="sm:mx-auto sm:w-full sm:max-w-sm p-6 bg-white shadow-md rounded-md border border-086475"
-         style="margin-top: 20px;">
+    <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md lg:max-w-lg p-6 bg-white sm:shadow-md sm:rounded-md sm:border my-5">
+        <h3 class="text-center my-4 text-xl font-bold leading-9 tracking-tight text-primary">Join MaakMed as
+            a</h3>
         {% set form_names = forms|map((f) => f.vars.name) %}
         <style>
             {% for name in form_names %}
@@ -24,35 +23,31 @@
             }
 
             {% endfor %}
-            /* Adjusting spacing between radio buttons and form */
-            fieldset[name="type"] label {
-                margin-right: 10px;
-            }
-
-            /* Styling the radio button text */
-            fieldset[name="type"] label input[type="radio"] {
-                color: #086475;
-                font-weight: bold;
-            }
         </style>
 
-        <br>
-        <fieldset name="type" style="display: flex;">
-            {% set current = (forms|filter((f) => f.vars.submitted) ?: forms)|first.vars.name %}
-            {% for name in form_names %}
-                <label>
-                    <input type="radio" name="user_type" value="{{ name }}" {{ name == current ? 'checked' }}>
-                    {{ name |capitalize }}
-                </label>
-            {% endfor %}
+        <fieldset name="type" class="flex items-center justify-center space-x-2 my-4">
+            <div class="join join-horizontal">
+                {% set current = (forms|filter((f) => f.vars.submitted) ?: forms)|first.vars.name %}
+                {% for name in form_names %}
+                    <input type="radio" aria-label="{{ name|capitalize }}" class="btn join-item min-w-28"
+                           name="user_type"
+                           value="{{ name }}" {{ name == current ? 'checked' }}>
+                {% endfor %}
+            </div>
         </fieldset>
-        <br>
 
 
-        {% for form in forms %}
-            {% form_theme form 'form/daisyui_layout.html.twig' %}
-            {{ form(form, {attr: {novalidate: 'true'}}) }}
-
-        {% endfor %}
+        <div class="flex flex-col items-center justify-center">
+            {% for form in forms %}
+                {% form_theme form 'form/daisyui_layout.html.twig' %}
+                {{ form_start(form, {attr: {novalidate: 'true'}}) }}
+                {{ form_rest(form) }}
+                <div class="flex justify-center items-center">
+                    <button type="submit" class="btn btn-primary mx-auto">Register
+                        as {{ form.vars.name|capitalize }}</button>
+                </div>
+                {{ form_end(form) }}
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}
