@@ -6,7 +6,7 @@
 {%- endblock form_label -%}
 
 {%- block form_widget_simple -%}
-    {%- set type = type ?? null -%}
+    {%- set type = type|default('text') -%}
     {%- if type in ['text', 'number', 'integer'] -%}
       {%- set widget_class = widget_class|default('input input-bordered') -%}
       {%- set widget_errors_class = widget_errors_class|default('input-error text-error') -%}
