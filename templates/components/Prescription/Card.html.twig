@@ -1,15 +1,13 @@
+{# @var prescription \App\Entity\Prescription #}
 {% props prescription = null %}
 <div{{ attributes }}>
-    <article class="card w-[15rem] h-[15rem] bg-base-100 shadow-xl">        <div class="card-body">
+    <article class="card w-[15rem] h-[15rem] bg-base-100 shadow-xl">
+        <div class="card-body">
             <header class="card-title">
-                 {#
-                {% if is_granted('ROLE_DOCTOR') or is_granted('ROLE_ADMIN') %}
-                    <span>Patient:</span>
-                    <a class="link link-hover link-primary truncate"
-                       href="{{ path('app_prescription_index', {'patient': prescription.visit.patient.username}) }}"
-                    >{{ prescription.visit.patient.username }}</a>
-                {% endif %}
-                 #}
+                <span>Patient:</span>
+               {# <a class="link link-hover link-primary truncate"
+                   href="{{ path('app_prescription_index', {'patient': prescription.visit.patient.username}) }}"
+                >{{ prescription.visit.patient.username }}</a>#}
                 <span>Creation Date:</span>
                 <a href="{{ path('app_prescription_index', {'date': prescription.creationDate|date('Y-m-d')}) }}"
                    class="badge badge-ghost">{{ prescription.creationDate|date('F j, Y') }}</a>
@@ -19,11 +17,30 @@
             <div class="divider"></div>
             <div class="prose">
                 <h2>Medication</h2>
-                {% for medication in prescription.medications %}
-                    <p>{{ medication.getmedication.name }} - Quantity: {{ medication.quantity }}</p>
-                    <p>{{ medication.instructions}}</p>
-                {% endfor %}
-
+                <!-- Table -->
+                <div class="overflow-auto h-40 md:h-60 mt-6">
+                    <table class="table">
+                        <!-- head -->
+                        <thead>
+                        <tr>
+                            <th>Medication</th>
+                            <th>Quantity</th>
+                            <th>Instructions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {# @var medication \App\Entity\Medication #}
+                        {% for medication in prescription.medications %}
+                            <tr>
+                                <td><a class="link link-hover" href="#">{{ medication.getmedication.name }}</a></td>
+                                <td>{{ medication.quantity }}</td>
+                                <td>{{ medication.instructions }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- End Table -->
             </div>
         </div>
     </article>
