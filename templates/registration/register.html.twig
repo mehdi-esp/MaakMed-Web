@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+    <div class="flex justify-center ">
+        <div class="sm:w-full sm:max-w-sm">
+            <h1 class=" text-center text-2xl font-bold leading-9 tracking-tight text-gray-900" style="color: #0069AC;">
+                Register</h1>
+            <h3 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900"
+                style="color: #086475;">Join MaakMed as a ...</h3>
+        </div>
+    </div>
+
+    <div class="sm:mx-auto sm:w-full sm:max-w-sm p-6 bg-white shadow-md rounded-md border border-086475"
+         style="margin-top: 20px;">
+        {% set form_names = forms|map((f) => f.vars.name) %}
+        <style>
+            {% for name in form_names %}
+            :has(input[name="user_type"][value="{{ name }}"]:not(:checked))
+            form[name="{{ name }}"] {
+                display: none;
+            }
+
+            {% endfor %}
+            /* Adjusting spacing between radio buttons and form */
+            fieldset[name="type"] label {
+                margin-right: 10px;
+            }
+
+            /* Styling the radio button text */
+            fieldset[name="type"] label input[type="radio"] {
+                color: #086475;
+                font-weight: bold;
+            }
+        </style>
+
+        <br>
+        <fieldset name="type" style="display: flex;">
+            {% set current = (forms|filter((f) => f.vars.submitted) ?: forms)|first.vars.name %}
+            {% for name in form_names %}
+                <label>
+                    <input type="radio" name="user_type" value="{{ name }}" {{ name == current ? 'checked' }}>
+                    {{ name |capitalize }}
+                </label>
+            {% endfor %}
+        </fieldset>
+        <br>
+
+
+        {% for form in forms %}
+            {% form_theme form 'form/daisyui_layout.html.twig' %}
+            {{ form(form, {attr: {novalidate: 'true'}}) }}
+
+        {% endfor %}
+    </div>
+{% endblock %}
