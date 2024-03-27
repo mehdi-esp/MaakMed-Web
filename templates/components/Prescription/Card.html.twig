@@ -1,0 +1,30 @@
+{% props prescription = null %}
+<div{{ attributes }}>
+    <article class="card w-[15rem] h-[15rem] bg-base-100 shadow-xl">        <div class="card-body">
+            <header class="card-title">
+                 {#
+                {% if is_granted('ROLE_DOCTOR') or is_granted('ROLE_ADMIN') %}
+                    <span>Patient:</span>
+                    <a class="link link-hover link-primary truncate"
+                       href="{{ path('app_prescription_index', {'patient': prescription.visit.patient.username}) }}"
+                    >{{ prescription.visit.patient.username }}</a>
+                {% endif %}
+                 #}
+                <span>Creation Date:</span>
+                <a href="{{ path('app_prescription_index', {'date': prescription.creationDate|date('Y-m-d')}) }}"
+                   class="badge badge-ghost">{{ prescription.creationDate|date('F j, Y') }}</a>
+                <span>Is Confirmed:</span>
+                <span class="badge badge-accent">{{ prescription.isConfirmed ? 'Yes' : 'No' }}</span>
+            </header>
+            <div class="divider"></div>
+            <div class="prose">
+                <h2>Medication</h2>
+                {% for medication in prescription.medications %}
+                    <p>{{ medication.getmedication.name }} - Quantity: {{ medication.quantity }}</p>
+                    <p>{{ medication.instructions}}</p>
+                {% endfor %}
+
+            </div>
+        </div>
+    </article>
+</div>

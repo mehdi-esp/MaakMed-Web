@@ -57,4 +57,31 @@ class PrescriptionController extends AbstractController
             'filters' => $filters
         ]);
     }
+    #[Route('/new', name: 'app_prescription_new', methods: ['GET', 'POST'])]
+    #[IsGranted("ROLE_DOCTOR")]
+    public function new(Request $request, EntityManagerInterface $em): Response
+    {
+         //**@var Doctor $doctor */
+        $doctor = $this->getUser();
+        $prescription = new Prescription();
+        $form = $this->createForm(PrescriptionType::class ) ;
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $prescription->setDoctor($doctor);
+            $em->persist($prescription);
+            $em->flush();
+            $this->addFlash('success', 'Prescription created successfully') ;
+            return $this->redirectToRoute('app_prescription_index', [], Response::HTTP_SEE_OTHER);
+        }
+        $response = new Response(
+            status: $form->isSubmitted() ?
+                Response::HTTP_UNPROCESSABLE_ENTITY :
+                Response::HTTP_OK,
+        );
+        return $this->render('prescription/new.html.twig', [
+            'form' => $form->createView(),'prescription' => $prescription,],
+            $response
+        );
+
+    }
 }
