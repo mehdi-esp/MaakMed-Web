@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Constraints\Regex;
 
 class InsurancePlanType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options): void
+    public function buildForm(FormBuilderInterface $builder, array $options):void
     {
         $builder
             ->add('Name', TextType::class, [
