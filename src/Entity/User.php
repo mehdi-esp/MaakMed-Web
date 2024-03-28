@@ -21,7 +21,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
     'admin' => Admin::class,
 ])]
 #[ApiResource]
-#[UniqueEntity(fields: ['username'], message: 'There is already an account with this username')]
+#[UniqueEntity(
+    fields: ['username'],
+    message: 'There is already an account with this username',
+    entityClass: self::class,
+)]
 abstract class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
