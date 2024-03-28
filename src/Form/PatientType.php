@@ -23,7 +23,7 @@ class PatientType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('FirstName', TextType::class, [
+            ->add('firstName', options: [
                 'label' => 'First Name',
                 'attr' => [
                     'placeholder' => 'Enter your first name',
@@ -38,7 +38,7 @@ class PatientType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('LastName', TextType::class, [
+            ->add('lastName', options: [
                 'label' => 'Last Name',
                 'attr' => [
                     'placeholder' => 'Enter your last name',
@@ -53,7 +53,7 @@ class PatientType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('Username', TextType::class, [
+            ->add('username', options: [
                 'label' => 'Username',
                 'attr' => [
                     'placeholder' => 'Enter your  username',
@@ -71,23 +71,18 @@ class PatientType extends AbstractType
 
 
             ->add('dateOfBirth')
-            ->add('NationalId', TextType::class, [
+            ->add('nationalId', options: [
                 'label' => 'NationalId',
                 'attr' => [
                     'placeholder' => 'Enter your nationalId',
                 ],
                 'constraints' => [
-                    new Length([
-                        'min' => 8,
-                        'max' => 8,
-                        'exactMessage' => 'Your national ID must be exactly {{ limit }} characters long',
-                    ]),
+                    new Length(
+                        exactly: 8,
+                        exactMessage: 'Your national ID must be exactly {{ limit }} characters long'
+                    ),
                     new NotBlank([
                         'message' => 'Please enter your National ID',
-                    ]),
-                    new Regex([
-                        'pattern' => '/^[0-9]*$/',
-                        'message' => 'Your national ID can only contain numbers',
                     ]),
                 ],
             ])

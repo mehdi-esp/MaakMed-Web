@@ -21,7 +21,7 @@ class PharmacyType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('Name', TextType::class, [
+            ->add('name', options: [
                 'label' => ' Name',
                 'attr' => [
                     'placeholder' => 'Enter your  name',
@@ -36,7 +36,7 @@ class PharmacyType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('Username', TextType::class, [
+            ->add('username', options: [
                 'label' => 'Username',
                 'attr' => [
                     'placeholder' => 'Enter your  username',
@@ -51,7 +51,7 @@ class PharmacyType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('Address', TextType::class, [
+            ->add('address', options: [
                 'label' => 'Address',
                 'attr' => [
                     'placeholder' => 'Enter your address',
