@@ -32,7 +32,27 @@ public function findByDoctor(Doctor $doctor): array
 
     return $qb->execute();
 }
+// in PrescriptionRepository.php
 
+// in PrescriptionRepository.php
+
+// in PrescriptionRepository.php
+
+  public function findByUser($user)
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->innerJoin('p.visit', 'v');
+
+        if ($user instanceof Doctor) {
+            $qb->where('v.doctor = :user')
+                ->setParameter('user', $user);
+        } elseif ($user instanceof Patient) {
+            $qb->where('v.patient = :user')
+                ->setParameter('user', $user);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
 //    /**
 //     * @return Prescription[] Returns an array of Prescription objects
 //     */

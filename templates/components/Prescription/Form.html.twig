@@ -1,0 +1,15 @@
+{% form_theme form 'components/Prescription/_form_theme_prescription.html.twig' %}
+
+<div{{ attributes }}>
+    {{ form_start(form) }}
+
+    {{ form_errors(form) }}
+    {{ form_row(form.visit) }}
+    {{ form_errors(form.medications) }}
+    {{ form_row(form.medications) }}
+    {{ form_rest(form) }}
+
+    <button class="btn btn-primary">{{ buttonLabel|default('Save') }}</button>
+
+    {{ form_end(form) }}
+</div>

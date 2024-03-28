@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Invoice{% endblock %}
+
+{% block body %}
+    <main class="container px-4 mx-auto">
+        <div class="prose"><h2>Create new Invoice</h2></div>
+
+        <twig:Prescription:Form form="{{ form }}" initialFormData="{{ prescription }}"/>
+
+        <a class="link link-secondary" href="{{ path('app_prescription_index') }}">back to list</a>
+
+    </main>
+{% endblock %}

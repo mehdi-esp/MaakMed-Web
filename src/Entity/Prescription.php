@@ -22,9 +22,9 @@ class Prescription
     private ?\DateTimeInterface $creationDate = null;
 
     #[ORM\Column]
-    private ?bool $confirmed = null;
+    private ?bool $confirmed = false;
 
-    #[ORM\OneToMany(mappedBy: 'prescription', targetEntity: PrescriptionEntry::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'prescription', targetEntity: PrescriptionEntry::class, orphanRemoval: true,cascade: ['persist'])]
     private Collection $medications;
 
     #[ORM\OneToOne(mappedBy: 'prescription', cascade: ['persist', 'remove'])]

@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Prescription{% endblock %}
+
+{% block body %}
+    <h1>Prescription</h1>
+
+    <table class="table">
+        <tbody>
+        <tr>
+            <th>Id</th>
+            <td>{{ prescription.id }}</td>
+        </tr>
+        <tr>
+            <th>Doctor</th>
+            <td>{{ prescription.visit.doctor.username }}</td>
+        </tr>
+        <tr>
+            <th>Patient</th>
+            <td>{{ prescription.visit.patient.username }}</td>
+        </tr>
+        <tr>
+            <th>CreationTime</th>
+            <td>{{ prescription.creationDate ? prescription.creationDate|date('Y-m-d H:i:s') : '' }}</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <h2>Medications</h2>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Medication Name</th>
+            <th>Quantity</th>
+            <th>Instructions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for medication in prescription.medications %}
+            <tr>
+                <td>{{ medication.getmedication.name }}</td>
+                <td>{{ medication.quantity }}</td>
+                <td>{{ medication.instructions }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_prescription_index') }}">back to list</a>
+
+    {% if is_granted('ROLE_DOCTOR') %}
+        <a href="{{ path('app_prescription_edit', {'id': prescription.id}) }}">edit</a>
+
+ {{ include('prescription/_delete_form.html.twig') }}}
+    {% endif %}
+
+{% endblock %}
