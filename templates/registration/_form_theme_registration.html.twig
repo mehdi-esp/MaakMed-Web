@@ -19,6 +19,11 @@
 {%- endblock form_errors -%}
 
 
+{%- block integer_widget -%}
+    {%- set type = type|default('text') -%}
+    {{- parent() -}}
+{%- endblock integer_widget -%}
+
 {%- block form_row -%}
     {%- set row_attr = row_attr|merge({ class: row_attr.class|default(row_class|default('mb-6')) }) -%}
     {%- set widget_attr = {} -%}
