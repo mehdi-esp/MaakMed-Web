@@ -1,0 +1,36 @@
+{% use 'form/daisyui_layout.html.twig' %}
+
+{%- block form_errors -%}
+    {% set size = 5 %}
+    {% if errors|length > 0 %}
+        <div class="dropdown dropdown-hover">
+            <svg tabindex="0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                 class="size-{{ size }} stroke-current text-error" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z"></path>
+            </svg>
+            <div class="prose dropdown-content z-[1] shadow bg-base-100 rounded-box w-64">
+                {{- parent() -}}
+            </div>
+        </div>
+    {% else %}
+        <span class="size-{{ size }} invisible"></span>
+    {% endif %}
+{%- endblock form_errors -%}
+
+
+{%- block form_row -%}
+    {%- set row_attr = row_attr|merge({ class: row_attr.class|default(row_class|default('mb-6')) }) -%}
+    {%- set widget_attr = {} -%}
+    {%- if help is not empty -%}
+        {%- set widget_attr = {attr: {'aria-describedby': id ~"_help"}} -%}
+    {%- endif -%}
+    <div{% with {attr: row_attr} %}{{ block('attributes') }}{% endwith %}>
+        <div class="mb-2 flex items-center">
+            {{- form_label(form) -}}
+            {{- form_errors(form) }}
+        </div>
+        {{- form_widget(form, widget_attr) -}}
+        {{- form_help(form) -}}
+    </div>
+{%- endblock form_row -%}
