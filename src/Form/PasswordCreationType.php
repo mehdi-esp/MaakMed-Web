@@ -9,6 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
+use Symfony\Component\Validator\Constraints\Sequentially;
 
 class PasswordCreationType extends AbstractType
 {
@@ -40,10 +41,26 @@ class PasswordCreationType extends AbstractType
                     // max length allowed by Symfony for security reasons
                     'max' => 4096,
                 ]),
-                new Regex([
-                    'pattern' => '/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/',
-                    'message' => 'Your password should contain at least one uppercase letter, one number, and one special character',
-                ])
+                new Sequentially(
+                    [
+                        new Regex([
+                            'pattern' => '/[a-z]+/',
+                            'message' => 'Your password should contain at least one lowercase letter',
+                        ]),
+                        new Regex([
+                            'pattern' => '/[A-Z]+/',
+                            'message' => 'Your password should contain at least one uppercase letter',
+                        ]),
+                        new Regex([
+                            'pattern' => '/\d+/',
+                            'message' => 'Your password should contain at least one number',
+                        ]),
+                        new Regex([
+                            'pattern' => '/\W+/',
+                            'message' => 'Your password should contain at least one special character',
+                        ]),
+                    ]
+                ),
             ],
         ]);
     }
