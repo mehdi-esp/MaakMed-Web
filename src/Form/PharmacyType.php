@@ -25,8 +25,6 @@ class PharmacyType extends AbstractType
                 'label' => ' Name',
                 'attr' => [
                     'placeholder' => 'Enter your  name',
-                    'class' => 'form-control mb-3 rounded-lg',
-                    'style' => 'border-color: #086475;'
                 ],
                 'constraints' => [
                     new Regex([
@@ -42,8 +40,6 @@ class PharmacyType extends AbstractType
                 'label' => 'Username',
                 'attr' => [
                     'placeholder' => 'Enter your  username',
-                    'class' => 'form-control mb-3 rounded-lg',
-                    'style' => 'border-color: #086475;'
                 ],
                 'constraints' => [
                     new Regex([
@@ -55,13 +51,10 @@ class PharmacyType extends AbstractType
                     ]),
                 ],
             ])
-
             ->add('Address', TextType::class, [
                 'label' => 'Address',
                 'attr' => [
                     'placeholder' => 'Enter your address',
-                    'class' => 'form-control mb-3 rounded-lg',
-                    'style' => 'border-color: #086475;'
                 ],
                 'constraints' => [
                     new NotBlank([
@@ -69,23 +62,18 @@ class PharmacyType extends AbstractType
                     ]),
                 ],
             ])
-
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'first_options' => [
                     'label' => 'Password',
                     'attr' => [
                         'placeholder' => 'Enter your password',
-                        'class' => 'form-control mb-3 rounded-lg', // Added 'rounded-lg' class
-                        'style' => 'border-color: #086475;'
                     ],
                 ],
                 'second_options' => [
                     'label' => 'Repeat Password',
                     'attr' => [
                         'placeholder' => 'Repeat your password',
-                        'class' => 'form-control mb-3 rounded-lg', // Added 'rounded-lg' class
-                        'style' => 'border-color: #086475;'
                     ],
                 ],
                 'invalid_message' => 'The password fields must match.',
@@ -104,14 +92,6 @@ class PharmacyType extends AbstractType
                         'pattern' => '/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/',
                         'message' => 'Your password should contain at least one uppercase letter, one number, and one special character',
                     ])
-                ],
-            ])
-            ->add('submit', SubmitType::class, [
-                'label' => 'Register',
-                'label' => 'Register',
-                'attr' => [
-                    'class' => 'btn btn-primary',
-                    'style' => 'background-color: #086475; border-color: #086475;'
                 ],
             ]);
     }

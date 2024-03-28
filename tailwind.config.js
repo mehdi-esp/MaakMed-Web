@@ -7,7 +7,7 @@ module.exports = {
   theme: {
   },
   plugins: [
-    require('@tailwindcss/forms'),
+    require('@tailwindcss/forms')({ strategy: 'class' }),
     require('@tailwindcss/typography'),
     require('@tailwindcss/container-queries'),
     require("daisyui"),

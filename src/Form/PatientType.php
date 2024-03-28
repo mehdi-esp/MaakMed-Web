@@ -27,8 +27,6 @@ class PatientType extends AbstractType
                 'label' => 'First Name',
                 'attr' => [
                     'placeholder' => 'Enter your first name',
-                    'class' => 'form-control mb-3 rounded-lg',
-                    'style' => 'border-color: #086475;'
                 ],
                 'constraints' => [
                     new Regex([
@@ -44,8 +42,6 @@ class PatientType extends AbstractType
                 'label' => 'Last Name',
                 'attr' => [
                     'placeholder' => 'Enter your last name',
-                    'class' => 'form-control mb-3 rounded-lg',
-                    'style' => 'border-color: #086475;'
                 ],
                 'constraints' => [
                     new Regex([
@@ -61,8 +57,6 @@ class PatientType extends AbstractType
                 'label' => 'Username',
                 'attr' => [
                     'placeholder' => 'Enter your  username',
-                    'class' => 'form-control mb-3 rounded-lg',
-                    'style' => 'border-color: #086475;'
                 ],
                 'constraints' => [
                     new Regex([
@@ -81,8 +75,6 @@ class PatientType extends AbstractType
                 'label' => 'NationalId',
                 'attr' => [
                     'placeholder' => 'Enter your nationalId',
-                    'class' => 'form-control mb-3 rounded-lg',
-                    'style' => 'border-color: #086475;'
                 ],
                 'constraints' => [
                     new Length([
@@ -105,16 +97,12 @@ class PatientType extends AbstractType
                     'label' => 'Password',
                     'attr' => [
                         'placeholder' => 'Enter your password',
-                        'class' => 'form-control mb-3 rounded-lg', // Added 'rounded-lg' class
-                        'style' => 'border-color: #086475;'
                     ],
                 ],
                 'second_options' => [
                     'label' => 'Repeat Password',
                     'attr' => [
                         'placeholder' => 'Repeat your password',
-                        'class' => 'form-control mb-3 rounded-lg', // Added 'rounded-lg' class
-                        'style' => 'border-color: #086475;'
                     ],
                 ],
                 'invalid_message' => 'The password fields must match.',
@@ -135,13 +123,7 @@ class PatientType extends AbstractType
                     ])
                 ],
             ])
-            ->add('submit', SubmitType::class, [
-                'label' => 'Register',
-                'attr' => [
-                    'class' => 'btn btn-primary',
-                    'style' => 'background-color: #086475; border-color: #086475;'
-                ],
-            ]);
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
