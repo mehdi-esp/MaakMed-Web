@@ -42,6 +42,8 @@
                 </div>
                 <!-- End Table -->
                 <!-- Buttons -->
+                {% if is_granted("ROLE_DOCTOR") %}
+
                 <div class="card-actions gap-0 join">
                     <a class="btn btn-ghost text-primary join-item"
                        href="{{ path("app_prescription_edit",{id: prescription.id}) }}">
@@ -61,6 +63,7 @@
                         </svg>
                     </a>
                 </div>
+                {% endif %}
                 <!-- End Buttons -->
             </div>
         </div>
