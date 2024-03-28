@@ -62,38 +62,8 @@ class PharmacyType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('plainPassword', RepeatedType::class, [
-                'type' => PasswordType::class,
-                'first_options' => [
-                    'label' => 'Password',
-                    'attr' => [
-                        'placeholder' => 'Enter your password',
-                    ],
-                ],
-                'second_options' => [
-                    'label' => 'Repeat Password',
-                    'attr' => [
-                        'placeholder' => 'Repeat your password',
-                    ],
-                ],
-                'invalid_message' => 'The password fields must match.',
-                'mapped' => false,
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Please enter a password',
-                    ]),
-                    new Length([
-                        'min' => 8,
-                        'minMessage' => 'Your password should be at least {{ limit }} characters',
-                        // max length allowed by Symfony for security reasons
-                        'max' => 4096,
-                    ]),
-                    new Regex([
-                        'pattern' => '/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/',
-                        'message' => 'Your password should contain at least one uppercase letter, one number, and one special character',
-                    ])
-                ],
-            ]);
+            ->add('plainPassword', PasswordCreationType::class)
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
