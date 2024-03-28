@@ -5,7 +5,7 @@ namespace App\Repository;
 use App\Entity\Prescription;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use App\Entity\Doctor;
+use App\Entity\{Doctor, Patient};
 
 /**
  * @extends ServiceEntityRepository<Prescription>
