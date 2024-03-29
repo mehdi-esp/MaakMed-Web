@@ -6,20 +6,20 @@
                 {% if is_granted('ROLE_DOCTOR') or is_granted('ROLE_ADMIN') %}
                     <span>Patient:</span>
                     <a class="link link-hover link-primary truncate"
-                       href="{{ path('app_visit_index', {'patient': visit.patient.username}) }}"
+                       href="{{ path('app_visit_index', {'patient': visit.patient.id}) }}"
                     >{{ visit.patient.fullName }}</a>
                 {% endif %}
                 {% if is_granted('ROLE_PATIENT') or is_granted('ROLE_ADMIN') %}
                     <span>Doctor:</span>
                     <a class="link link-hover link-primary truncate"
-                       href="{{ path('app_visit_index', {'doctor': visit.doctor.username}) }}"
+                       href="{{ path('app_visit_index', {'doctor': visit.doctor.id}) }}"
                     >{{ visit.doctor.fullName }}</a>
                 {% endif %}
             </header>
             <div class="flex justify-center space-x-4">
                 <a href="{{ path('app_visit_index', {'date': visit.date|date('Y-m-d')}) }}"
                    class="badge badge-ghost">{{ visit.date|date('F j, Y') }}</a>
-                <a href="{{ path('app_visit_index', {'type': visit.type.displayName}) }}"
+                <a href="{{ path('app_visit_index', {'category': visit.type.name}) }}"
                    class="badge badge-accent">{{ visit.type.displayName }}</a>
             </div>
             <div class="divider"></div>
