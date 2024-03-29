@@ -27,12 +27,12 @@ class InvoiceController extends AbstractController
         $user = $this->getUser();
 
         $criteria = [];
-        $userCriteria = match (true) {
+        $visibilityCriterion = match (true) {
             $user instanceof Admin => [],
             $user instanceof Pharmacy => ['pharmacy' => $user],
             $user instanceof Patient => ['patient' => $user],
         };
-        $criteria = array_merge($criteria, $userCriteria);
+        $criteria = array_merge($criteria, $visibilityCriterion);
 
         $invoices = $invoiceRepository->findBy($criteria);
         return $this->render('invoice/index.html.twig', [
