@@ -10,12 +10,6 @@ module.exports = {
     },
   ],
   theme: {
-    extend: {
-      colors: {
-        'success': '#10B981', // green
-        'error': '#EF4444', // red
-      }
-    }
   },
   plugins: [
     require('@tailwindcss/forms')({ strategy: 'class' }),
