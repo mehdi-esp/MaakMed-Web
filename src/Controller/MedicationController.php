@@ -55,4 +55,39 @@ class MedicationController extends AbstractController
             'form' => $form->createView(),
         ], $response);
     }
+    #[Route('/{id}/edit', name: 'app_medication_edit', methods: ['GET', 'POST'])]
+    #[IsGranted("ROLE_ADMIN")]
+    public function edit(Request $request, Medication $medication, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(MedicationType::class, $medication);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_medication_index', [], Response::HTTP_SEE_OTHER);
+        }
+
+        $response = new Response(
+            status: $form->isSubmitted() ?
+                Response::HTTP_UNPROCESSABLE_ENTITY :
+                Response::HTTP_OK
+        );
+
+        return $this->render('medication/edit.html.twig', [
+            'medication' => $medication,
+            'form' => $form->createView(),
+        ], $response);
+    }
+    #[Route('/{id}', name: 'app_medication_delete', methods: ['POST'])]
+    #[IsGranted("ROLE_ADMIN")]
+    public function delete(Request $request, Medication $medication, EntityManagerInterface $entityManager): Response
+    {
+        if ($this->isCsrfTokenValid('delete'.$medication->getId(), $request->request->get('_token'))) {
+            $entityManager->remove($medication);
+            $entityManager->flush();
+        }
+
+        return $this->redirectToRoute('app_medication_index', [], Response::HTTP_SEE_OTHER);
+    }
 }

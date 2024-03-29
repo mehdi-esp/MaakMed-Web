@@ -16,8 +16,14 @@
             </div>
             {% if is_granted('ROLE_ADMIN') %}
                 <div class="flex justify-end space-x-2">
-                   {#  <a href="{{ path('app_medication_edit', {'id': medication.id}) }}" class="btn btn-primary">Update</a>
-                    <a href="{{ path('app_medication_delete', {'id': medication.id}) }}" class="btn btn-danger">Delete</a>#}
+                    <a href="{{ path('app_medication_edit', {'id': medication.id}) }}"
+                       class="btn btn-primary">Update</a>
+                    <form action="{{ path('app_medication_delete', {'id': medication.id}) }}" method="post" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ medication.id) }}">
+                        <button class="btn btn-ghost text-danger join-item" type="submit">
+                            delete
+                        </button>
+                    </form>
                 </div>
             {% endif %}
         </div>
