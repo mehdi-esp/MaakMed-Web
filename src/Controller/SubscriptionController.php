@@ -6,14 +6,15 @@ use App\Entity\InsurancePlan;
 use App\Entity\Patient;
 use App\Entity\Subscription;
 use App\Form\SubscriptionType;
-use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Query;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+
 
 class SubscriptionController extends AbstractController
 {
@@ -24,17 +25,53 @@ class SubscriptionController extends AbstractController
             'controller_name' => 'SubscriptionController',
         ]);
     }
+    #[Route('/subscription/active', name: 'app_subscription_active')]
+    #[IsGranted("ROLE_PATIENT")]
+    public function getActivePlan(EntityManagerInterface $entityManager): JsonResponse
+    {
+        $user = $this->getUser();
+        if (!$user instanceof Patient) {
+            throw new \Exception('Logged in user must be a Patient');
+        }
 
+        $activePlan = $entityManager->getRepository(Subscription::class)
+            ->findOneBy([
+                'patient' => $user,
+                'status' => 'active'
+            ]);
+
+        $response = [
+            'hasActivePlan' => $activePlan !== null
+        ];
+
+        if ($activePlan !== null) {
+            $response['planName'] = $activePlan->getPlan()->getName();
+        }
+
+        return new JsonResponse($response);
+    }
     /**
      * @throws \Exception
      */
     #[Route('/subscription/Subscribe/{planId}', name: 'app_subscription_add')]
     #[IsGranted("ROLE_PATIENT")]
-    public function Subscribe(EntityManagerInterface $entityManager, $planId): Response
+    public function Subscribe(EntityManagerInterface $entityManager, $planId): JsonResponse
     {
         $user = $this->getUser();
         if (!$user instanceof Patient) {
             throw new \Exception('Logged in user must be a Patient');
+        }
+        // Check if the patient already has a subscription with status "pending" or "active"
+        $existingSubscription = $entityManager->getRepository(Subscription::class)
+            ->findOneBy([
+                'patient' => $user,
+                'status' => ['pending', 'active']
+            ]);
+        if ($existingSubscription) {
+            // If an active or pending subscription exists, return an error message
+            return new JsonResponse([
+                'error' => 'You already have an active or pending subscription.'
+            ], Response::HTTP_BAD_REQUEST);
         }
         $subscription = new Subscription();
         $subscription->setPatient($user);
@@ -52,8 +89,10 @@ class SubscriptionController extends AbstractController
 
         $entityManager->persist($subscription);
         $entityManager->flush();
-
-        return $this->redirectToRoute('app_subscription_index', [], Response::HTTP_SEE_OTHER);
+        return new JsonResponse([
+            'success' => 'Subscription created successfully.',
+            'redirectUrl' => $this->generateUrl('app_insurance_plan_ListPlans')
+        ], Response::HTTP_OK);
     }
 
     #[Route('/subscription/ListSubscriptions', name: 'app_subscription_listAdmin')]

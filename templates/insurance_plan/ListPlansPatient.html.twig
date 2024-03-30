@@ -9,6 +9,11 @@
         <button class="py-1 px-4 focus:outline-none">Annually</button>
       </div>
     </div>
+{% if app.session.has('notice') %}
+    <div class="alert alert-notice" id="flash-message" style="display: none;">
+        {{ app.session.get('notice') }}
+    </div>
+{% endif %}
     <div class="flex flex-wrap -m-4">
       {% for plan in plans %}
       <div class="p-4 xl:w-1/4 md:w-1/2 w-full">
@@ -30,11 +35,11 @@
                       <p class="text-xs text-gray-500 mt-3"> Plan Ceiling: {{ plan.ceiling }}</p>
           </p>
 
-          <button class="flex items-center mt-auto text-white bg-indigo-500 border-0 py-2 px-4 w-full focus:outline-none hover:bg-indigo-600 rounded">Subscribe
+          <a href={{path('app_subscription_add', {'planId': plan.id})}}   class="flex items-center mt-auto text-white bg-indigo-500 border-0 py-2 px-4 w-full focus:outline-none hover:bg-indigo-600 rounded" data-subscribe-button="true">>Subscribe
             <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-auto" viewBox="0 0 24 24">
               <path d="M5 12h14M12 5l7 7-7 7"></path>
             </svg>
-          </button>
+          </a>
 
         </div>
       </div>
@@ -42,4 +47,40 @@
     </div>
   </div>
 </section>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.querySelectorAll('[data-subscribe-button]').forEach(function(button) {
+    button.addEventListener('click', async function(event) {
+        event.preventDefault();
+
+        const response = await fetch(event.target.href, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        const data = await response.json();
+
+        if (data.error) {
+            Swal.fire({
+                title: 'Error',
+                text: data.error,
+                icon: 'error',
+                timer: 5000,
+                showConfirmButton: false
+            });
+        } else if (data.success) {
+            Swal.fire({
+                title: 'Success',
+                text: data.success,
+                icon: 'success',
+                timer: 5000,
+                showConfirmButton: false
+            }).then(() => {
+                window.location.href = data.redirectUrl;
+            });
+        }
+    });
+});
+</script>
 {% endblock %}
