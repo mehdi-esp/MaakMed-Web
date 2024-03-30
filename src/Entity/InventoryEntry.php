@@ -35,14 +35,14 @@ class InventoryEntry
         return $this;
     }
 
-    public function increment(int $amount = 1): static
+    public function increaseQuantity(int $amount = 1): static
     {
         $this->quantity ??= 0;
         $this->quantity += $amount;
         return $this;
     }
 
-    public function decrement(int $amount = 1): static
+    public function decreaseQuantity(int $amount = 1): static
     {
         $this->quantity ??= 0;
         $this->quantity -= $amount;
