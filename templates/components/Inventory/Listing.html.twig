@@ -1,0 +1,31 @@
+<div {{ attributes }}>
+    {% if editing %}
+
+        <button
+                type="button"
+                class="btn btn-primary"
+                data-action="live#action"
+                data-live-action-param="save"
+        >
+            Save
+
+        </button>
+        {% form_theme form 'components/Inventory/_form_theme_inventory.html.twig' %}
+        {{ form_start(form) }}
+        {{ form_errors(form) }}
+        {{ form_rest(form) }}
+        {{ form_end(form) }}
+    {% else %}
+        <button
+                type="button"
+                class="btn btn-primary"
+                data-model="editing"
+                data-value="true"
+                data-action="live#update"
+        >
+            Edit
+
+        </button>
+        {{ 'your display here' }}
+    {% endif %}
+</div>
