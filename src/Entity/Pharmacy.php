@@ -18,7 +18,7 @@ class Pharmacy extends User
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $address = null;
 
-    #[ORM\OneToMany(mappedBy: 'pharmacy', targetEntity: InventoryEntry::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'pharmacy', targetEntity: InventoryEntry::class, orphanRemoval: true, cascade: ['persist'])]
     private Collection $inventoryEntries;
 
     #[ORM\OneToMany(mappedBy: 'pharmacy', targetEntity: Invoice::class, orphanRemoval: true)]
