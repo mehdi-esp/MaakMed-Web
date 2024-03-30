@@ -19,7 +19,6 @@ class InsurancePlanController extends AbstractController
         ]);
     }
     #[Route('/insurance/plan/ListPlans', name: 'app_insurance_plan_ListPlans')]
-
     public function listPlansPatient(EntityManagerInterface $entityManager):Response
     {
         $plans = $entityManager->getRepository(InsurancePlan::class)->findAll();
@@ -27,4 +26,5 @@ class InsurancePlanController extends AbstractController
             'plans' => $plans,
         ]);
     }
+
 }
