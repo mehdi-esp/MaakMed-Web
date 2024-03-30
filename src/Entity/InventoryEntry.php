@@ -35,6 +35,20 @@ class InventoryEntry
         return $this;
     }
 
+    public function increment(int $amount = 1): static
+    {
+        $this->quantity ??= 0;
+        $this->quantity += $amount;
+        return $this;
+    }
+
+    public function decrement(int $amount = 1): static
+    {
+        $this->quantity ??= 0;
+        $this->quantity -= $amount;
+        return $this;
+    }
+
     public function getPharmacy(): ?Pharmacy
     {
         return $this->pharmacy;
