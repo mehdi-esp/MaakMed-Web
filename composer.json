@@ -6,7 +6,9 @@
     "require": {
         "php": ">=8.2",
         "ext-ctype": "*",
+        "ext-dom": "*",
         "ext-iconv": "*",
+        "ext-libxml": "*",
         "api-platform/core": "2.7.16",
         "doctrine/annotations": "^2.0",
         "doctrine/dbal": "^3",
