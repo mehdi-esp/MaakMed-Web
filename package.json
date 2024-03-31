@@ -32,6 +32,7 @@
         "build": "encore production --progress"
     },
     "dependencies": {
+        "@stimulus-components/scroll-to": "^5.0.1",
         "@tailwindcss/container-queries": "^0.1.1"
     }
 }

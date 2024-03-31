@@ -1,4 +1,5 @@
 import { startStimulusApp } from '@symfony/stimulus-bridge';
+import ScrollTo from '@stimulus-components/scroll-to'
 
 // Registers Stimulus controllers from controllers.json and in the controllers/ directory
 export const app = startStimulusApp(require.context(
@@ -6,5 +7,6 @@ export const app = startStimulusApp(require.context(
     true,
     /\.[jt]sx?$/
 ));
+app.register('scroll-to', ScrollTo)
 // register any custom, 3rd party controllers here
 // app.register('some_controller_name', SomeImportedController);
