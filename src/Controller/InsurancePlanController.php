@@ -15,14 +15,34 @@ class InsurancePlanController extends AbstractController
 {
     #[Route('/listInsurancePlan', name: 'app_insurancePlan_list', methods: ['GET'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function listIP(EntityManagerInterface $entityManager): Response
+    public function listIP(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $insurancePlans = $entityManager->getRepository(InsurancePlan::class)->findAll();
+        $repository = $entityManager->getRepository(InsurancePlan::class);
+
+        $searchTerm = $request->query->get('searchTerm');
+        $costFilter = $request->query->get('costFilter');
+
+        $queryBuilder = $repository->createQueryBuilder('ip');
+
+        if ($searchTerm) {
+            $queryBuilder->andWhere('ip.name LIKE :searchTerm')
+                ->setParameter('searchTerm', $searchTerm . '%');
+        }
+
+        if ($costFilter) {
+            if ($costFilter === 'high') {
+                $queryBuilder->orderBy('ip.cost', 'DESC');
+            } elseif ($costFilter === 'low') {
+                $queryBuilder->orderBy('ip.cost', 'ASC');
+            }
+        }
+
+        $insurancePlans = $queryBuilder->getQuery()->getResult();
+
         return $this->render('insurancePlan/listInsurancePlan.html.twig', [
             'insurancePlans' => $insurancePlans,
         ]);
     }
-
 
 
     #[Route('/addInsurancePlan', name: 'app_insurancePlan_add', methods: ['GET', 'POST'])]
