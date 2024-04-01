@@ -15,6 +15,7 @@ export const app = startStimulusApp(require.context(
     true,
     /\.[jt]sx?$/
 ));
+app.stimulusUseDebug = true;
 app.schema = customSchema;
 app.register('scroll-to', ScrollTo)
 app.register('textarea-autogrow', TextareaAutogrow)
