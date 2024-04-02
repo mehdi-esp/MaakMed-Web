@@ -23,7 +23,10 @@
             <twig:Form:ErrorTooltip field="{{ form.diagnosis }}"/>
         </div>
         {{ form_widget(form.diagnosis, {
-            attr: {class: 'textarea textarea-bordered textarea-lg w-full min-h-96'}
+            attr: {
+              class: 'textarea textarea-bordered textarea-lg w-full min-h-96',
+              ...stimulus_controller("textarea-autogrow")
+            }
         }) }}
         <button class="btn btn-primary mx-auto">{{ buttonLabel|default('Save') }}</button>
     </div>
