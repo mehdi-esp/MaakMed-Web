@@ -28,17 +28,20 @@ class PrescriptionController extends AbstractController
     #[Route('/', name: 'app_prescription_index', methods: ['GET'])]
     #[IsGranted(PrescriptionVoter::LIST_ALL)]
     public function index(
-        PrescriptionRepository $prescriptionRepository
+        PrescriptionRepository $prescriptionRepository,
+        Request $request
     ): Response
     {
         /** @var Doctor|Admin|Patient $user */
         $user = $this->getUser();
 
-        $prescriptions = $prescriptionRepository->findByUser($user);
+        $confirmed = $request->query->get('confirmed');
+        $order = $request->query->get('order');
+
+        $prescriptions = $prescriptionRepository->findByUserAndFilters($user, $confirmed, $order);
 
         return $this->render('prescription/index.html.twig', [
             'prescriptions' => $prescriptions,
-
         ]);
     }
 

@@ -4,6 +4,11 @@ module.exports = {
     "./assets/**/*.js",
     "./templates/**/*.html.twig",
   ],
+  safelist: [
+    {
+      pattern: /alert-(info|success|warning|error)/,
+    },
+  ],
   theme: {
   },
   plugins: [

@@ -1,18 +1,24 @@
 {# @var prescription \App\Entity\Prescription #}
 {% props prescription = null %}
 <div{{ attributes }}>
-    <article class="card w-[15rem] h-[15rem] bg-base-100 shadow-xl">
+    <article
+            class="card card-bordered w-[25rem] sm:w-[25rem] md:w-[30rem] lg:w-[35rem] xl:w-[40rem] bg-white shadow-md">
         <div class="card-body">
-            <header class="card-title">
-                <span>Patient:</span>
-                <a class="link link-hover link-primary truncate"
-                   href="{{ path('app_prescription_index', {'patient': prescription.visit.patient.username}) }}"
-                >{{ prescription.visit.patient.username }}</a>
-                <span>Creation Date:</span>
-                <a href="{{ path('app_prescription_index', {'date': prescription.creationDate|date('Y-m-d')}) }}"
-                   class="badge badge-ghost">{{ prescription.creationDate|date('F j, Y') }}</a>
-                <span>Is Confirmed:</span>
-                <span class="badge badge-accent">{{ prescription.isConfirmed ? 'Yes' : 'No' }}</span>
+            <header class="card-title flex flex-col sm:flex-row items-center justify-between">
+                <div class="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                    <span>Patient:</span>
+                    <h2 class="link link-hover link-primary truncate"
+                       href="{{ path('app_prescription_index', {'patient': prescription.visit.patient.username}) }}"
+                    >{{ prescription.visit.patient.username }}</h2>
+                </div>
+                <div class="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                    <span>Date:</span>
+                    <a href="{{ path('app_prescription_index', {'date': prescription.creationDate|date('Y-m-d')}) }}"
+                       class="badge badge-ghost">{{ prescription.creationDate|date('F j, Y') }}</a>
+                </div>
+                <div class="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                    <span class="badge {{ prescription.isConfirmed ? 'badge-success' : 'badge-error' }}">{{ prescription.isConfirmed ? 'Confirmed' : 'Not Confirmed' }}</span>
+                </div>
             </header>
             <div class="divider"></div>
             <div class="prose">

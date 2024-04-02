@@ -1,0 +1,31 @@
+{% form_theme form 'form/daisyui_layout.html.twig' %}
+<div{{ attributes }}>
+
+    {{ form_start(form) }}
+    <div class="container grid gap-4 mt-4">
+        {{ form_errors(form) }}
+        <div class="grid grid-cols-2 gap-4">
+            <div class="col-span-1 flex space-x-2 items-center">
+                {{ form_label(form.name) }}
+                {{ form_widget(form.name) }}
+                <twig:Form:ErrorTooltip field="{{ form.name }}"/>
+            </div>
+            <div class="col-span-1 flex space-x-2 items-center">
+                {{ form_label(form.description) }}
+                {{ form_widget(form.description) }}
+                <twig:Form:ErrorTooltip field="{{ form.description }}"/>
+            </div>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+            <div class="col-span-1 flex space-x-2 items-center">
+                {{ form_label(form.insured) }}
+                {{ form_widget(form.insured) }}
+                <twig:Form:ErrorTooltip field="{{ form.insured }}"/>
+            </div>
+        </div>
+        <button class="btn btn-primary mx-auto">{{ buttonLabel|default('Save') }}</button>
+    </div>
+
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
+</div>

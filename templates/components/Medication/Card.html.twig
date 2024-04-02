@@ -1,0 +1,31 @@
+{# @var medication \App\Entity\Medication #}
+{% props medication = null %}
+<div{{ attributes }}>
+    <article class="card w-[25rem] h-[20rem] bg-base-100 shadow-xl">
+        <div class="card-body">
+            <header class="card-title">
+                <span>Medication:</span>
+                <h2>{{ medication.name }}</h2>
+            </header>
+            <div class="flex justify-center space-x-4">
+                <p class="line-clamp-3">{{ medication.description }}</p>
+            </div>
+            <div class="divider"></div>
+            <div class="prose">
+                <p>{{ medication.insured ? 'Insured' : 'Not Insured' }}</p>
+            </div>
+            {% if is_granted('ROLE_ADMIN') %}
+                <div class="flex justify-end space-x-2">
+                    <a href="{{ path('app_medication_edit', {'id': medication.id}) }}"
+                       class="btn btn-primary">Update</a>
+                    <form action="{{ path('app_medication_delete', {'id': medication.id}) }}" method="post" onsubmit="return confirm('Are you sure you want to delete this item?');">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ medication.id) }}">
+                        <button class="btn btn-ghost text-danger join-item" type="submit">
+                            delete
+                        </button>
+                    </form>
+                </div>
+            {% endif %}
+        </div>
+    </article>
+</div>
