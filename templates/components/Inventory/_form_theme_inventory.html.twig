@@ -32,8 +32,8 @@
                 {% if form.vars.data.medication is not same as(null) %}
                     {{- form.vars.data.medication.name -}}
                 {% else %}
+                    {{- form_widget(form.medication, {label: false}) -}}
                 {% endif %}
-                {{- form_widget(form.medication, {label: false}) -}}
                 <twig:Form:ErrorTooltip field="{{ form.medication }}" size="4" fillAbsent="true"/>
 
             </div>
