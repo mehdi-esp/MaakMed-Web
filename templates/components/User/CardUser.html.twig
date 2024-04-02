@@ -1,0 +1,35 @@
+{# @var user \App\Entity\User #}
+{% props user = null %}
+<div {{ attributes }}>
+
+    <div class="card card-side bg-base-100 shadow-xl my-5 mx-5 w-[22rem] border border-t-4 border-t-blue-600">
+        <figure>
+            <!-- You can replace this with an actual image of the user if you have one -->
+            <img class="object-contain w-[80px] h-[80px] m-[10px]"
+                 src="{{ asset('images/' ~ ('ROLE_ADMIN' in user.roles ? 'admin.png' : ('ROLE_DOCTOR' in user.roles ? 'doctor.png' : ('ROLE_PATIENT' in user.roles ? 'patient.png' : ('ROLE_PHARMACY' in user.roles ? 'pharmacy.png' : 'unknown.png'))))) }}"
+                 alt="{{ user.username }}"/>
+        </figure>
+        <div class="card-body">
+            <h2 class="card-title" style="color: #6B7B8C;">{{ user.username }}</h2>
+
+            <p>
+                {% if 'ROLE_ADMIN' in user.roles %}
+                    Admin
+                {% elseif 'ROLE_DOCTOR' in user.roles %}
+                    Doctor
+                {% elseif 'ROLE_PATIENT' in user.roles %}
+                    Patient
+                {% elseif 'ROLE_PHARMACY' in user.roles %}
+                    Pharmacy
+                {% else %}
+                    Unknown
+                {% endif %}
+            </p>
+            {# <div class="card-actions justify-end">
+            <!-- You can replace this with an actual action for the user -->
+            <button class="btn btn-outline btn-info ">Ban</button>
+
+        </div> #}
+        </div>
+    </div>
+</div>
