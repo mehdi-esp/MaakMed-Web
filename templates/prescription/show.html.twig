@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Prescription{% endblock %}
+
+{% block body %}
+    <div class="flex flex-col items-center justify-center min-h-screen p-4 bg-gray-100">
+        <div class="prose prose-lg text-gray-500 mx-auto">
+            <h1>Prescription</h1>
+
+            <div class="w-full max-w-md mx-auto bg-white p-5 rounded-md shadow-sm">
+                <table class="table-auto w-full">
+                    <tbody>
+                    <tr>
+                        <th class="px-4 py-2">Id</th>
+                        <td class="px-4 py-2">{{ prescription.id }}</td>
+                    </tr>
+                    <tr>
+                        <th class="px-4 py-2">Doctor</th>
+                        <td class="px-4 py-2">{{ prescription.visit.doctor.username }}</td>
+                    </tr>
+                    <tr>
+                        <th class="px-4 py-2">Patient</th>
+                        <td class="px-4 py-2">{{ prescription.visit.patient.username }}</td>
+                    </tr>
+                    <tr>
+                        <th class="px-4 py-2">CreationTime</th>
+                        <td class="px-4 py-2">{{ prescription.creationDate ? prescription.creationDate|date('Y-m-d H:i:s') : '' }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 class="mt-5">Medications</h3>
+
+            <div class="w-full max-w-md mx-auto bg-white p-5 rounded-md shadow-sm mt-4">
+                <table class="table-auto w-full">
+                    <thead>
+                    <tr>
+                        <th class="px-4 py-2">Medication Name</th>
+                        <th class="px-4 py-2">Quantity</th>
+                        <th class="px-4 py-2">Instructions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for medication in prescription.medications %}
+                        <tr>
+                            <td class="px-4 py-2">{{ medication.getmedication.name }}</td>
+                            <td class="px-4 py-2">{{ medication.quantity }}</td>
+                            <td class="px-4 py-2">{{ medication.instructions }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-5">
+                <a href="{{ path('app_prescription_index') }}" class="btn btn-primary">back to list</a>
+
+                {% if is_granted('ROLE_DOCTOR') %}
+                    <a href="{{ path('app_prescription_edit', {'id': prescription.id}) }}" class="btn btn-secondary">edit</a>
+
+                    {{ include('prescription/_delete_form.html.twig') }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

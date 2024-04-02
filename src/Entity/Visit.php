@@ -25,7 +25,7 @@ class Visit
     #[ORM\Column(type: Types::TEXT)]
     private ?string $diagnosis = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(inversedBy: 'visit', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(onDelete: 'SET NULL')]
     private ?Prescription $prescription = null;
 

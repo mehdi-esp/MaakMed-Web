@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Medication{% endblock %}
+
+{% block body %}
+    <main class="container px-8 mx-auto mt-8">
+        <div class="prose"><h1>Create new Medication</h1></div>
+
+        {# Make sure to pass the 'form' variable correctly to the component #}
+        <twig:Medication:Form form="{{ form }}" initialFormData="{{ medication }}"/>
+
+        <a class="link link-secondary"  href="{{ path('app_medication_index') }}">back to list</a>
+    </main>
+{% endblock %}

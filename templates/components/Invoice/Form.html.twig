@@ -1,6 +1,15 @@
+{% form_theme form 'components/Invoice/_form_theme_invoice.html.twig' %}
+
 <div{{ attributes }}>
     {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ buttonLabel|default('Save') }}</button>
+
+    {{ form_errors(form) }}
+    {{ form_row(form.patient) }}
+    {{ form_errors(form.invoiceEntries) }}
+    {{ form_row(form.invoiceEntries) }}
+    {{ form_rest(form) }}
+
+    <button class="btn btn-primary">{{ buttonLabel|default('Save') }}</button>
+
     {{ form_end(form) }}
 </div>

@@ -1,0 +1,77 @@
+{# @var prescription \App\Entity\Prescription #}
+{% props prescription = null %}
+<div{{ attributes }}>
+    <article
+            class="card card-bordered w-[25rem] sm:w-[25rem] md:w-[30rem] lg:w-[35rem] xl:w-[40rem] bg-white shadow-md">
+        <div class="card-body">
+            <header class="card-title flex flex-col sm:flex-row items-center justify-between">
+                <div class="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                    <span>Patient:</span>
+                    <h2 class="link link-hover link-primary truncate"
+                       href="{{ path('app_prescription_index', {'patient': prescription.visit.patient.username}) }}"
+                    >{{ prescription.visit.patient.username }}</h2>
+                </div>
+                <div class="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                    <span>Date:</span>
+                    <a href="{{ path('app_prescription_index', {'date': prescription.creationDate|date('Y-m-d')}) }}"
+                       class="badge badge-ghost">{{ prescription.creationDate|date('F j, Y') }}</a>
+                </div>
+                <div class="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4">
+                    <span class="badge {{ prescription.isConfirmed ? 'badge-success' : 'badge-error' }}">{{ prescription.isConfirmed ? 'Confirmed' : 'Not Confirmed' }}</span>
+                </div>
+            </header>
+            <div class="divider"></div>
+            <div class="prose">
+                <h2>Medication</h2>
+                <!-- Table -->
+                <div class="overflow-auto h-40 md:h-60 mt-6">
+                    <table class="table">
+                        <!-- head -->
+                        <thead>
+                        <tr>
+                            <th>Medication</th>
+                            <th>Quantity</th>
+                            <th>Instructions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {# @var medication \App\Entity\Medication #}
+                        {% for medication in prescription.medications %}
+                            <tr>
+                                <td><a class="link link-hover" href="#">{{ medication.getmedication.name }}</a></td>
+                                <td>{{ medication.quantity }}</td>
+                                <td>{{ medication.instructions }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- End Table -->
+                <!-- Buttons -->
+                {% if is_granted("ROLE_DOCTOR") %}
+
+                <div class="card-actions gap-0 join">
+                    <a class="btn btn-ghost text-primary join-item"
+                       href="{{ path("app_prescription_edit",{id: prescription.id}) }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                             stroke-width="1.5" stroke="currentColor" class="size-5">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"/>
+                        </svg>
+                    </a>
+                    <a class="btn btn-ghost text-secondary join-item"
+                       href="{{ path("app_prescription_show",{id: prescription.id}) }}">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                             stroke-width="1.5"
+                             stroke="currentColor" class="size-5">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                  d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/>
+                        </svg>
+                    </a>
+                </div>
+                {% endif %}
+                <!-- End Buttons -->
+            </div>
+        </div>
+    </article>
+</div>

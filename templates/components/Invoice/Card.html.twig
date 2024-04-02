@@ -1,0 +1,111 @@
+{# @var invoice \App\Entity\Invoice #}
+{% props invoice = null %}
+<div {{ attributes }}>
+    <!-- Card -->
+    <article
+            class="card card-bordered w-[25rem] sm:w-[30rem] md:w-[35rem] lg:w-[40rem] xl:w-[45rem] bg-white shadow-md">
+        <div class="card-body">
+
+            <header class="flex flex-col justify-center items-center px-4 gap-y-4">
+                <div class="flex flex-col sm:flex-row justify-around items-center">
+                    <div class="prose">
+                        <h2 class="">Invoice #{{ invoice.id }}</h2>
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="card-actions gap-0 join">
+                        {% if is_granted("ROLE_PHARMACY") %}
+                            <a class="btn btn-ghost text-primary join-item"
+                               href="{{ path("app_invoice_edit",{id: invoice.id}) }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                     stroke-width="1.5" stroke="currentColor" class="size-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                          d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"/>
+                                </svg>
+                            </a>
+                        {% endif %}
+                        <a class="btn btn-ghost text-secondary join-item"
+                           href="{{ path("app_invoice_show",{id: invoice.id}) }}">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                 stroke-width="1.5"
+                                 stroke="currentColor" class="size-5">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/>
+                            </svg>
+                        </a>
+                    </div>
+                    <!-- End Buttons -->
+                </div>
+                <div class="container flex justify-evenly items-center">
+                    {% if is_granted("ROLE_PHARMACY") or is_granted("ROLE_ADMIN") %}
+                        <dl class="text-center">
+                            <dt>Issued to:</dt>
+                            <dd><a class="link link-hover link-accent">{{ invoice.patient.fullName }}</a></dd>
+                        </dl>
+                    {% endif %}
+                    {% if is_granted("ROLE_PATIENT") or is_granted("ROLE_ADMIN") %}
+                        <dl class="text-center">
+                            <dt>Issued by:</dt>
+                            <dd><a class="link link-hover link-accent">{{ invoice.pharmacy.name }}</a></dd>
+                        </dl>
+                    {% endif %}
+                </div>
+                <time class="text-secondary">
+                    {{ invoice.creationTime|date }}
+                </time>
+            </header>
+            <!-- Table -->
+            <div class="overflow-auto h-40 md:h-60 mt-6">
+                <table class="table">
+                    <!-- head -->
+                    <thead>
+                    <tr>
+                        <th>Medication</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Total</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {# @var entry \App\Entity\InvoiceEntry #}
+                    {% for entry in invoice.invoiceEntries %}
+                        <tr>
+                            <td><a class="link link-hover" href="#">{{ entry.medication.name }}</a></td>
+                            <td>{{ entry.quantity }}</td>
+                            <td>{{ entry.cost }} TND</td>
+                            <td>{{ entry.totalCost }} TND</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <!-- End Table -->
+
+            <!-- Flex -->
+            <div class="mt-8 flex sm:justify-end">
+                <div class="w-full max-w-2xl sm:text-end space-y-2">
+                    <!-- Grid -->
+                    <div class="grid grid-cols-2 sm:grid-cols-1 gap-3 sm:gap-2">
+                        <dl class="grid sm:grid-cols-5 gap-x-3">
+                            <dt class="col-span-3 font-semibold text-gray-800">Total:</dt>
+                            <dd class="col-span-2 text-gray-500">{{ invoice.total }} TND</dd>
+                        </dl>
+
+                        <dl class="grid sm:grid-cols-5 gap-x-3">
+                            <dt class="col-span-3 font-semibold text-gray-800">Reimbursed:</dt>
+                            <dd class="col-span-2 text-gray-500">{{ invoice.reimbursed }}</dd>
+                        </dl>
+
+                        <dl class="grid sm:grid-cols-5 gap-x-3">
+                            <dt class="col-span-3 font-semibold text-gray-800">Paid:</dt>
+                            <dd class="col-span-2 text-gray-500">{{ invoice.totalPaid }} TND</dd>
+                        </dl>
+                    </div>
+                    <!-- End Grid -->
+                </div>
+            </div>
+            <!-- End Flex -->
+        </div>
+    </article>
+    <!-- End Card -->
+</div>

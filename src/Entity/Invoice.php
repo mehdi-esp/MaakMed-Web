@@ -112,6 +112,25 @@ class Invoice
         return $this;
     }
 
+    public function getTotal(): float
+    {
+        return $this->invoiceEntries->reduce(
+            fn(float $sum, InvoiceEntry $entry) => $entry->getTotalCost() + $sum,
+            0
+        );
+    }
+
+    public function getReimbursed(): float
+    {
+        return $this->getTotal() * ($this->getDiscountRate());
+    }
+
+    public function getTotalPaid(): float
+    {
+        return $this->getTotal() * (1 - $this->getDiscountRate());
+
+    }
+
     public function removeInvoiceEntry(InvoiceEntry $invoiceEntry): static
     {
         if ($this->invoiceEntries->removeElement($invoiceEntry)) {

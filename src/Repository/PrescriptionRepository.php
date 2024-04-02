@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Prescription;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Entity\{Doctor, Patient};
 
 /**
  * @extends ServiceEntityRepository<Prescription>
@@ -20,7 +21,38 @@ class PrescriptionRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Prescription::class);
     }
+    // In PrescriptionRepository.php
 
+public function findByDoctor(Doctor $doctor): array
+{
+    $qb = $this->createQueryBuilder('p')
+        ->where('p.doctor = :doctor')
+        ->setParameter('doctor', $doctor)
+        ->getQuery();
+
+    return $qb->execute();
+}
+// in PrescriptionRepository.php
+
+// in PrescriptionRepository.php
+
+// in PrescriptionRepository.php
+
+  public function findByUser($user)
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->innerJoin('p.visit', 'v');
+
+        if ($user instanceof Doctor) {
+            $qb->where('v.doctor = :user')
+                ->setParameter('user', $user);
+        } elseif ($user instanceof Patient) {
+            $qb->where('v.patient = :user')
+                ->setParameter('user', $user);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
 //    /**
 //     * @return Prescription[] Returns an array of Prescription objects
 //     */

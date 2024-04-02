@@ -4,10 +4,15 @@ module.exports = {
     "./assets/**/*.js",
     "./templates/**/*.html.twig",
   ],
+  safelist: [
+    {
+      pattern: /alert-(info|success|warning|error)/,
+    },
+  ],
   theme: {
   },
   plugins: [
-    require('@tailwindcss/forms'),
+    require('@tailwindcss/forms')({ strategy: 'class' }),
     require('@tailwindcss/typography'),
     require('@tailwindcss/container-queries'),
     require("daisyui"),
@@ -26,6 +31,11 @@ module.exports = {
           "base-content": "#181a2a",
           accent: '#5c99d6',
           "accent-content": '#edf2f7',
+
+          "error-content": 'oklch(100% 0 0)',
+          "success-content": 'oklch(100% 0 0)',
+          // "warning-content": '#EDEDED',
+          // "info-content": '#EDEDED',
         },
       },
       "light"
