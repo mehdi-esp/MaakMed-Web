@@ -10,6 +10,10 @@ export default class extends Controller {
       name: "suggest",
       wait: 2500,
     },
+    {
+      name: "suggest",
+      wait: 1000,
+    },
   ]
 
   static debounces = [
@@ -19,10 +23,6 @@ export default class extends Controller {
     },
     {
       name: "requestSuggestion",
-      wait: 1000,
-    },
-    {
-      name: "suggest",
       wait: 1000,
     },
   ]
