@@ -20,6 +20,7 @@
         <div class="flex items-center space-x-4">
             <div class="prose"><h3>Diagnosis</h3></div>
             <twig:Form:ErrorTooltip field="{{ form.diagnosis }}"/>
+            <pre class="invisible ml-2" data-loading="action(genCompletion)|removeClass(invisible)">Loading completion...   <span class="loading loading-spinner loading-xs"></span></pre>
         </div>
         <div class="relative mb-96">
             {{ form_widget(form.diagnosis, {
