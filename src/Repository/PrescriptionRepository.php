@@ -21,24 +21,18 @@ class PrescriptionRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Prescription::class);
     }
-    // In PrescriptionRepository.php
 
-public function findByDoctor(Doctor $doctor): array
-{
-    $qb = $this->createQueryBuilder('p')
-        ->where('p.doctor = :doctor')
-        ->setParameter('doctor', $doctor)
-        ->getQuery();
+    public function findByDoctor(Doctor $doctor): array
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->where('p.doctor = :doctor')
+            ->setParameter('doctor', $doctor)
+            ->getQuery();
 
-    return $qb->execute();
-}
-// in PrescriptionRepository.php
+        return $qb->execute();
+    }
 
-// in PrescriptionRepository.php
-
-// in PrescriptionRepository.php
-
-  public function findByUser($user)
+    public function findByUser($user)
     {
         $qb = $this->createQueryBuilder('p')
             ->innerJoin('p.visit', 'v');
@@ -53,28 +47,31 @@ public function findByDoctor(Doctor $doctor): array
 
         return $qb->getQuery()->getResult();
     }
-//    /**
-//     * @return Prescription[] Returns an array of Prescription objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('p.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
 
-//    public function findOneBySomeField($value): ?Prescription
-//    {
-//        return $this->createQueryBuilder('p')
-//            ->andWhere('p.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function findByUserAndFilters($user, $confirmed, $order)
+    {
+        $qb = $this->createQueryBuilder('p')
+            ->innerJoin('p.visit', 'v');
+
+        if ($user instanceof Doctor) {
+            $qb->where('v.doctor = :user')
+                ->setParameter('user', $user);
+        } elseif ($user instanceof Patient) {
+            $qb->where('v.patient = :user')
+                ->setParameter('user', $user);
+        }
+
+        if ($order === 'newest') {
+            $qb->orderBy('p.creationDate', 'DESC');
+        } elseif ($order === 'oldest') {
+            $qb->orderBy('p.creationDate', 'ASC');
+        }
+
+        if ($confirmed !== null) {
+            $qb->andWhere('p.confirmed = :confirmed')
+                ->setParameter('confirmed', $confirmed);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
 }

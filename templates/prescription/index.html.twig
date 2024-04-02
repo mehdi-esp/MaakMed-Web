@@ -17,20 +17,43 @@
             </div>
         {% endif %}
 
+        <!-- Filter form -->
+        <!-- Filter form -->
+        <form method="get" action="{{ path('app_prescription_index') }}" class="container p-2 md:p-5 flex flex-wrap justify-center gap-x-4 gap-y-6">
+            <div class="flex flex-col md:flex-row gap-4">
 
-
+                <div>
+                    <label for="confirmed" class="block text-sm font-medium text-gray-700">Confirmed:</label>
+                    <select id="confirmed" name="confirmed" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        <option value="">All</option>
+                        <option value="1">Yes</option>
+                        <option value="0">No</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="order" class="block text-sm font-medium text-gray-700">Order by:</label>
+                    <select id="order" name="order" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                        <option value="newest">Newest</option>
+                        <option value="oldest">Oldest</option>
+                    </select>
+                </div>
+            </div>
+            <div class="flex justify-center mt-6">
+                <input type="submit" value="Get" class="btn-primary inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+            </div>
+        </form>
 
         <div class="container p-2 md:p-5 flex flex-wrap justify-center gap-x-4 gap-y-6">
             {% for pres in prescriptions %}
                 <twig:Prescription:Card prescription="{{ pres }}"/>
             {% endfor %}
-        </section>
-        <div class="grid justify-end">
-            <a
-                    class="fixed bottom-4 start-4 md:bottom-16 md:start-16 btn rounded-full"
-                    role="button"
-                    href="#visits"
-                    id="btn-back-to-top">
+            </section>
+            <div class="grid justify-end">
+                <a
+                        class="fixed bottom-4 start-4 md:bottom-16 md:start-16 btn rounded-full"
+                        role="button"
+                        href="#visits"
+                        id="btn-back-to-top">
             <span class="[&>svg]:w-4">
               <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -44,8 +67,8 @@
                         d="M4.5 10.5 12 3m0 0 7.5 7.5M12 3v18"/>
               </svg>
             </span>
-            </a>
-        </div>
+                </a>
+            </div>
     </main>
 
     <div class="toast">
