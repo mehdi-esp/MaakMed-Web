@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Issue{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="text-2xl font-bold title-color mb-4">Edit Issue</h1>
+        <div class="row">
+            <div class="col-md-12">
+                {{ form_start(form) }}
+                    {{ form_rest(form) }}
+                    <button type="submit" class="btn btn-primary">Update</button>
+                {{ form_end(form) }}
+                    <a href="{{ path('app_issue_index') }}" class="btn btn-secondary">Back to List</a>
+                </form>
+                <div>
+                    {{ include('issue/_delete_form.html.twig') }}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
