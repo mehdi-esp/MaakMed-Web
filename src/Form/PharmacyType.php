@@ -58,7 +58,7 @@ class PharmacyType extends AbstractType
                 ],
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter your specialization',
+                        'message' => 'Please enter your address',
                     ]),
                 ],
             ])
