@@ -1,4 +1,4 @@
-<div{{ attributes }}>
+<div{{ attributes.defaults({...stimulus_controller("visit-listing"), ...stimulus_action("visit-listing", "clearFilters", "filters:clear") }) }}>
     <div class="prose"><h1 id="visits">Visits</h1></div>
 
     {% if is_granted('ROLE_DOCTOR') %}
@@ -27,6 +27,7 @@
                                         url: path('ux_entity_autocomplete', { alias: "patient" }),
                                         noResultsFoundText: "No such patient",
                                     }) }}
+                                    {{ stimulus_target('visit-listing', 'picker') }}
                             ></select>
                         </label>
                     </li>
@@ -41,6 +42,7 @@
                                     {{ stimulus_controller('symfony/ux-autocomplete/autocomplete', {
                                         url: path('ux_entity_autocomplete', { alias: "doctor" })
                                     }) }}
+                                    {{ stimulus_target('visit-listing', 'picker') }}
                             ></select>
                         </label>
                     </li>
@@ -59,15 +61,6 @@
                 </li>
             </ul>
         </div>
-        <script type="module">
-            const selects = document.querySelectorAll('#filters ul li select');
-            window.addEventListener('filters:clear', () => {
-                [...selects]
-                    .map(el => /** @type ?TomSelect */ el.tomselect)
-                    .filter(ts => ts !== undefined)
-                    .forEach(ts => ts.clear(true))
-            })
-        </script>
         {#                <a class="btn mx-auto" href="{{ path('app_visit_index') }}">Clear Filters</a> #}
         <button class="btn mx-auto"
                 data-action="live#action"
