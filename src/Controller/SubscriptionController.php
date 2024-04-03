@@ -53,47 +53,44 @@ class SubscriptionController extends AbstractController
     /**
      * @throws \Exception
      */
-    #[Route('/subscription/Subscribe/{planId}', name: 'app_subscription_add')]
-    #[IsGranted("ROLE_PATIENT")]
-    public function Subscribe(EntityManagerInterface $entityManager, $planId): JsonResponse
-    {
-        $user = $this->getUser();
-        if (!$user instanceof Patient) {
-            throw new \Exception('Logged in user must be a Patient');
-        }
-        // Check if the patient already has a subscription with status "pending" or "active"
-        $existingSubscription = $entityManager->getRepository(Subscription::class)
-            ->findOneBy([
-                'patient' => $user,
-                'status' => ['pending', 'active']
-            ]);
-        if ($existingSubscription) {
-            // If an active or pending subscription exists, return an error message
-            return new JsonResponse([
-                'error' => 'You already have an active or pending subscription.'
-            ], Response::HTTP_BAD_REQUEST);
-        }
-        $subscription = new Subscription();
-        $subscription->setPatient($user);
-        $currentDate = new \DateTimeImmutable();
-        $subscription->setStartDate($currentDate);
+   #[Route('/subscription/Subscribe/{planId}', name: 'app_subscription_add')]
+   #[IsGranted("ROLE_PATIENT")]
+   public function Subscribe(EntityManagerInterface $entityManager, $planId): Response
+   {
+       $user = $this->getUser();
+       if (!$user instanceof Patient) {
+           throw new \Exception('Logged in user must be a Patient');
+       }
+       // Check if the patient already has a subscription with status "pending" or "active"
+       $existingSubscription = $entityManager->getRepository(Subscription::class)
+           ->findOneBy([
+               'patient' => $user,
+               'status' => ['pending', 'active']
+           ]);
+       if ($existingSubscription) {
+           // If an active or pending subscription exists, return an error message
+           $this->addFlash('message', 'You already have an active or pending subscription.');
+           $this->addFlash('status', 'error');
+           return $this->redirectToRoute('app_insurance_plan_ListPlans');
+       }
+       $subscription = new Subscription();
+       $subscription->setPatient($user);
+       $currentDate = new \DateTimeImmutable();
+       $subscription->setStartDate($currentDate);
 
-        // Add one year to the current date
-        $endDate = $currentDate->add(new \DateInterval('P1Y'));
-        $subscription->setEndDate($endDate);
-        $subscription->setStatus('pending');
+       // Add one year to the current date
+       $endDate = $currentDate->add(new \DateInterval('P1Y'));
+       $subscription->setEndDate($endDate);
+       $subscription->setStatus('pending');
 
-        // Get the plan with the given ID and set it on the subscription
-        $plan = $entityManager->getRepository(InsurancePlan::class)->find($planId);
-        $subscription->setPlan($plan);
+       // Get the plan with the given ID and set it on the subscription
+       $plan = $entityManager->getRepository(InsurancePlan::class)->find($planId);
+       $subscription->setPlan($plan);
 
-        $entityManager->persist($subscription);
-        $entityManager->flush();
-        return new JsonResponse([
-            'success' => 'Subscription created successfully.',
-            'redirectUrl' => $this->generateUrl('app_insurance_plan_ListPlans')
-        ], Response::HTTP_OK);
-    }
+       $this->addFlash('message', 'Subscription created successfully.');
+       $this->addFlash('status', 'success');
+       return $this->redirectToRoute('app_insurance_plan_ListPlans');
+   }
 
     #[Route('/subscription/ListSubscriptions', name: 'app_subscription_listAdmin')]
     #[IsGranted("ROLE_ADMIN")]
