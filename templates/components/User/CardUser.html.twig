@@ -6,24 +6,14 @@
         <figure>
             <!-- You can replace this with an actual image of the user if you have one -->
             <img class="object-contain w-[80px] h-[80px] m-[10px]"
-                 src="{{ asset('images/' ~ ('ROLE_ADMIN' in user.roles ? 'admin.png' : ('ROLE_DOCTOR' in user.roles ? 'doctor.png' : ('ROLE_PATIENT' in user.roles ? 'patient.png' : ('ROLE_PHARMACY' in user.roles ? 'pharmacy.png' : 'unknown.png'))))) }}"
+                 src="{{ asset('images/' ~ user.iconPath) }}"
                  alt="{{ user.username }}"/>
         </figure>
         <div class="card-body">
             <h2 class="card-title" style="color: #6B7B8C;">{{ user.username }}</h2>
 
             <p>
-                {% if 'ROLE_ADMIN' in user.roles %}
-                    Admin
-                {% elseif 'ROLE_DOCTOR' in user.roles %}
-                    Doctor
-                {% elseif 'ROLE_PATIENT' in user.roles %}
-                    Patient
-                {% elseif 'ROLE_PHARMACY' in user.roles %}
-                    Pharmacy
-                {% else %}
-                    Unknown
-                {% endif %}
+                {{ user.roleName }}
             </p>
             {# <div class="card-actions justify-end">
             <!-- You can replace this with an actual action for the user -->
