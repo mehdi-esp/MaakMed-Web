@@ -51,13 +51,11 @@ final class Listing extends AbstractController
     }
 
     /** @return Prescription[] */
-    /** @return Prescription[] */
-    /** @return Prescription[] */
     public function getPrescriptions(): array
     {
         $user = $this->getUser();
 
-        $prescriptions = $this->prescriptionRepository->findAll();
+        $prescriptions = $this->prescriptionRepository->findByUserAndFilters($user, $this->confirmed, $this->orderBy);
         $filteredPrescriptions = [];
         foreach ($prescriptions as $prescription) {
             if ($user instanceof Doctor && $prescription->getVisit()->getDoctor() === $user) {
@@ -68,6 +66,24 @@ final class Listing extends AbstractController
                     $filteredPrescriptions[] = $prescription;
                 }
             }
+        }
+
+        // If confirmed is set, filter the prescriptions based on the confirmed status
+        if ($this->confirmed !== null) {
+            $filteredPrescriptions = array_filter($filteredPrescriptions, function($prescription) {
+                return $prescription->isConfirmed() === $this->confirmed;
+            });
+        }
+
+        // If orderBy is set, sort the prescriptions based on the orderBy property
+        if ($this->orderBy !== null) {
+            usort($filteredPrescriptions, function($a, $b) {
+                if ($this->orderBy === 'creationDate') {
+                    return $this->orderDir === 'ASC' ? $a->getCreationDate() <=> $b->getCreationDate() : $b->getCreationDate() <=> $a->getCreationDate();
+                } elseif ($this->orderBy === 'confirmed') {
+                    return $this->orderDir === 'ASC' ? $a->isConfirmed() <=> $b->isConfirmed() : $b->isConfirmed() <=> $a->isConfirmed();
+                }
+            });
         }
 
         return $filteredPrescriptions;
