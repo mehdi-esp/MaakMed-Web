@@ -1,0 +1,125 @@
+{% extends 'base.html.twig' %}
+
+        {% block title %}Profile{% endblock %}
+
+        {% block body %}
+            {% if is_granted('ROLE_ADMIN') or (app.user and app.user.id == user.id) %}
+            <h3 style="font-size: 1.5em; color: #0069AC; margin-left: 30px; margin-top: 30px; font-weight: bold;">Welcome, {{ user.username }}</h3>
+
+            <h4 style="font-size: 1em; color: #262626; margin-left: 30px; margin-top: 20px; font-weight: bold;">Your Profile</h4>
+
+
+            <div style="display:flex; justify-content: center; align-items: center; height: 50vh;">
+
+                {% if is_granted('ROLE_DOCTOR') %}
+
+                    <div class="group hover:saturate-100 saturate-0 transition-[filter] relative w-[450px] h-[475px] bg-[#AAB8C2] font-['Robot_Flex'] border-b-2 border-b-[#0069AC]">
+                        <img class="group-hover:rounded-br-[100px] rounded-br-[0px] transition-[border-radius]"
+                             src="{{ asset('images/doctor.png') }}"/>
+                        <p class="m-[5px] text-[#777674] text-xs" style="font-size: 20px; font-weight: bold; ">Doctor</p>
+                        <br>
+                        <p class="m-[5px] text-[#212E53] text-xs" style="font-size: 18px;" >UserName</p>
+                        <p class="m-[5px] text-[#5784BA] text-xs" style="font-size: 16px;">{{ user.username }}</p>
+                        {% if user.email is not null %}
+                            <p class="m-[5px] text-[#212E53] text-xs" style="font-size: 18px;">Email</p>
+                            <p class="m-[5px] text-[#5784BA] text-xs" style="font-size: 16px;">{{ user.email }}</p>
+                        {% endif %}
+                        <p class="m-[5px] text-[#212E53] text-xs" style="font-size: 18px;">Full Name</p>
+                        <p class="m-[5px] text-[#5784BA] text-base" style="font-size: 16px;">{{ user.firstName }} {{ user.lastName }}</p>
+                        <p class="m-[5px] text-[#212E53] text-xs" style="font-size: 18px;">Specialization</p>
+                        <p class="m-[5px] text-[#5784BA] text-xs" style="font-size: 16px;">{{ user.specialization }}</p>
+                        <p class="m-[5px] text-[#212E53] text-xs" style="font-size: 18px;">NationalID number</p>
+                        <p class="m-[5px] text-[#5784BA] text-xs" style="font-size: 16px;">{{ user.nationalId }}</p>
+                        {% if user.number is not null %}
+                            <p class="m-[5px] text-[#212E53] text-xs" style="font-size: 18px;">number</p>
+                            <p class="m-[5px] text-[#5784BA] text-xs" style="font-size: 16px;">{{ user.number }}</p>
+                        {% endif %}
+
+                    </div>
+                {% elseif is_granted('ROLE_PATIENT') %}
+                    <div class="group hover:saturate-100 saturate-0 transition-[filter] relative w-[450px] h-[475px] bg-[#D9E4E9] font-['Robot_Flex'] border-b-2 border-b-[#0069AC]">
+                        <img class="group-hover:rounded-br-[100px] rounded-br-[0px] transition-[border-radius]"
+                             src="{{ asset('images/patient.png') }}"/>
+                        <p class="m-[5px] text-[#777674] text-xs" style="font-size: 20px; font-weight: bold; ">Patient</p>
+                        <br>
+                        <p class="m-[5px] text-[#212E53] text-xs" style="font-size: 18px;" >UserName</p>
+                        <p class="m-[5px] text-[#5784BA] text-xs" style="font-size: 16px;">{{ user.username }}</p>
+                        {% if user.email is not null %}
+                            <p class="m-[5px] text-[#212E53] text-xs" style="font-size: 18px;">Email</p>
+                            <p class="m-[5px] text-[#5784BA] text-xs" style="font-size: 16px;">{{ user.email }}</p>
+                        {% endif %}
+                        <p class="m-[5px] text-[#212E53] text-xs" style="font-size: 18px;">Full Name</p>
+                        <p class="m-[5px] text-[#5784BA] text-base" style="font-size: 16px;">{{ user.firstName }} {{ user.lastName }}</p>
+                        <p class="m-[5px] text-[#212E53] text-xs" style="font-size: 18px;">Date of Birth </p>
+                        <p class="m-[5px] text-[#5784BA] text-xs" style="font-size: 16px;">{{ user.dateOfBirth|date('Y-m-d') }}</p>
+                        <p class="m-[5px] text-[#212E53] text-xs" style="font-size: 18px;">NationalId Number</p>
+                        <p class="m-[5px] text-[#5784BA] text-base" style="font-size: 16px;">{{ user.nationalId }} </p>
+                        {% if user.number is not null %}
+                            <p class="m-[5px] text-[#212E53] text-xs" style="font-size: 18px;">number</p>
+                            <p class="m-[5px] text-[#5784BA] text-xs" style="font-size: 16px;">{{ user.number }}</p>
+                        {% endif %}
+
+                    </div>
+                {% elseif is_granted('ROLE_ADMIN') %}
+                    <div class="group hover:saturate-100 saturate-0 transition-[filter] relative w-[450px] h-[475px] bg-[#D9E4E9] font-['Robot_Flex'] border-b-2 border-b-[#0069AC]">
+                        <img class="group-hover:rounded-br-[100px] rounded-br-[0px] transition-[border-radius]"
+                             src="{{ asset('images/admin.png') }}"/>
+                        <p class="m-[5px] text-[#777674] text-xs" style="font-size: 20px; font-weight: bold; ">Admin</p>
+                        <br>
+                        <p class="m-[5px] text-[#212E53] text-xs" style="font-size: 18px;">UserName</p>
+                        <p class="m-[5px] text-[#5784BA] text-xs" style="font-size: 16px;">{{ user.username }}</p>
+                        {% if user.email is not null %}
+                            <p class="m-[5px] text-[#212E53] text-xs" style="font-size: 18px;">Email</p>
+                            <p class="m-[5px] text-[#5784BA] text-xs" style="font-size: 16px;">{{ user.email }}</p>
+                        {% endif %}
+
+                    </div>
+
+
+                {% elseif is_granted('ROLE_PHARMACY') %}
+                    <div class="group hover:saturate-100 saturate-0 transition-[filter] relative w-[450px] h-[475px] bg-[#AAB8C2] font-['Robot_Flex'] border-b-2 border-b-[#0069AC]">
+                        <img class="group-hover:rounded-br-[100px] rounded-br-[0px] transition-[border-radius]"
+                             src="{{ asset('images/pharmacy.png') }}"/>
+                        <p class="m-[5px] text-[#777674] text-xs" style="font-size: 20px; font-weight: bold; ">Pharmacy</p>
+                        <br>
+                        <p class="m-[5px] text-[#212E53] text-xs" style="font-size: 18px;">UserName</p>
+                        <p class="m-[5px] text-[#5784BA] text-xs" style="font-size: 16px;">{{ user.username }}</p>
+                        {% if user.email is not null %}
+                            <p class="m-[5px] text-[#212E53] text-xs" style="font-size: 18px;">Email</p>
+                            <p class="m-[5px] text-[#5784BA] text-xs" style="font-size: 16px;">{{ user.email }}</p>
+                        {% endif %}
+                        <p class="m-[5px] text-[#212E53] text-xs" style="font-size: 18px;">Name</p>
+                        <p class="m-[5px] text-[#5784BA] text-base" style="font-size: 16px;">{{ user.name }} </p>
+                        <p class="m-[5px] text-[#212E53] text-xs" style="font-size: 18px;">Address</p>
+                        <p class="m-[5px] text-[#5784BA] text-xs" style="font-size: 16px;">{{ user.address }}</p>
+                        {% if user.number is not null %}
+                            <p class="m-[5px] text-[#212E53] text-xs" style="font-size: 18px;">number</p>
+                            <p class="m-[5px] text-[#5784BA] text-xs" style="font-size: 16px;">{{ user.number }}</p>
+                        {% endif %}
+
+                    </div>
+
+
+                {% endif %}
+
+                <br> <br> <br>
+            </div>
+
+
+            <a href="{{ path('profile_edit') }}" class="btn btn-secondary"
+               style="position: absolute; top: 550px; right: 300px;">Edit Profile</a>
+                <br>
+                <br>
+                <a href="{{ path('password_change') }}" class="btn btn-primary"
+                   style="position: absolute; top: 600px; right: 300px;">Change Password</a>
+            {% else %}
+                <h1>Access Denied</h1>
+                <p>You do not have permission to view this page.</p>
+            {% endif %}
+
+        {% endblock %}
+
+
+
+
+
