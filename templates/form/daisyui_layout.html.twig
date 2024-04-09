@@ -8,8 +8,8 @@
 {%- block form_widget_simple -%}
     {%- set type = type|default('text') -%}
     {%- if type in ['text', 'number', 'integer'] -%}
-      {%- set widget_class = widget_class|default('input input-bordered') -%}
-      {%- set widget_errors_class = widget_errors_class|default('input-error text-error') -%}
+        {%- set widget_class = widget_class|default('input input-bordered') -%}
+        {%- set widget_errors_class = widget_errors_class|default('input-error text-error') -%}
     {%- endif -%}
     {{- parent() -}}
 {%- endblock form_widget_simple -%}
@@ -36,3 +36,31 @@
     {%- set widget_errors_class = widget_errors_class|default('textarea-error') -%}
     {{- parent() -}}
 {%- endblock textarea_widget -%}
+
+{% block body %}
+    <!-- Main modal -->
+    <div id="updateProductModal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-modal md:h-full">
+        <div class="modal-content">
+            <!-- Modal content -->
+            {{ form_start(form) }}
+            <!-- Form content -->
+            <div>
+                <label for="title" class="block mb-2 text-sm font-medium text-black">Title</label>
+                {{ form_widget(form.title) }}
+            </div>
+            <div>
+                <label for="content" class="block mb-2 text-sm font-medium text-black">Content</label>
+                {{ form_widget(form.content) }}
+            </div>
+            <div>
+                <label for="category" class="block mb-2 text-sm font-medium text-black">Category</label>
+                {{ form_widget(form.category, { 'disabled': true }) }}
+            </div>
+            <div class="flex items-center justify-between mt-4">
+                <button type="submit">Update</button>
+                <a href="{{ path('app_issue_index') }}">Back to List</a>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}
