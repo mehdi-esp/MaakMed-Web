@@ -1,25 +1,116 @@
 {# @var user \App\Entity\User #}
 {% props user = null %}
-<div {{ attributes }}>
+<div {{ attributes }} class="user-card relative">
 
     <div class="card card-side bg-base-100 shadow-xl my-5 mx-5 w-[22rem] border border-t-4 border-t-blue-600">
         <figure>
-            <!-- You can replace this with an actual image of the user if you have one -->
             <img class="object-contain w-[80px] h-[80px] m-[10px]"
                  src="{{ asset('images/' ~ user.iconPath) }}"
                  alt="{{ user.username }}"/>
         </figure>
         <div class="card-body">
             <h2 class="card-title" style="color: #6B7B8C;">{{ user.username }}</h2>
-
-            <p>
-                {{ user.roleName }}
-            </p>
-            {# <div class="card-actions justify-end">
-            <!-- You can replace this with an actual action for the user -->
-            <button class="btn btn-outline btn-info ">Ban</button>
-
-        </div> #}
+            <p>{{ user.roleName }}</p>
+            {% if user.email is not null %}
+                <p class="bold-text"> Email: {{ user.email }}</p>
+            {% endif %}
         </div>
     </div>
+
+    <!-- Additional information -->
+    <div class="additional-info absolute bg-white p-4 border border-gray-300 z-10 hidden
+        {% if 'ROLE_DOCTOR' in user.roles %} doctor-info
+    {% elseif 'ROLE_PATIENT' in user.roles %} patient-info
+    {% elseif 'ROLE_PHARMACY' in user.roles %} pharmacy-info
+        {% endif %}">
+        {% if 'ROLE_DOCTOR' in user.roles %}
+            <p class="bold-text"> First Name: {{ user.firstName }}</p>
+            <p class="bold-text"> Last Name: {{ user.lastName }}</p>
+            <p> Specialization: {{ user.specialization }}</p>
+            <p> National ID: {{ user.nationalId }}</p>
+            {% if user.number is not null %}
+                <p> Phone Number: {{ user.number }}</p>
+            {% endif %}
+
+
+        {% elseif 'ROLE_PATIENT' in user.roles %}
+            <p class="bold-text"> First Name: {{ user.firstName }}</p>
+            <p class="bold-text"> Last Name: {{ user.lastName }}</p>
+            <p> Date of Birth: {{ user.dateOfBirth|date('Y-m-d') }}</p>
+            <p> National ID: {{ user.nationalId }}</p>
+
+        {% if user.number is not null %}
+            <p> Phone Number: {{ user.number }}</p>
+        {% endif %}
+        {% elseif 'ROLE_PHARMACY' in user.roles %}
+            <p class="bold-text"> Name: {{ user.name }}</p>
+            <p> Address: {{ user.address }}</p>
+
+        {% if user.number is not null %}
+            <p> Phone Number: {{ user.number }}</p>
+        {% endif %}
+        {% endif %}
+    </div>
 </div>
+
+<style>
+    .bold-text {
+        font-weight: bold;
+    }
+    .user-card {
+        /* Add your custom styles for the user card here */
+        border: 1px solid #ccc;
+        padding: 10px;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+    }
+
+    .user-card:hover {
+        /* Add your custom styles for the user card on hover here */
+        /* Add your custom styles for the user card on hover here */
+        transform: scale(1.05);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+        border: 2px solid #0069AC; /* Add a border */
+        background-color: #D9E4E9;
+    }
+
+    .additional-info {
+        display: none;
+        position: absolute;
+        background-color: white;
+        padding: 10px;
+        border: 1px solid #ccc;
+        z-index: 1;
+        bottom: 100%; /* Position at the bottom of the user card */
+        left: 50%; /* Center the additional info */
+        transform: translateX(-50%) translateY(10px); /* Adjust the position for centering and slide up */
+        opacity: 0; /* Start from transparent */
+        transition: all 0.3s ease;
+
+    }
+
+    .user-card:hover .additional-info {
+        /* Add your custom styles for the additional info on hover here */
+        display: block;
+        opacity: 1; /* Fade in */
+        transform: translateX(-50%) translateY(0);
+
+    }
+    .doctor-info {
+        /* Add your custom styles for the doctor info here */
+        background-color: #D9E4E9;
+        color: #0069AC;
+    }
+
+    .patient-info {
+        /* Add your custom styles for the patient info here */
+        background-color: #AAB8C2;
+        color: #212E53;
+    }
+
+    .pharmacy-info {
+        /* Add your custom styles for the pharmacy info here */
+        background-color: #D9E4E9;
+        color: #5784BA;
+    }
+</style>
