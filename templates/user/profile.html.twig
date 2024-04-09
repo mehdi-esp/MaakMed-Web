@@ -3,15 +3,19 @@
         {% block title %}Profile{% endblock %}
 
         {% block body %}
-            {% if is_granted('ROLE_ADMIN') or (app.user and app.user.id == user.id) %}
-            <h3 style="font-size: 1.5em; color: #0069AC; margin-left: 30px; margin-top: 30px; font-weight: bold;">Welcome, {{ user.username }}</h3>
 
-            <h4 style="font-size: 1em; color: #262626; margin-left: 30px; margin-top: 20px; font-weight: bold;">Your Profile</h4>
+            {% if app.user is same as(user) %}
+                <h3 style="font-size: 1.5em; color: #0069AC; margin-left: 30px; margin-top: 30px; font-weight: bold;">Welcome, {{ user.username }}</h3>
+
+                <h4 style="font-size: 1em; color: #262626; margin-left: 30px; margin-top: 20px; font-weight: bold;">Your Profile</h4>
+            {% else %}
+                <h3 style="font-size: 1em; color: #262626; margin-left: 30px; margin-top: 20px; font-weight: bold;">{{ user.username }}'s Profile</h3>
+            {% endif %}
 
 
             <div style="display:flex; justify-content: center; align-items: center; height: 50vh;">
 
-                {% if is_granted('ROLE_DOCTOR') %}
+                {% if 'ROLE_DOCTOR' in user.roles %}
 
                     <div class="group hover:saturate-100 saturate-0 transition-[filter] relative w-[450px] h-[475px] bg-[#AAB8C2] font-['Robot_Flex'] border-b-2 border-b-[#0069AC]">
                         <img class="group-hover:rounded-br-[100px] rounded-br-[0px] transition-[border-radius]"
@@ -36,7 +40,7 @@
                         {% endif %}
 
                     </div>
-                {% elseif is_granted('ROLE_PATIENT') %}
+                {% elseif 'ROLE_PATIENT' in user.roles %}
                     <div class="group hover:saturate-100 saturate-0 transition-[filter] relative w-[450px] h-[475px] bg-[#D9E4E9] font-['Robot_Flex'] border-b-2 border-b-[#0069AC]">
                         <img class="group-hover:rounded-br-[100px] rounded-br-[0px] transition-[border-radius]"
                              src="{{ asset('images/patient.png') }}"/>
@@ -60,7 +64,7 @@
                         {% endif %}
 
                     </div>
-                {% elseif is_granted('ROLE_ADMIN') %}
+                {% elseif 'ROLE_ADMIN' in user.roles %}
                     <div class="group hover:saturate-100 saturate-0 transition-[filter] relative w-[450px] h-[475px] bg-[#D9E4E9] font-['Robot_Flex'] border-b-2 border-b-[#0069AC]">
                         <img class="group-hover:rounded-br-[100px] rounded-br-[0px] transition-[border-radius]"
                              src="{{ asset('images/admin.png') }}"/>
@@ -76,7 +80,7 @@
                     </div>
 
 
-                {% elseif is_granted('ROLE_PHARMACY') %}
+                {% elseif 'ROLE_PHARMACY' in user.roles %}
                     <div class="group hover:saturate-100 saturate-0 transition-[filter] relative w-[450px] h-[475px] bg-[#AAB8C2] font-['Robot_Flex'] border-b-2 border-b-[#0069AC]">
                         <img class="group-hover:rounded-br-[100px] rounded-br-[0px] transition-[border-radius]"
                              src="{{ asset('images/pharmacy.png') }}"/>
@@ -106,15 +110,13 @@
             </div>
 
 
-            <a href="{{ path('profile_edit') }}" class="btn btn-secondary"
-               style="position: absolute; top: 550px; right: 300px;">Edit Profile</a>
-                <br>
-                <br>
-                <a href="{{ path('password_change') }}" class="btn btn-primary"
-                   style="position: absolute; top: 600px; right: 300px;">Change Password</a>
-            {% else %}
-                <h1>Access Denied</h1>
-                <p>You do not have permission to view this page.</p>
+            {% if app.user is same as(user) %}
+                <a href="{{ path('profile_edit') }}" class="btn btn-secondary"
+                   style="position: absolute; top: 550px; right: 300px;">Edit Profile</a>
+                    <br>
+                    <br>
+                    <a href="{{ path('password_change') }}" class="btn btn-primary"
+                       style="position: absolute; top: 600px; right: 300px;">Change Password</a>
             {% endif %}
 
         {% endblock %}

@@ -18,19 +18,17 @@ use App\Entity\Patient;
 use App\Entity\Pharmacy;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 class ProfileController extends AbstractController
 {
 
     #[Route("/profile", name: "profile")]
+    #[IsGranted("ROLE_USER")]
     public function profile()
     {
         /** @var User $currentUser */
         $currentUser = $this->getUser();
-        if (!$currentUser) {
-            return $this->redirectToRoute('app_login');
-        }
-
         return $this->render('user/profile.html.twig', ['user' => $currentUser]);
     }
 
@@ -78,21 +76,16 @@ class ProfileController extends AbstractController
         ], $response);
     }
 
-    #[Route("/profile/{id}", name: "user_profile")]
-    public function userProfile(UserRepository $userRepository, $id): Response
+
+    // TODO: Maybe add a specific voter
+
+    #[Route("/profile/{username}", name: "user_profile")]
+    #[IsGranted("ROLE_USER")]
+    public function userProfile(User $user): Response
     {
-        $user = $userRepository->find($id);
-
-        if (!$user) {
-            throw $this->createNotFoundException('The user does not exist');
+        if ($user === $this->getUser()) {
+            return $this->redirectToRoute("profile");
         }
-
-        // Allow access if the current user is an admin
-        $currentUser = $this->getUser();
-        if (!$currentUser || (!$this->isGranted('ROLE_ADMIN'))) {
-            throw $this->createAccessDeniedException('You do not have permission to view this page.');
-        }
-
-        return $this->render('user/profile.html.twig', ['user' => $user, 'app_user' => $currentUser]);
+        return $this->render('user/profile.html.twig', ['user' => $user]);
     }
 }
