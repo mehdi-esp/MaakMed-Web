@@ -28,31 +28,6 @@ class SecurityController extends AbstractController
             'last_username' => $lastUsername,
             'error' => $error,
         ]);
-       /* // Get the login error if there is one
-        $error = $authenticationUtils->getLastAuthenticationError();
-
-        // Last username entered by the user
-        $lastUsername = $authenticationUtils->getLastUsername();
-
-        // Check Cloudflare Turnstile before allowing login
-        $zoneId = 'lp5UVAWcW8eh4PxIDknmpn8JPCa82LkFfqmxi40D'; // Replace 'YOUR_ZONE_ID' with your Cloudflare Zone ID
-        $email = $request->request->get('_username');
-        $password = $request->request->get('_password');
-
-        // Call Cloudflare service to check Turnstile
-        $turnstileResponse = $cloudflareService->checkTurnstile($zoneId, $email, $password);
-
-        // Handle Turnstile response
-        if ($turnstileResponse->passes()) {
-            // Allow user to log in
-            return $this->render('security/login.html.twig', [
-                'last_username' => $lastUsername,
-                'error' => $error,
-            ]);
-        } else {
-            // Handle Turnstile failure, you can redirect or show an error message
-            return $this->render('security/turnstile_failure.html.twig');
-        }*/
     }
 
     #[Route(path: '/logout', name: 'app_logout')]
