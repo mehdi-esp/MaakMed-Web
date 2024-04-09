@@ -19,10 +19,10 @@ class IssueUpdateType  extends AbstractType
             ])
             ->add('category', null, [
                 'disabled' => true,
-            ])
-            ->add('creationDate', null, [
-                'disabled' => true,
             ]);
+           /* ->add('creationDate', null, [
+                'disabled' => true,
+            ]); */
     }
 
     public function configureOptions(OptionsResolver $resolver): void
