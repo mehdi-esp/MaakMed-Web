@@ -3,9 +3,11 @@
 namespace App\Controller;
 
 use App\Form\ChangePasswordType;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
@@ -61,8 +63,11 @@ class SecurityController extends AbstractController
 
 
     #[Route('/password-change', name: 'password_change')]
-    public function changePassword(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
-    {
+    public function changePassword(
+        Request $request,
+        UserPasswordHasherInterface $userPasswordHasher,
+        EntityManagerInterface $entityManager,
+    ): Response {
         // Create a form
         $form = $this->createForm(ChangePasswordType::class);
         $form->handleRequest($request);
@@ -72,7 +77,7 @@ class SecurityController extends AbstractController
             $user = $this->getUser();
 
             // Encode the new password
-            $newPassword = $passwordEncoder->encodePassword(
+            $newPassword = $userPasswordHasher->hashPassword(
                 $user,
                 $form->get('new_password')->getData()
             );
@@ -81,7 +86,6 @@ class SecurityController extends AbstractController
             $user->setPassword($newPassword);
 
             // Save the user
-            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->flush();
 
             // Redirect to the login page
