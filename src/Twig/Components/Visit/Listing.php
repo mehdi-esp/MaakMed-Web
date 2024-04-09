@@ -41,7 +41,8 @@ final class Listing extends AbstractController
             dehydrateWith: 'dehydrateOrderDir',
             url: true,
         )]
-        public string                           $orderDir = "DESC",
+        /** @var 'DESC'|'ASC' $orderDir */
+        public string $orderDir = "DESC",
         // #[LiveProp(writable: true, url: true)]
         public string                           $orderBy = "date"
     )
