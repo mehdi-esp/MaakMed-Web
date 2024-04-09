@@ -18,6 +18,7 @@
         "doctrine/orm": "^3.1",
         "jungi/framework-extra-bundle": "^1.4",
         "kambo/huggingface-php": "^0.1.0",
+        "knplabs/knp-time-bundle": "^2.2",
         "nelmio/cors-bundle": "^2.4",
         "nyholm/psr7": "^1.8",
         "phpdocumentor/reflection-docblock": "^5.3",
