@@ -21,10 +21,8 @@ class MedicationController extends AbstractController
     public function index(MedicationRepository $medicationRepository): Response
     {    /** @var Doctor|Admin|Pharmacy $user */
         $user = $this->getUser();
-        $medications= $medicationRepository->findAll();
-        return $this->render('medication/index.html.twig', [
-            'medications' => $medications,
-        ]);
+
+        return $this->render('medication/index.html.twig' );
     }
 
     #[Route('/new', name: 'app_medication_new', methods: ['GET', 'POST'])]
