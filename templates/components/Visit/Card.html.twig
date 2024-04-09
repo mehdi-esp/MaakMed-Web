@@ -18,7 +18,7 @@
             </header>
             <div class="flex justify-center space-x-4">
                 <a href="{{ path('app_visit_index', {'date': visit.date|date('Y-m-d')}) }}"
-                   class="badge badge-ghost">{{ visit.date|date('F j, Y') }}</a>
+                   class="badge badge-ghost">{{ visit.date|ago }}</a>
                 <a href="{{ path('app_visit_index', {'category': visit.type.name}) }}"
                    class="badge badge-accent">{{ visit.type.displayName }}</a>
             </div>
