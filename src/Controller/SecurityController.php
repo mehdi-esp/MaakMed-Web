@@ -82,7 +82,6 @@ class SecurityController extends AbstractController
 
             // Save the user
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($user);
             $entityManager->flush();
 
             // Redirect to the login page

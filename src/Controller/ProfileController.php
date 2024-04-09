@@ -57,7 +57,6 @@ class ProfileController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($currentUser);
             $entityManager->flush();
 
             return $this->redirectToRoute('profile');
