@@ -35,14 +35,8 @@ class PrescriptionController extends AbstractController
         /** @var Doctor|Admin|Patient $user */
         $user = $this->getUser();
 
-        $confirmed = $request->query->get('confirmed');
-        $order = $request->query->get('order');
 
-        $prescriptions = $prescriptionRepository->findByUserAndFilters($user, $confirmed, $order);
-
-        return $this->render('prescription/index.html.twig', [
-            'prescriptions' => $prescriptions,
-        ]);
+        return $this->render('prescription/index.html.twig');
     }
 
     #[Route('/new', name: 'app_prescription_new', methods: ['GET', 'POST'])]

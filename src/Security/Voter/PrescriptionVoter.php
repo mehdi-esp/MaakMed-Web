@@ -40,7 +40,6 @@ class PrescriptionVoter extends Voter
 
         if (
             !$user instanceof Patient &&
-            !$user instanceof Pharmacy &&
             !$user instanceof Admin &&
             !$user instanceof Doctor
         ) {   
@@ -59,8 +58,8 @@ class PrescriptionVoter extends Voter
         if ($attribute === self::VIEW) {
             return $user instanceof Admin || $subject->getVisit()->getPatient() === $user || $subject->getVisit()->getDoctor() === $user;
         }
-        if ($attribute === self::MANAGE) {
-            return $subject->getVisit()->getDoctor() === $user;
+        if ($user instanceof Doctor && $attribute === self::MANAGE) {
+            return true;
         }
 
         return false;
