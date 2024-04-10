@@ -1,0 +1,115 @@
+<div{{ attributes.defaults({...stimulus_controller("prescription-listing"), ...stimulus_action("prescription-listing", "clearFilters", "filters:clear") }) }}>
+    <div class="prose"><h1 id="prescriptions">Prescriptions</h1></div>
+    {% if is_granted('ROLE_DOCTOR') %}
+        <div class="flex">
+            <a role="button" class="btn btn-primary mx-auto" href="{{ path('app_prescription_new') }}">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                     stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+                </svg>
+                New Prescription
+            </a>
+        </div>
+    {% endif %}
+    <section id="filters" class="grid justify-center mb-4">
+        <div class="prose">
+            <div class="flex space-x-4 justify-center">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">
+                        Order By:
+                        <select data-model="orderBy" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            <option value="creationDate">Creation Date</option>
+                            <option value="confirmed">Confirmed</option>
+                        </select>
+                    </label>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">
+                        Order Direction:
+                        <select data-model="orderDir" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            <option value="ASC">Ascending</option>
+                            <option value="DESC">Descending</option>
+                        </select>
+                    </label>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">
+                        Confirmed:
+                        <select data-model="confirmed" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            <option value="">All</option>
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </select>
+                    </label>
+                </div>
+                <div>
+                    <button class="btn mx-auto bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded mt-6"
+                            data-action="live#action"
+                            data-live-action-param="clearFilters"
+                            data-loading="addAttribute(disabled)"
+                    >Clear Filters
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="mb-2 prose" data-loading="addClass(opacity-50)">
+
+        <h3>{{ computed.prescriptions|length }} prescriptions</h3>
+
+    </div>
+    <section data-loading="addClass(opacity-50)"
+             class="container flex flex-wrap justify-center gap-4 pt-10">
+        {% for prescription in computed.prescriptions %}
+            <twig:Prescription:Card prescription="{{ prescription }}"/>
+        {% endfor %}
+    </section>
+    <div class="grid justify-end">
+        <a
+                class="fixed bottom-4 start-4 md:bottom-16 md:start-16 btn rounded-full"
+                role="button"
+                {{ stimulus_controller("scroll-to") }}
+                href="#prescriptions"
+                id="btn-back-to-top">
+            <span class="[&>svg]:w-4">
+              <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="3"
+                      stroke="currentColor">
+                <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M4.5 10.5 12 3m0 0 7.5 7.5M12 3v18"/>
+              </svg>
+            </span>
+        </a>
+    </div>
+    <div class="toast">
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div
+                        role="alert"
+                        class="alert alert-{{ label }} transition transform duration-1000 hidden"
+                        {{ stimulus_controller("notification", { delay: 3000 }) }}
+                        data-transition-enter-from="opacity-0 translate-x-6"
+                        data-transition-enter-to="opacity-100 translate-x-0"
+                        data-transition-leave-from="opacity-100 translate-x-0"
+                        data-transition-leave-to="opacity-0 translate-x-6"
+                >
+                    <span class="text-white">{{ message }}</span>
+                    <button {{stimulus_action("notification", "hide")}} >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                             class="size-6">
+                            <path class="text-white" fill-rule="evenodd"
+                                  d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z"
+                                  clip-rule="evenodd"/>
+                        </svg>
+                    </button>
+                </div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+</div>

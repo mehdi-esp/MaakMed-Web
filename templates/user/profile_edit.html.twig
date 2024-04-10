@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Profile{% endblock %}
+
+{% block body %}
+    <div class="flex justify-center ">
+        <div class="sm:w-full sm:max-w-sm">
+            <h1 class="text-center text-2xl font-bold leading-9 tracking-tight text-accent">
+                Edit Profile</h1>
+        </div>
+    </div>
+
+    <div class="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md lg:max-w-lg p-6 bg-white sm:shadow-md sm:rounded-md sm:border my-5">
+    <h3 class="text-center my-4 text-xl font-bold leading-9 tracking-tight text-primary">{{ user.username }}'s Profile Data</h3>
+
+    {% form_theme form 'user/_form_theme_profile.html.twig' %}
+    {{ form_start(form, {attr: {novalidate: 'true'}}) }}
+
+    {{ form_rest(form) }}
+    <div class="flex justify-center items-center space-x-4">
+        <button type="submit" class="btn btn-primary flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+            Update Profile
+        </button>
+        <a href="{{ path('profile') }}" class="btn btn-secondary flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
+            </svg>
+            Back to Profile
+        </a>
+    </div>
+    {{ form_end(form) }}
+{% endblock %}

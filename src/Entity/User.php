@@ -21,7 +21,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
     'admin' => Admin::class,
 ])]
 #[ApiResource]
-#[UniqueEntity(fields: ['username'], message: 'There is already an account with this username')]
+#[UniqueEntity(
+    fields: ['username'],
+    message: 'There is already an account with this username',
+    entityClass: self::class,
+)]
 abstract class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -159,6 +163,27 @@ abstract class User implements UserInterface, PasswordAuthenticatedUserInterface
             'ROLE_USER',
             $instanceRole,
         ];
+    }
+
+    public function getRoleName(): string
+    {
+
+        return match (true) {
+            $this instanceof Patient => 'Patient',
+            $this instanceof Doctor => 'Doctor',
+            $this instanceof Pharmacy => 'Pharmacy',
+            $this instanceof Admin => 'Admin'
+        };
+    }
+
+    public function getIconPath(): string
+    {
+        return match (true) {
+            $this instanceof Patient => 'patient.png',
+            $this instanceof Doctor => 'doctor.png',
+            $this instanceof Pharmacy => 'pharmacy.png',
+            $this instanceof Admin => 'admin.png'
+        };
     }
 
     /**

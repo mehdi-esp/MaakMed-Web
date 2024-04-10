@@ -1,0 +1,54 @@
+{% use 'form/daisyui_layout.html.twig' %}
+
+{%- block live_collection_widget -%}
+    <table class="table table-xs">
+        <thead>
+        <tr>
+            {% if form|last %}
+                <td>{{ form_label(form|last.medication) }}</td>
+                <td>{{ form_label(form|last.quantity) }}</td>
+                <td>{{ form_label(form|last.cost) }}</td>
+            {% endif %}
+            <td></td>
+        </tr>
+        </thead>
+        <tbody>
+        {{ block('form_widget') }}
+        </tbody>
+    </table>
+    {%- if skip_add_button|default(false) is same as(false) and button_add is defined and not button_add.rendered -%}
+        {{ form_widget(button_add, {attr: {class: 'btn btn-secondary'}}) }}
+    {%- endif -%}
+{%- endblock -%}
+
+{%- block live_collection_entry_row -%}
+    <tr>
+        <td>
+            <div class="flex items-center gap-3">
+                {{- form_widget(form.medication, {label: false}) -}}
+                <twig:Form:ErrorTooltip field="{{ form.medication }}" size="4" fillAbsent="true"/>
+            </div>
+        </td>
+        <td>
+            <div class="flex items-center gap-3">
+                {{- form_widget(form.quantity, {label: false}) -}}
+                <twig:Form:ErrorTooltip field="{{ form.quantity }}" size="4" fillAbsent="true"/>
+            </div>
+        </td>
+        <td>
+            <div class="flex items-center gap-3">
+                {{- form_widget(form.cost, {label: false}) -}}
+                <twig:Form:ErrorTooltip field="{{ form.cost }}" size="4" fillAbsent="true"/>
+            </div>
+        </td>
+        <td>
+            {%- set label -%}
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                     stroke="currentColor" class="size-5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14"/>
+                </svg>
+            {%- endset -%}
+            {{- form_widget(button_delete, {label: label, label_html: true, attr: {class: 'btn btn-error btn-sm btn-outline border-[2px] btn-circle'}}) -}}
+        </td>
+    </tr>
+{%- endblock -%}

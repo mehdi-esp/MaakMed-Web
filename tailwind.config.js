@@ -4,52 +4,41 @@ module.exports = {
     "./assets/**/*.js",
     "./templates/**/*.html.twig",
   ],
-  theme: {
-    extend: {
-      colors: {
-        primary: '#1DD3B0',
-        secondary: '#086375',
-        accent: '#AFFC41',
-        light: '#B2FF9E',
-        background: '#EDEDED',
-      },
+  safelist: [
+    {
+      pattern: /alert-(info|success|warning|error)/,
     },
+  ],
+  theme: {
   },
   plugins: [
-    require('@tailwindcss/forms'),
+    require('@tailwindcss/forms')({ strategy: 'class' }),
     require('@tailwindcss/typography'),
     require('@tailwindcss/container-queries'),
     require("daisyui"),
   ],
   daisyui: {
     themes: [
-      "light",
       {
-        // XXX: Subject to change
         maakmed: {
-          primary: '#1DD3B0',
-          secondary: '#086375',
-          accent: '#AFFC41',
-          neutral: "#061b22",
-          background: '#EDEDED',
-          info: "#00b9fe",
-          success: "#00ffce",
-          warning: "#a98a00",
-          error: "#ff005e",
+          primary: '#38b2ac',
+          "primary-content": '#EDEDED',
+          secondary: '#7b92b2',
+          "secondary-content": '#EDEDED',
+          neutral: "#212121",
+          "neutral-content": "#EDEDED",
+          "base-100": "oklch(100% 0 0)",
+          "base-content": "#181a2a",
+          accent: '#5c99d6',
+          "accent-content": '#edf2f7',
+
+          "error-content": 'oklch(100% 0 0)',
+          "success-content": 'oklch(100% 0 0)',
+          // "warning-content": '#EDEDED',
+          // "info-content": '#EDEDED',
         },
-      }
+      },
+      "light"
     ]
   }
 }
-
-
-/* 
- * Our colors
- *
- * #1DD3B0
- * #086375
- * #AFFC41
- * #B2FF9E
- * #EDEDED
- *
- * */

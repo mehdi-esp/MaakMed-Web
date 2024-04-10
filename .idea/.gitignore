@@ -15,3 +15,7 @@ commandlinetools/schemas/frameworkDescriptionVersion*.xsd
 
 # Other data sources
 dataSources.xml
+
+/php.xml
+/MaakMed-Web.iml
+/inspectionProfiles/

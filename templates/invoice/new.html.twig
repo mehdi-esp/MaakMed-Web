@@ -3,9 +3,12 @@
 {% block title %}New Invoice{% endblock %}
 
 {% block body %}
-    <h1>Create new Invoice</h1>
+  <main class="container px-4 mx-auto">
+    <div class="prose"><h2>Create new Invoice</h2></div>
 
-    <twig:InvoiceForm form="{{ form }}" initialFormData="{{ invoice }}"/>
+    <twig:Invoice:Form form="{{ form }}" initialFormData="{{ invoice }}"/>
 
-    <a href="{{ path('app_invoice_index') }}">back to list</a>
+    <a class="link link-secondary" href="{{ path('app_invoice_index') }}">back to list</a>
+
+  </main>
 {% endblock %}

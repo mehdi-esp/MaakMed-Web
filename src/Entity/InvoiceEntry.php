@@ -68,6 +68,11 @@ class InvoiceEntry
         return $this->cost;
     }
 
+    public function getTotalCost(): float
+    {
+        return $this->quantity * $this->cost;
+    }
+
     public function setCost(?float $cost): static
     {
         $this->cost = $cost;
