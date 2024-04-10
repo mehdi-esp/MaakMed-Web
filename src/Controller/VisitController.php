@@ -2,7 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Admin;
 use App\Entity\Doctor;
+use App\Entity\Patient;
+use App\Entity\User;
 use App\Entity\Visit;
 use App\Form\VisitType;
 use App\Security\Voter\VisitVoter;
@@ -21,6 +24,33 @@ class VisitController extends AbstractController
     public function index(): Response
     {
         return $this->render('visit/index.html.twig');
+    }
+
+    #[Route('/_userinfo/{username}', name: '_app_visit_userinfo', methods: ['GET'])]
+    #[IsGranted(VisitVoter::CONSULT_USER_INFO, subject: 'subject')]
+    public function userInfoPopover(User $subject): Response
+    {
+        if (!$subject instanceof Patient && !$subject instanceof Doctor) {
+            return new Response(status: Response::HTTP_NOT_FOUND);
+        }
+        /** @var Doctor|Patient|Admin $user */
+        $user = $this->getUser();
+
+        // XXX: Maybe use query builder for better performance?
+
+        $count = match (true) {
+            $user instanceof Admin => $subject->getVisits()->count(),
+            $user instanceof Doctor => $subject->getVisits()
+                ->filter(fn (Visit $visit) => $visit->getDoctor() === $user)
+                ->count(),
+            $user instanceof Patient => $subject->getVisits()
+                ->filter(fn (Visit $visit) => $visit->getPatient() === $user)
+                ->count(),
+        };
+
+        return $this->render('visit/popover/_userinfo.html.twig', [
+            'count' => $count,
+        ]);
     }
 
     #[Route('/new', name: 'app_visit_new', methods: ['GET', 'POST'])]

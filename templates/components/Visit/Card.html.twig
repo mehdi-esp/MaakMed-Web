@@ -1,20 +1,21 @@
 {% props visit = null %}
 <div{{ attributes }}>
-    <article class="card w-[30rem] h-[25rem] bg-base-100 shadow-xl">
+    <article class="card w-[30rem] h-[28rem] bg-base-100 shadow-xl">
         <div class="card-body">
             <header class="card-title">
-                {% if is_granted('ROLE_DOCTOR') or is_granted('ROLE_ADMIN') %}
-                    <span>Patient:</span>
-                    <a class="link link-hover link-primary truncate"
-                       href="{{ path('app_visit_index', {'patient': visit.patient.id}) }}"
-                    >{{ visit.patient.fullName }}</a>
-                {% endif %}
-                {% if is_granted('ROLE_PATIENT') or is_granted('ROLE_ADMIN') %}
-                    <span>Doctor:</span>
-                    <a class="link link-hover link-primary truncate"
-                       href="{{ path('app_visit_index', {'doctor': visit.doctor.id}) }}"
-                    >{{ visit.doctor.fullName }}</a>
-                {% endif %}
+                <div class="grid gap-1 place-items-center container">
+                    {% for role in ['doctor', 'patient'] %}
+                        {% if not is_granted('ROLE_' ~ (role|upper)) %}
+                            <span {{ stimulus_controller("popover", {url: path("_app_visit_userinfo", {username: attribute(visit, role).username})}) }}>
+                                {{ role|capitalize }}:
+                                <span data-action="mouseenter->popover#show mouseleave->popover#hide" class="dropdown dropdown-top dropdown-hover" ><a
+                                  class="link link-hover link-primary truncate"
+                                  href="{{ path('app_visit_index', {(role): attribute(visit, role).id}) }}"
+                                >{{ attribute(visit, role).fullName }}</a></span>
+                            </span>
+                        {% endif %}
+                    {% endfor %}
+                </div>
             </header>
             <div class="flex justify-center space-x-4">
                 <a href="{{ path('app_visit_index', {'date': visit.date|date('Y-m-d')}) }}"
