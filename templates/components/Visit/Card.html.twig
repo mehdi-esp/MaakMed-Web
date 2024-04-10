@@ -8,10 +8,11 @@
                         {% if not is_granted('ROLE_' ~ (role|upper)) %}
                             <span {{ stimulus_controller("popover", {url: path("_app_visit_userinfo", {username: attribute(visit, role).username})}) }}>
                                 {{ role|capitalize }}:
-                                <span data-action="mouseenter->popover#show mouseleave->popover#hide" class="dropdown dropdown-top dropdown-hover" ><a
-                                  class="link link-hover link-primary truncate"
-                                  href="{{ path('app_visit_index', {(role): attribute(visit, role).id}) }}"
-                                >{{ attribute(visit, role).fullName }}</a></span>
+                                <span data-action="mouseenter->popover#show mouseleave->popover#hide"
+                                      class="dropdown dropdown-top dropdown-hover"><a
+                                            class="link link-hover link-primary truncate"
+                                            href="{{ path('app_visit_index', {(role): attribute(visit, role).id}) }}"
+                                    >{{ attribute(visit, role).fullName }}</a></span>
                             </span>
                         {% endif %}
                     {% endfor %}
