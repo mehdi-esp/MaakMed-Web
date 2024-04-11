@@ -1,5 +1,30 @@
 {% extends 'base.html.twig' %}
   {% block body %}
+  <div class="toast fixed top-0 right-0">
+          {% for label, messages in app.flashes %}
+              {% for message in messages %}
+                  <div
+                    role="alert"
+                    class="alert alert-{{ label }} transition transform duration-1000 hidden "
+                    {{ stimulus_controller("notification", {delay: 3000}) }}
+                    data-transition-enter-from="opacity-0 translate-x-6"
+                    data-transition-enter-to="opacity-100 translate-x-0"
+                    data-transition-leave-from="opacity-100 translate-x-0"
+                    data-transition-leave-to="opacity-0 translate-x-6"
+                  >
+                      <span class="text-white">{{ message }}</span>
+                      <button {{ stimulus_action("notification", "hide") }} >
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                               class="size-6">
+                              <path class="text-white" fill-rule="evenodd"
+                                    d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z"
+                                    clip-rule="evenodd"/>
+                          </svg>
+                      </button>
+                  </div>
+              {% endfor %}
+          {% endfor %}
+      </div>
 <section class="text-gray-600 body-font overflow-hidden">
   <div class="container px-5 py-24 mx-auto">
     <div class="flex flex-col text-center w-full mb-20">
@@ -9,11 +34,6 @@
         <button class="py-1 px-4 focus:outline-none">Annually</button>
       </div>
     </div>
-{% if app.session.has('notice') %}
-    <div class="alert alert-notice" id="flash-message" style="display: none;">
-        {{ app.session.get('notice') }}
-    </div>
-{% endif %}
     <div class="flex flex-wrap -m-4">
       {% for plan in plans %}
       <div class="p-4 xl:w-1/4 md:w-1/2 w-full">
@@ -50,16 +70,6 @@
     </div>
   </div>
 </section>
+
 {% endblock %}
-{% block javascripts %}
-<script>
-    window.onload = function() {
-        var flashMessage = document.getElementById('flash-message');
-        if (flashMessage) {
-            setTimeout(function() {
-                flashMessage.style.display = 'none';
-            }, 5000); // Hide the message after 5 seconds
-        }
-    }
-</script>
-{% endblock %}
+

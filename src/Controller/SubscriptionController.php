@@ -61,18 +61,17 @@ class SubscriptionController extends AbstractController
        if (!$user instanceof Patient) {
            throw new \Exception('Logged in user must be a Patient');
        }
-//        // Check if the patient already has a subscription with status "pending" or "active"
-//        $existingSubscription = $entityManager->getRepository(Subscription::class)
-//            ->findOneBy([
-//                'patient' => $user,
-//                'status' => ['pending', 'active']
-//            ]);
-//        if ($existingSubscription) {
-//            // If an active or pending subscription exists, return an error message
-//            $this->addFlash('message', 'You already have an active or pending subscription.');
-//            $this->addFlash('status', 'error');
-//            return $this->redirectToRoute('app_insurance_plan_ListPlans');
-//        }
+       // Check if the patient already has a subscription with status "pending" or "active"
+       $existingSubscription = $entityManager->getRepository(Subscription::class)
+           ->findOneBy([
+               'patient' => $user,
+               'status' => ['pending', 'active']
+           ]);
+       if ($existingSubscription) {
+           // If an active or pending subscription exists, return an error message
+           $this->addFlash('message', 'You already have an active or pending subscription.');
+           return $this->redirectToRoute('app_insurance_plan_ListPlans');
+       }
        $subscription = new Subscription();
        $subscription->setPatient($user);
        $currentDate = new \DateTimeImmutable();
