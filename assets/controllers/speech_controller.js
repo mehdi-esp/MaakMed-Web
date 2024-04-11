@@ -18,7 +18,7 @@ export default class extends Controller {
     static debounces = [
         {
             name: "playInstructionSound",
-            wait: 3000,
+            wait: 500,
         }
     ];
     static throttles = [
