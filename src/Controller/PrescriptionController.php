@@ -133,12 +133,15 @@ class PrescriptionController extends AbstractController
     #[Route('/{id}/speech', name: 'app_prescription_speech', methods: ['POST', 'GET'])]
     public function speech(Request $request, Prescription $prescription, HttpClientInterface $client): Response
     {
+        /** @var Doctor|Admin|Patient $user */
+        $user = $this->getUser();
         $response = $client->request('POST', 'https://api.deepgram.com/v1/speak?model=aura-asteria-en', [
             'headers' => [
                 'Authorization' => 'Token ***REMOVED***',
                 'Content-Type' => 'application/json',
             ],
-            'json' => ['text' => $prescription->getMedications()->first()->getInstructions()],
+            'json' => ['text' =>  "Hi". $user->getUsername() .",".$prescription->getPrescriptionSpeech()
+            ],
         ]);
 
         $content = $response->getContent();
