@@ -10,7 +10,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-
+use Doctrine\ORM\Query;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -94,7 +94,7 @@ class SubscriptionController extends AbstractController
        return $this->redirectToRoute('app_insurance_plan_ListPlans');
    }
 
-    #[Route('/subscription/ListSubscriptions', name: 'app_subscription_listAdmin')]
+    #[Route('/subscription/ListSubscriptions', name: 'app_subscription_list', methods: ['GET'])]
     #[IsGranted("ROLE_ADMIN")]
     public function ListSubscriptionsAdmin(Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -123,6 +123,40 @@ class SubscriptionController extends AbstractController
             'subscriptions' => $subscriptions,
         ]);
     }
+   #[Route('/subscription/search', name: 'app_subscription_search', methods: ['GET'])]
+   #[IsGranted("ROLE_ADMIN")]
+   public function search(Request $request, EntityManagerInterface $entityManager): Response
+   {
+       $planName = $request->query->get('planName');
+       $status = $request->query->get('status');
+
+       $queryBuilder = $entityManager->getRepository(Subscription::class)->createQueryBuilder('s')
+           ->leftJoin('s.plan', 'p')
+           ->where('p.name LIKE :planName')
+           ->setParameter('planName', $planName . '%');
+        if (!empty($status)) {
+                $queryBuilder->andWhere('s.status = :status')
+                    ->setParameter('status', $status);
+            }
+       $subscriptions = $queryBuilder
+           ->orderBy('s.status', 'ASC')
+           ->getQuery()
+           ->getResult();
+
+       $subscriptionsArray = array_map(function($subscription) {
+           return [
+               'id' => $subscription->getId(),
+               'planName' => $subscription->getPlan()->getName(),
+               'patientUsername' => $subscription->getPatient()->getUsername(),
+               'startDate' => $subscription->getStartDate()->format('Y-m-d'),
+               'endDate' => $subscription->getEndDate()->format('Y-m-d'),
+               'status' => $subscription->getStatus(),
+           ];
+       }, $subscriptions);
+
+       return new JsonResponse($subscriptionsArray);
+   }
+
     #[Route('/subscription/UpdateSubscription/{id}', name: 'app_subscription_Update')]
     #[IsGranted("ROLE_ADMIN")]
     public function UpdateSub(Request $req, Subscription $Sub, EntityManagerInterface $entityManager): Response
@@ -133,7 +167,7 @@ class SubscriptionController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_subscription_listAdmin', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_subscription_list', [], Response::HTTP_SEE_OTHER);
         }
 
         $response = new Response(

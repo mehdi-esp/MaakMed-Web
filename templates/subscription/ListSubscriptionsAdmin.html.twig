@@ -12,7 +12,7 @@
                                    <path stroke-linecap="round" stroke-linejoin="round" d="m15.75 15.75-2.489-2.489m0 0a3.375 3.375 0 1 0-4.773-4.773 3.375 3.375 0 0 0 4.774 4.774ZM21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                                </svg>
                    <input id="planNameInput" type="text" class="h-9 w-60 px-2 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent" placeholder="Search by plan name">
-                   <select id="statusSelect" class=" h-9 w-40 px-2 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent">
+                   <select id="statusSelect" class="ml-2 h-9 w-40 px-2 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent">
                        <option value="">All</option>
                        <option value="active">Active</option>
                        <option value="pending">Pending</option>
@@ -49,51 +49,9 @@
     </table>
 {% endblock %}
 {% block javascripts %}
-<script>
-   document.addEventListener('DOMContentLoaded', function() {
-       var statusSelect = document.getElementById('statusSelect');
-       var planNameInput = document.getElementById('planNameInput');
-       var tableBody = document.querySelector('table tbody');
-       if (statusSelect && planNameInput && tableBody) {
-           var selectedStatus = localStorage.getItem('selectedStatus');
-           var enteredPlanName = localStorage.getItem('enteredPlanName');
-           if (selectedStatus) {
-               statusSelect.value = selectedStatus;
-           }
-           if (enteredPlanName) {
-               planNameInput.value = enteredPlanName;
-           }
-
-           statusSelect.addEventListener('change', function() {
-               localStorage.setItem('selectedStatus', this.value);
-               localStorage.setItem('enteredPlanName', planNameInput.value);
-               window.location.href = '?status=' + this.value + '&planName=' + planNameInput.value;
-           });
-
-           planNameInput.addEventListener('input', function() {
-               localStorage.setItem('enteredPlanName', this.value);
-               fetch('?status=' + statusSelect.value + '&planName=' + this.value)
-                   .then(response => response.json())
-                   .then(subscriptions => {
-                       while (tableBody.firstChild) {
-                           tableBody.removeChild(tableBody.firstChild);
-                       }
-                       subscriptions.forEach(subscription => {
-                           var row = document.createElement('tr');
-                           row.innerHTML = `
-                               <td>${subscription.plan.name}</td>
-                               <td>${subscription.patient.username}</td>
-                               <td>${subscription.startDate}</td>
-                               <td>${subscription.endDate}</td>
-                               <td>${subscription.status}</td>
-                               <td><a class="btn primary-btn m-2" href="app_subscription_Update?id=${subscription.id}">Update</a></td>
-                               <td><a class="btn primary-btn m-2" href="app_subscription_Delete?id=${subscription.id}">Cancel</a></td>
-                           `;
-                           tableBody.appendChild(row);
-                       });
-                   });
-           });
-       }
-   });
+  {{ encore_entry_script_tags('app') }}
+<script type="text/javascript">
+   window.SubscriptionsFeature();
+</script>
 </script>
 {% endblock %}
