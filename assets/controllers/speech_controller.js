@@ -33,18 +33,17 @@ export default class extends Controller {
         useThrottle(this);
     }
 
-    playInstructionSound() {
+    async playInstructionSound() {
         this.loadingTarget.classList.remove("hidden");
         this.buttonTarget.disabled = true;
-        fetch(this.routeValue)
+        await fetch(this.routeValue)
             .then(response => response.blob())
             .then(blob => {
                 const audioUrl = URL.createObjectURL(blob);
                 const audio = new Audio(audioUrl);
-                audio.play().then(() => {
-                    this.loadingTarget.classList.add("hidden");
-                    this.buttonTarget.disabled = false;
-                });
+                audio.play();
             });
+        this.loadingTarget.classList.add("hidden");
+        this.buttonTarget.disabled = false;
     }
 }
