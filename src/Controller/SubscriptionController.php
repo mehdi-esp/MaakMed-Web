@@ -68,8 +68,7 @@ class SubscriptionController extends AbstractController
                'status' => ['pending', 'active']
            ]);
        if ($existingSubscription) {
-           // If an active or pending subscription exists, return an error message
-           $this->addFlash('message', 'You already have an active or pending subscription.');
+           $this->addFlash('warning', 'You already have an active or pending subscription.');
            return $this->redirectToRoute('app_insurance_plan_ListPlans');
        }
        $subscription = new Subscription();

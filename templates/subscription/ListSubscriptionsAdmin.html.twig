@@ -5,24 +5,29 @@
 {% block body %}
 
     <h1 class="text-2xl font-semibold text-center mt-5 mb-5">Subscriptions</h1>
-<div class="flex flex-col justify-start container mx-auto">
-    <div class="flex justify-between items-center mb-5">
+    <div class="flex flex-col justify-start container mx-auto" {{ stimulus_controller("subscription") }}>
+        <div class="flex justify-between items-center mb-5">
             <div class="flex items-center">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-10 h-10 ">
-                                   <path stroke-linecap="round" stroke-linejoin="round" d="m15.75 15.75-2.489-2.489m0 0a3.375 3.375 0 1 0-4.773-4.773 3.375 3.375 0 0 0 4.774 4.774ZM21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                               </svg>
-                   <input id="planNameInput" type="text" class="h-9 w-60 px-2 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent" placeholder="Search by plan name">
-                   <select id="statusSelect" class="ml-2 h-9 w-40 px-2 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent">
-                       <option value="">All</option>
-                       <option value="active">Active</option>
-                       <option value="pending">Pending</option>
-                       <option value="canceling">Canceling</option>
-                       <option value="canceled">Canceled</option>
-                   </select>
-               </div>
-           </div>
-           <table class="table table-auto mx-auto mt-5 w-full border border-gray-300 rounded-lg shadow-md">
-        <thead>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                     stroke="currentColor" class="w-10 h-10 ">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="m15.75 15.75-2.489-2.489m0 0a3.375 3.375 0 1 0-4.773-4.773 3.375 3.375 0 0 0 4.774 4.774ZM21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                </svg>
+                <input id="planNameInput" type="text"
+                       class="h-9 w-60 px-2 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                       placeholder="Search by plan name">
+                <select id="statusSelect"
+                        class="ml-2 h-9 w-40 px-2 border border-gray-300 rounded shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent">
+                    <option value="">All</option>
+                    <option value="active">Active</option>
+                    <option value="pending">Pending</option>
+                    <option value="canceling">Canceling</option>
+                    <option value="canceled">Canceled</option>
+                </select>
+            </div>
+        </div>
+        <table class="table table-auto mx-auto mt-5 w-full border border-gray-300 rounded-lg shadow-md">
+            <thead>
             <tr>
                 <th>Plan ID</th>
                 <th>User ID</th>
@@ -30,28 +35,26 @@
                 <th>End Time</th>
                 <th>Status</th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
 
-        {% for subscription in subscriptions %}
+            {% for subscription in subscriptions %}
 
-            <tr>
-                <td>{{ subscription.plan.getName }}</td>
-                <td>{{ subscription.patient.getUsername()}}</td>
-                <td>{{ subscription.startDate ? subscription.startDate|date('Y-m-d') : '' }}</td>
-                <td>{{ subscription.endDate ? subscription.endDate|date('Y-m-d') : '' }}</td>
-                <td>{{ subscription.status }}</td>
-               <td><a class="btn primary-btn m-2" href={{ path('app_subscription_Update', {'id': subscription.id}) }}>Update</a></td>
-                <td><a class="btn primary-btn m-2" href={{path('app_subscription_Delete', {'id': subscription.id})}}>Cancel</a></td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-{% endblock %}
-{% block javascripts %}
-  {{ encore_entry_script_tags('app') }}
-<script type="text/javascript">
-   window.SubscriptionsFeature();
-</script>
-</script>
+                <tr>
+                    <td>{{ subscription.plan.getName }}</td>
+                    <td>{{ subscription.patient.getUsername() }}</td>
+                    <td>{{ subscription.startDate ? subscription.startDate|date('Y-m-d') : '' }}</td>
+                    <td>{{ subscription.endDate ? subscription.endDate|date('Y-m-d') : '' }}</td>
+                    <td>{{ subscription.status }}</td>
+                    <td><a class="btn primary-btn m-2"
+                           href={{ path('app_subscription_Update', {'id': subscription.id}) }}>Update</a>
+                    </td>
+                    <td><a class="btn primary-btn m-2"
+                           href={{ path('app_subscription_Delete', {'id': subscription.id}) }}>Cancel</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}
