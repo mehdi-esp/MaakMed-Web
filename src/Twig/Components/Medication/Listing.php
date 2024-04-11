@@ -13,7 +13,6 @@ use Symfony\UX\LiveComponent\ComponentToolsTrait;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 use Symfony\UX\TwigComponent\Attribute\PostMount;
 
-
 #[AsLiveComponent()]
 final class Listing extends AbstractController
 {
@@ -29,6 +28,9 @@ final class Listing extends AbstractController
     #[LiveProp(writable: true, url: true)]
     public ?bool $insured = null;
 
+    #[LiveProp(writable: true, url: true)]
+    public ?string $searchTerm = null;
+
     public function __construct(
         private readonly MedicationRepository  $medicationRepository,
         private readonly EntityManagerInterface $entityManager
@@ -42,6 +44,7 @@ final class Listing extends AbstractController
         $this->orderBy = 'name';
         $this->orderDir = 'ASC';
         $this->insured = null;
+        $this->searchTerm = null;
         $this->dispatchBrowserEvent('filters:clear');
     }
 
@@ -61,6 +64,15 @@ final class Listing extends AbstractController
 
         $orderBy = [$this->orderBy => $this->orderDir];
 
-        return $this->medicationRepository->findBy($criteria, $orderBy);
+        $medications = $this->medicationRepository->findBy($criteria, $orderBy);
+
+        // If searchTerm is set, filter the medications based on the searchTerm
+        if ($this->searchTerm !== null) {
+            $medications = array_filter($medications, function($medication) {
+                return strpos(strtolower($medication->getName()), strtolower($this->searchTerm)) === 0;
+            });
+        }
+
+        return $medications;
     }
 }
