@@ -113,9 +113,9 @@ class Prescription
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getPrescriptionSpeech(): ?string
+    public function getPrescriptionSpeech(): string
     {
         $message = "Follow these instructions carefully: ";
 
