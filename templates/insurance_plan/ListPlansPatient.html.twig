@@ -1,16 +1,16 @@
 {% extends 'base.html.twig' %}
   {% block body %}
-  <div class="toast fixed top-0 right-0">
+      <div class="toast fixed top-0 right-0">
           {% for label, messages in app.flashes %}
               {% for message in messages %}
                   <div
-                    role="alert"
-                    class="alert alert-{{ label }} transition transform duration-1000 hidden "
-                    {{ stimulus_controller("notification", {delay: 3000}) }}
-                    data-transition-enter-from="opacity-0 translate-x-6"
-                    data-transition-enter-to="opacity-100 translate-x-0"
-                    data-transition-leave-from="opacity-100 translate-x-0"
-                    data-transition-leave-to="opacity-0 translate-x-6"
+                          role="alert"
+                          class="alert alert-{{ label }} transition transform duration-1000 hidden "
+                          {{ stimulus_controller("notification", {delay: 3000}) }}
+                          data-transition-enter-from="opacity-0 translate-x-6"
+                          data-transition-enter-to="opacity-100 translate-x-0"
+                          data-transition-leave-from="opacity-100 translate-x-0"
+                          data-transition-leave-to="opacity-0 translate-x-6"
                   >
                       <span class="text-white">{{ message }}</span>
                       <button {{ stimulus_action("notification", "hide") }} >
@@ -25,7 +25,7 @@
               {% endfor %}
           {% endfor %}
       </div>
-<section class="text-gray-600 body-font overflow-hidden">
+<section class="text-gray-600 body-font overflow-hidden" >
   <div class="container px-5 py-24 mx-auto">
     <div class="flex flex-col text-center w-full mb-20">
       <h1 class="sm:text-4xl text-3xl font-medium title-font mb-2 text-gray-900">Pricing</h1>
@@ -55,14 +55,14 @@
                       <p class="text-xs text-gray-500 mt-3"> Plan Ceiling: {{ plan.ceiling }}</p>
           </p>
 
-         <form method="POST" action="{{ path('app_subscription_add', {'planId': plan.id}) }}">
-             <button type="submit" class="flex items-center mt-auto text-white bg-indigo-500 border-0 py-2 px-4 w-full focus:outline-none hover:bg-indigo-600 rounded" data-subscribe-button="true">
-                 Subscribe
-                 <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-auto" viewBox="0 0 24 24">
-                     <path d="M5 12h14M12 5l7 7-7 7"></path>
-                 </svg>
-             </button>
-         </form>
+            <form method="POST" action="{{ path('app_subscription_Activate', {'planId': plan.id, 'amount': plan.cost}) }}">
+                <button type="submit" class="flex items-center mt-auto text-white bg-indigo-500 border-0 py-2 px-4 w-full focus:outline-none hover:bg-indigo-600 rounded" data-subscribe-button="true">
+                    Subscribe
+                    <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-auto" viewBox="0 0 24 24">
+                        <path d="M5 12h14M12 5l7 7-7 7"></path>
+                    </svg>
+                </button>
+            </form>
 
         </div>
       </div>
@@ -73,3 +73,25 @@
 
 {% endblock %}
 
+{% block javascripts %}
+
+        <script>
+            fetch('/stripe/checkout/', {
+                method: 'POST',
+                mode: 'no-cors',
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.url) {
+                        window.location = data.url;
+                    } else {
+                        console.error('Failed to create Stripe Checkout session');
+                    }
+                })
+                .catch(error => {
+                    // Handle fetch error
+                    console.error('Fetch error:', error);
+                });
+        </script>
+
+{% endblock %}

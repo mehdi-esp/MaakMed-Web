@@ -6,7 +6,11 @@ use App\Entity\InsurancePlan;
 use App\Entity\Patient;
 use App\Entity\Subscription;
 use App\Form\SubscriptionType;
+use Stripe\Stripe;
+use Stripe\Checkout\Session;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -53,44 +57,55 @@ class SubscriptionController extends AbstractController
     /**
      * @throws \Exception
      */
-   #[Route('/subscription/Subscribe/{planId}', name: 'app_subscription_add',methods: ['POST'])]
-   #[IsGranted("ROLE_PATIENT")]
-   public function Subscribe(EntityManagerInterface $entityManager, $planId): Response
-   {
-       $user = $this->getUser();
-       if (!$user instanceof Patient) {
-           throw new \Exception('Logged in user must be a Patient');
-       }
-       // Check if the patient already has a subscription with status "pending" or "active"
-       $existingSubscription = $entityManager->getRepository(Subscription::class)
-           ->findOneBy([
-               'patient' => $user,
-               'status' => ['pending', 'active']
-           ]);
-       if ($existingSubscription) {
-           $this->addFlash('warning', 'You already have an active or pending subscription.');
-           return $this->redirectToRoute('app_insurance_plan_ListPlans');
-       }
-       $subscription = new Subscription();
-       $subscription->setPatient($user);
-       $currentDate = new \DateTimeImmutable();
-       $subscription->setStartDate($currentDate);
-
-       // Add one year to the current date
-       $endDate = $currentDate->add(new \DateInterval('P1Y'));
-       $subscription->setEndDate($endDate);
-       $subscription->setStatus('pending');
-
-       // Get the plan with the given ID and set it on the subscription
-       $plan = $entityManager->getRepository(InsurancePlan::class)->find($planId);
-       $subscription->setPlan($plan);
-
-        $entityManager->persist($subscription);
-        $entityManager->flush();
-       $this->addFlash('message', 'Subscription created successfully.');
-       $this->addFlash('status', 'success');
-       return $this->redirectToRoute('app_insurance_plan_ListPlans');
-   }
+//    #[Route('/subscription/Subscribe/{planId}/{amount}', name: 'app_subscription_add',methods: ['POST'])]
+//    #[IsGranted("ROLE_PATIENT")]
+//    public function Subscribe(EntityManagerInterface $entityManager, int $planId, float $amount): Response
+//    {
+//     header('Content-Type: application/json');
+//        $user = $this->getUser();
+//        if (!$user instanceof Patient) {
+//            throw new \Exception('Logged in user must be a Patient');
+//        }
+//        // Check if the patient already has a subscription with status "pending" or "active"
+//        $existingSubscription = $entityManager->getRepository(Subscription::class)
+//            ->findOneBy([
+//                'patient' => $user,
+//                'status' => ['pending', 'active']
+//            ]);
+//
+//        $subscription = new Subscription();
+//        $subscription->setPatient($user);
+//        $currentDate = new \DateTimeImmutable();
+//        $subscription->setStartDate($currentDate);
+//
+//        // Add one year to the current date
+//        $endDate = $currentDate->add(new \DateInterval('P1Y'));
+//        $subscription->setEndDate($endDate);
+//        $subscription->setStatus('pending');
+//
+//        // Get the plan with the given ID and set it on the subscription
+//        $plan = $entityManager->getRepository(InsurancePlan::class)->find($planId);
+//        $subscription->setPlan($plan);
+//
+//         $entityManager->persist($subscription);
+//         $entityManager->flush();
+//        $this->addFlash('message', 'Subscription created successfully.');
+//        $this->addFlash('status', 'success');
+//        $plan = $entityManager->getRepository(InsurancePlan::class)->find($planId);
+//            if (!$plan) {
+//                throw $this->createNotFoundException('The plan does not exist');
+//            }
+//
+//            $sessionUrl = $this->createCheckoutSession($amount, $plan->getName());
+//             if (strpos($sessionUrl, 'An error occurred') !== false) {
+//                     // Handle the error here instead of redirecting to an error URL
+//                     $this->addFlash('error', $sessionUrl);
+//                     return $this->redirectToRoute('app_insurance_plan_ListPlans');
+//                 }
+//                 header("HTTP/1.1 303 See Other");
+//                 header("Location: " . $sessionUrl);
+//                 return new RedirectResponse($sessionUrl, 303);
+//    }
 
     #[Route('/subscription/ListSubscriptions', name: 'app_subscription_list', methods: ['GET'])]
     #[IsGranted("ROLE_ADMIN")]
@@ -188,4 +203,84 @@ class SubscriptionController extends AbstractController
         $entityManager->flush();
         return $this->redirectToRoute('app_subscription_listAdmin');
     }
+    #[Route('/stripe/checkout/{planId}/{amount}', name: 'app_subscription_Activate')]
+    #[IsGranted("ROLE_PATIENT")]
+    public function createCheckoutSession(int $planId, float $amount, EntityManagerInterface $entityManager): JsonResponse|RedirectResponse
+    {
+         $user = $this->getUser();
+               if (!$user instanceof Patient) {
+                   throw new \Exception('Logged in user must be a Patient');
+               }
+
+               $existingSubscription = $entityManager->getRepository(Subscription::class)
+                          ->findOneBy([
+                              'patient' => $user,
+                              'status' => ['pending', 'active']
+                          ]);
+                      if ($existingSubscription) {
+                          $this->addFlash('warning', 'You already have an active or pending subscription.');
+                          return $this->redirectToRoute('app_insurance_plan_ListPlans');
+                      }
+               $subscription = new Subscription();
+               $subscription->setPatient($user);
+               $currentDate = new \DateTimeImmutable();
+               $subscription->setStartDate($currentDate);
+
+               // Add one year to the current date
+               $endDate = $currentDate->add(new \DateInterval('P1Y'));
+               $subscription->setEndDate($endDate);
+               $subscription->setStatus('pending');
+
+               // Get the plan with the given ID and set it on the subscription
+               $plan = $entityManager->getRepository(InsurancePlan::class)->find($planId);
+               $subscription->setPlan($plan);
+
+                $entityManager->persist($subscription);
+                $entityManager->flush();
+               $this->addFlash('message', 'Subscription created successfully.');
+               $this->addFlash('status', 'success');
+        \Stripe\Stripe::setApiKey($_ENV['STRIPE_KEY']);
+        header('Content-Type: application/json');
+        // Get the plan with the given ID
+        $plan = $entityManager->getRepository(InsurancePlan::class)->find($planId);
+        if (!$plan) {
+            throw $this->createNotFoundException('The plan does not exist');
+        }
+
+        $namePlan = $plan->getName();
+        $amountInCents = $amount * 100;
+
+        try {
+            $session = \Stripe\Checkout\Session::create([
+                'payment_method_types' => ['card'],
+                'line_items' => [[
+                    'price_data' => [
+                        'currency' => 'usd',
+                        'unit_amount' => $amountInCents,
+                        'product_data' => [
+                            'name' => $namePlan,
+                        ],
+                    ],
+                    'quantity' => 1,
+                ]],
+                'mode' => 'payment',
+                'success_url' => 'https://www.google.com',
+                'cancel_url' => 'https://www.youtube.com',
+            ]);
+             header("HTTP/1.1 303 See Other");
+              header("Location: " . $session->url);
+            return new RedirectResponse($session->url, 303);
+        } catch (\Stripe\Exception\ApiErrorException $e) {
+            // Log the error for debugging purposes
+            error_log($e->getMessage());
+            return 'An error occurred while creating the Stripe Checkout Session: ' . $e->getMessage();
+        }
+    }
+
+   #[Route('/subscription/success', name: 'app_subscription_success', methods: ['GET'])]
+   #[IsGranted("ROLE_PATIENT")]
+   public function paymentSuccess(): Response
+   {
+       return $this->render('subscription/success.html.twig');
+   }
 }
