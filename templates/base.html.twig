@@ -15,55 +15,69 @@
 
         <style>
           .bg-blue-teal-gradient {
-            background: #3082cf;
-            background: linear-gradient(90deg, #3082cfff 0%, #38b2acff 100%);
-          }
-          :has(#menu-toggle:checked) {
-            #menu  {
-              display: block;
-            }
+            background: #5c99d6;
+            background: linear-gradient(90deg, #38b2acff 40%, #5c99d6ff 100%);
           }
         </style>
     </head>
     <body class="min-h-screen">
-        <header class="bg-blue-teal-gradient top-0 left-0 w-full z-50 px-4 sm:px-8 lg:px-16 xl:px-40 2xl:px-64">
-
-          <div class="flex flex-wrap items-center justify-between py-4">
-            <div class="w-1/2 md:w-auto">
-              <a href="{{path("app_home")}}" class="text-white font-bold text-2xl">
-                MaakMed</a>
-            </div>
-
-            <label for="menu-toggle" class="pointer-cursor md:hidden block"><svg class="fill-current text-white"
-                xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
-                <title>menu</title>
-                <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z"></path>
-              </svg></label>
-
-            <input class="hidden" type="checkbox" id="menu-toggle">
-
-            <div class="hidden md:block w-full md:w-auto" id="menu">
-              <nav
-                class="w-full bg-white md:bg-transparent rounded shadow-lg px-6 py-4 mt-4 text-center md:p-0 md:mt-0 md:shadow-none">
-                <ul class="md:flex items-center">
-                  <li class="md:ml-4"><a class="py-2 inline-block md:text-white md:px-2 font-semibold"
-                      href="#">Plans</a></li>
-                  <li class="md:ml-4"><a class="py-2 inline-block md:text-white md:px-2 font-semibold"
-                      href="#">Testimonials</a></li>
-                  <li class="md:ml-4 md:hidden lg:block"><a class="py-2 inline-block md:text-white md:px-2 font-semibold"
-                      href="#">Blog</a></li>
-                  <li class="md:ml-4"><a class="py-2 inline-block md:text-white md:px-2 font-semibold" href="#">Contact
-                      Us</a></li>
-                  {% if not is_granted("IS_AUTHENTICATED_REMEMBERED")  %}
-                    <li class="md:ml-6 mt-3 md:mt-0">
-                      <a class="inline-block font-semibold px-4 py-2 text-white bg-blue-600 md:bg-transparent md:text-white border border-white rounded"
-                        href="{{path("app_login")}}">Login</a>
-                    </li>
-                  {% endif %}
+        <header class="sticky lg:z-50 backdrop-blur transition-colors duration-500 top-0 left-0 w-full bg-base-100/80 lg:border-b lg:border-slate-900/10 z-50 px-4 sm:px-8 lg:px-16 xl:px-40 2xl:px-64">
+          <nav class="navbar">
+            <div class="navbar-start">
+              <div class="dropdown">
+                <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" /></svg>
+                </div>
+                <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                  <li><a>Item 1</a></li>
+                  <li>
+                    <a>Parent</a>
+                    <ul class="p-2">
+                      <li><a>Submenu 1</a></li>
+                      <li><a>Submenu 2</a></li>
+                    </ul>
+                  </li>
+                  <li><a>Item 3</a></li>
                 </ul>
-              </nav>
+              </div>
+              <a class="btn btn-ghost text-primary text-2xl">MaakMed</a>
             </div>
-          </div>
+            <div class="navbar-center hidden lg:flex">
+              <ul class="menu menu-horizontal px-1">
+                <li class="text-sm leading-6 font-semibold text-slate-700"><a>Item 1</a></li>
+                <li >
+                  <details>
+                    <summary class="text-sm leading-6 font-semibold text-slate-700">Parent</summary>
+                    <ul class="p-2">
+                      <li><a>Submenu 1</a></li>
+                      <li><a>Submenu 2</a></li>
+                    </ul>
+                  </details>
+                </li>
+                <li class="text-sm leading-6 font-semibold text-slate-700"><a>Item 3</a></li>
+              </ul>
+            </div>
+            <div class="navbar-end">
+               <div class="dropdown dropdown-end">
+                 <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+                   <div class="w-10 rounded-full">
+                     <img alt="Tailwind CSS Navbar component" src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+                   </div>
+                 </div>
+                 <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                   <li>
+                     <a class="justify-between">
+                       Profile
+                       <span class="badge">New</span>
+                     </a>
+                   </li>
+                   <li><a>Settings</a></li>
+                   <li><a>Logout</a></li>
+                 </ul>
+               </div>
+            </div>
+          </nav>
+          <div class="h-1 bg-primary w-full start-0 fixed z-50" {{ stimulus_controller("scroll-progress") }}></div>
         </header>
 
         {% block body %}{% endblock %}
