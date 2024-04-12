@@ -2,6 +2,8 @@ import { startStimulusApp } from '@symfony/stimulus-bridge';
 import ScrollTo from '@stimulus-components/scroll-to'
 import TextareaAutogrow from 'stimulus-textarea-autogrow'
 import ScrollProgress from '@stimulus-components/scroll-progress'
+import Popover from '@stimulus-components/popover'
+import Notification from '@stimulus-components/notification'
 import { defaultSchema } from "@hotwired/stimulus"
 
 const customSchema = {
@@ -20,5 +22,7 @@ app.schema = customSchema;
 app.register('scroll-to', ScrollTo)
 app.register('textarea-autogrow', TextareaAutogrow)
 app.register('scroll-progress', ScrollProgress)
+app.register('popover', Popover)
+app.register('notification', Notification)
 // register any custom, 3rd party controllers here
 // app.register('some_controller_name', SomeImportedController);

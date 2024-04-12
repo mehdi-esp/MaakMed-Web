@@ -165,6 +165,27 @@ abstract class User implements UserInterface, PasswordAuthenticatedUserInterface
         ];
     }
 
+    public function getRoleName(): string
+    {
+
+        return match (true) {
+            $this instanceof Patient => 'Patient',
+            $this instanceof Doctor => 'Doctor',
+            $this instanceof Pharmacy => 'Pharmacy',
+            $this instanceof Admin => 'Admin'
+        };
+    }
+
+    public function getIconPath(): string
+    {
+        return match (true) {
+            $this instanceof Patient => 'patient.png',
+            $this instanceof Doctor => 'doctor.png',
+            $this instanceof Pharmacy => 'pharmacy.png',
+            $this instanceof Admin => 'admin.png'
+        };
+    }
+
     /**
      * Returning a salt is only needed, if you are not using a modern
      * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.

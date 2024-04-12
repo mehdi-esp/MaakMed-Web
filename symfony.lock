@@ -13,6 +13,9 @@
             "src/Entity/.gitignore"
         ]
     },
+    "babdev/pagerfanta-bundle": {
+        "version": "v4.4.0"
+    },
     "dama/doctrine-test-bundle": {
         "version": "8.0",
         "recipe": {

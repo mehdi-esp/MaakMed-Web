@@ -10,6 +10,7 @@
         "ext-iconv": "*",
         "ext-libxml": "*",
         "api-platform/core": "2.7.16",
+        "babdev/pagerfanta-bundle": "^4.4",
         "doctrine/annotations": "^2.0",
         "doctrine/dbal": "^3",
         "doctrine/doctrine-bundle": "^2.11",

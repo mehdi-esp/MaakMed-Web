@@ -32,6 +32,8 @@
         "build": "encore production --progress"
     },
     "dependencies": {
+        "@stimulus-components/notification": "^3.0.0",
+        "@stimulus-components/popover": "^7.0.0",
         "@stimulus-components/scroll-progress": "^5.0.0",
         "@stimulus-components/scroll-to": "^5.0.1",
         "@tailwindcss/container-queries": "^0.1.1",
