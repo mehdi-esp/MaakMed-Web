@@ -1,4 +1,4 @@
-<div{{ attributes.defaults({...stimulus_controller("medication-listing"), ...stimulus_action("medication-listing", "clearFilters", "filters:clear") }) }}>
+<div {{ attributes }}>
     <div class="prose"><h1 id="medications">Medications</h1></div>
     {% if is_granted('ROLE_ADMIN') %}
     {% endif %}

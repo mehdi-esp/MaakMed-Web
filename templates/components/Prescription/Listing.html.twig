@@ -1,4 +1,4 @@
-<div{{ attributes.defaults({...stimulus_controller("prescription-listing"), ...stimulus_action("prescription-listing", "clearFilters", "filters:clear") }) }}>
+<div {{ attributes }}>
     <div class="prose"><h1 id="prescriptions">Prescriptions</h1></div>
     {% if is_granted('ROLE_DOCTOR') %}
         <div class="flex">
