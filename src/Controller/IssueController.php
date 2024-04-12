@@ -83,7 +83,6 @@ class IssueController extends AbstractController
         ], $response);
     }
 
-
     #[Route('/{id}/edit', name: 'app_issue_edit', methods: ['GET', 'POST'])]
     #[IsGranted(IssueVoter::EDIT, subject: 'issue')]
     public function edit(Request $request, Issue $issue, EntityManagerInterface $entityManager, LoggerInterface $logger): Response

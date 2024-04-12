@@ -19,7 +19,12 @@
             overflow: hidden;
             transition: height 0.3s ease;
         }
-
+        .collapsed {
+            display: block;
+        }
+        .card {
+            border: 1px solid #3082cfff; /* Border color for cards */
+        }
     </style>
 {% endblock %}
 
@@ -32,13 +37,13 @@
                 <div class="grid lg:grid-cols-2 lg:gap-y-8 gap-6">
                     {% for issue in issues %}
                         <!-- Card -->
-                        <div class="group rounded-xl overflow-hidden dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600" onclick="toggleDetails('{{ issue.id }}')">
+                        <div class="group rounded-xl overflow-hidden" onclick="toggleDetails('{{ issue.id }}')">
                             <div class="sm:flex">
                                 <div class="grow mt-4 sm:mt-0 sm:ms-6 px-4 sm:px-0">
-                                    <h3 class="text-lg font-semibold card-title-color group-hover:text-gray-600 dark:text-gray-300 dark:group-hover:text-white">
+                                    <h3 class="text-lg font-semibold card-title-color">
                                         {{ issue.title }}
                                     </h3>
-                                    <p class="mt-2 text-sm text-black dark:text-gray-400">
+                                    <p class="mt-2 text-sm text-black">
                                         {{ issue.content }}
                                     </p>
                                     <!-- Additional details -->

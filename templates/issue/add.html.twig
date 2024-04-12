@@ -3,11 +3,16 @@
 {% block title %}Create New Issue{% endblock %}
 
 {% block body %}
+    {% if app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ app.flashes('success')[0] }}
+        </div>
+    {% endif %}
     <div class="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto">
         <div class="mx-auto max-w-2xl">
             <div class="text-center">
                 <h2 class="text-xl text-gray-800 font-bold sm:text-3xl dark:text-blue-600">
-                    Create New Issue
+                    Create your new Issue
                 </h2>
             </div>
 

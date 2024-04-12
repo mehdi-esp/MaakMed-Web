@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Create New Issue Response{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        /* Add your custom styles here */
+        .title-color {
+            color: #3082cfff; /* Color for the title "List of Issues" */
+        }
+        .card-title-color {
+            color: #38b2acff; /* Secondary color from the base template */
+        }
+        .text-black {
+            color: black; /* Black color for text */
+        }
+        /* Custom styles for the form */
+        .form-content {
+            border-radius: 8px; /* Rounded corners */
+            padding: 20px; /* Padding inside the form content */
+            max-width: 400px; /* Maximum width of the form content */
+            margin: auto; /* Center the form */
+        }
+        .form-content input[type="text"],
+        .form-content textarea {
+            background-color: #fff; /* White background for text fields */
+            border: 1px solid #ccc; /* Small border around text fields */
+            border-radius: 4px; /* Rounded corners for text fields */
+            padding: 8px; /* Padding inside text fields */
+            margin-bottom: 10px; /* Margin between text fields */
+            width: calc(100% - 16px); /* Full width with padding */
+        }
+        .form-content button[type="submit"] {
+            background-color: #38b2acff; /* Background color for submit button */
+            color: white; /* Text color for submit button */
+            border: none; /* No border for submit button */
+            border-radius: 4px; /* Rounded corners for submit button */
+            padding: 10px 20px; /* Padding inside submit button */
+            cursor: pointer; /* Cursor style for submit button */
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="form-content">
+        <h1>Create New Issue Response</h1>
+        {{ form_start(form) }}
+        <div>
+            {{ form_row(form.title) }}
+        </div>
+        <div>
+            {{ form_row(form.content) }}
+        </div>
+        <button type="submit">Submit</button>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

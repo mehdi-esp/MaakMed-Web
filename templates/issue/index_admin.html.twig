@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}List of Issues{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .title-color {
+            color: #3082cfff; /* Color for the title "List of Issues" */
+        }
+        .card-title-color {
+            color: #38b2acff; /* Secondary color from the base template */
+        }
+        .text-black {
+            color: black; /* Black color for text */
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="text-2xl font-bold title-color mb-4">List of Issues</h1>
+        <div class="row">
+            <div class="col-md-12">
+                <!-- Grid -->
+                <div class="grid lg:grid-cols-2 lg:gap-y-8 gap-6">
+                    {% for issue in issues %}
+                        <!-- Card -->
+                        <div class="group rounded-xl overflow-hidden dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
+                            <div class="sm:flex">
+                                <div class="grow mt-4 sm:mt-0 sm:ms-6 px-4 sm:px-0">
+                                    <h3 class="text-lg font-semibold card-title-color group-hover:text-gray-600 dark:text-gray-300 dark:group-hover:text-white">
+                                        {{ issue.title }}
+                                    </h3>
+                                    <p class="mt-2 text-sm text-black dark:text-gray-400">
+                                        {{ issue.content }}
+                                    </p>
+                                </div>
+                                <div class="flex items-center">
+                                    {# Delete button for admins only #}
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                        <form action="{{ path('app_issue_delete', {'id': issue.id}) }}" method="post">
+                                            <button type="submit" class="btn btn-danger ml-auto">Delete</button>
+                                        </form>
+                                        <a href="{{ path('app_add_issue_response',{'issueId': issue.id} )}}" class="btn btn-primary ml-2">Respond</a>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End Card -->
+                    {% endfor %}
+                </div>
+                <!-- End Grid -->
+            </div>
+        </div>
+    </div>
+{% endblock %}
