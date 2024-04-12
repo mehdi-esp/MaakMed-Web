@@ -53,49 +53,30 @@ final class Listing extends AbstractController
     /** @return Prescription[] */
     public function getPrescriptions(): array
     {
+        /** @var Doctor|Patient|Admin $user */
         $user = $this->getUser();
 
-        $prescriptions = $this->prescriptionRepository->findByUserAndFilters($user, $this->confirmed, $this->orderBy);
-        $filteredPrescriptions = [];
-        foreach ($prescriptions as $prescription) {
-            if ($user instanceof Doctor && $prescription->getVisit()->getDoctor() === $user) {
-                $filteredPrescriptions[] = $prescription;
-            } elseif ($user instanceof Patient) {
-                $patient = $this->getPatientFromPrescription($prescription);
-                if ($patient === $user) {
-                    $filteredPrescriptions[] = $prescription;
-                }
-            }
+        $qb = $this->prescriptionRepository->createQueryBuilder('p')
+            ->innerJoin('p.visit', 'v');
+
+        if ($user instanceof Doctor) {
+            $qb->where('v.doctor = :user')
+                ->setParameter('user', $user);
+        } elseif ($user instanceof Patient) {
+            $qb->where('v.patient = :user')
+                ->setParameter('user', $user);
         }
 
-        // If confirmed is set, filter the prescriptions based on the confirmed status
+        if (in_array($this->orderBy, ['creationDate', 'confirmed'])) {
+            $qb->orderBy('p.' . $this->orderBy, $this->orderDir);
+        }
+
         if ($this->confirmed !== null) {
-            $filteredPrescriptions = array_filter($filteredPrescriptions, function($prescription) {
-                return $prescription->isConfirmed() === $this->confirmed;
-            });
+            $qb->andWhere('p.confirmed = :confirmed')
+                ->setParameter('confirmed', $this->confirmed);
         }
 
-        // If orderBy is set, sort the prescriptions based on the orderBy property
-        if ($this->orderBy !== null) {
-            usort($filteredPrescriptions, function($a, $b) {
-                if ($this->orderBy === 'creationDate') {
-                    return $this->orderDir === 'ASC' ? $a->getCreationDate() <=> $b->getCreationDate() : $b->getCreationDate() <=> $a->getCreationDate();
-                } elseif ($this->orderBy === 'confirmed') {
-                    return $this->orderDir === 'ASC' ? $a->isConfirmed() <=> $b->isConfirmed() : $b->isConfirmed() <=> $a->isConfirmed();
-                }
-            });
-        }
-
-        return $filteredPrescriptions;
+        return $qb->getQuery()->getResult();
     }
-    public function getPatientFromPrescription(Prescription $prescription): ?Patient
-    {
-        $visit = $prescription->getVisit();
 
-        if ($visit !== null) {
-            return $visit->getPatient();
-        }
-
-        return null;
-    }
 }
