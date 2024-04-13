@@ -50,7 +50,9 @@
         </div>
         <div class="navbar-center hidden lg:flex">
             <ul class="menu menu-horizontal px-1">
-                {% if 'ROLE_PHARMACY' in app.user.roles %}
+                {% if not app.user %}
+                {# TODO: Visitor #}
+                {% elseif 'ROLE_PHARMACY' in app.user.roles %}
                     <li class="text-sm leading-6 font-semibold text-slate-700"><a href="{{ path("app_inventory_index") }}">Inventory</a></li>
                     <li class="text-sm leading-6 font-semibold text-slate-700"><a href="{{ path("app_invoice_index") }}">Invoices</a></li>
                 {% else %}
