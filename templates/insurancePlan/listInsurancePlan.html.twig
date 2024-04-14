@@ -1,4 +1,5 @@
-{% extends 'base.html.twig' %}
+{% extends ('ROLE_ADMIN' in app.user.roles) ? 'base_admin.html.twig' : 'base.html.twig' %}
+
 
 {% block title %}List of InsurancePlans{% endblock %}
 
