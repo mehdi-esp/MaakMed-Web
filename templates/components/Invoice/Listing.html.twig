@@ -1,10 +1,96 @@
-<div {{ attributes }}>
+<div {{ attributes.defaults({...stimulus_controller("tomselect-cleaner"), ...stimulus_action("tomselect-cleaner", "clearFilters", "filters:clear")}) }}>
     <div class="prose mx-auto md:mx-0"><h1>Invoices</h1></div>
 
-    <div id="invoices" class="container p-2 md:p-5 flex flex-wrap justify-center gap-x-4 gap-y-6">
-        {% for invoice in computed.invoices %}
-            <twig:Invoice:Card invoice="{{ invoice }}"/>
-        {% endfor %}
+    <div data-loading="addClass(opacity-50)" class="prose my-4">
+        <i>
+            {% if computed.invoices|length > 0 %}
+                Showing {{ computed.invoices|length }} invoices
+            {% else %}
+                No invoices found
+            {% endif %}
+        </i>
+    </div>
+
+
+    <section class="mb-4">
+        <div class="prose">
+            <h2>Sorting</h2>
+            <label class="swap">
+
+                <input type="checkbox" name="sorting" data-model="orderDir"/>
+
+                <!-- Arrow Down ( descending ) -->
+                <svg class="swap-on size-10" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                     stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M3 4.5h14.25M3 9h9.75M3 13.5h5.25m5.25-.75L17.25 9m0 0L21 12.75M17.25 9v12"/>
+                </svg>
+
+                <!-- Arrow Up ( ascending ) -->
+                <svg class="swap-off size-10" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                     stroke-width="1.5" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                          d="M3 4.5h14.25M3 9h9.75M3 13.5h9.75m4.5-4.5v12m0 0-3.75-3.75M17.25 21 21 17.25"/>
+                </svg>
+
+            </label>
+        </div>
+    </section>
+
+    <section id="filters" class="grid justify-start mb-4">
+        <div class="prose">
+            <h2>Filters</h2>
+            <ul>
+                {% if is_granted("ROLE_PHARMACY") or is_granted("ROLE_ADMIN") %}
+                    <li><label>
+                            Patient:
+                            <select
+                                    name="patient"
+                                    data-model="patient"
+                                    {{ stimulus_controller('symfony/ux-autocomplete/autocomplete', {
+                                        url: path('ux_entity_autocomplete', {alias: "patient"}),
+                                        noResultsFoundText: "No such patient",
+                                    }) }}
+                                    {{ stimulus_target('tomselect-cleaner', 'picker') }}
+                            ></select>
+                        </label>
+                    </li>
+                {% endif %}
+                {% if is_granted("ROLE_PATIENT") or is_granted("ROLE_ADMIN") %}
+                    <li>
+                        <label>
+                            Pharmacy:
+                            <select
+                                    name="pharmacy"
+                                    data-model="pharmacy"
+                                    {{ stimulus_controller('symfony/ux-autocomplete/autocomplete', {
+                                        url: path('ux_entity_autocomplete', {alias: "pharmacy"})
+                                    }) }}
+                                    {{ stimulus_target('tomselect-cleaner', 'picker') }}
+                            ></select>
+                        </label>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+        {#                <a class="btn mx-auto" href="{{ path('app_visit_index') }}">Clear Filters</a> #}
+        <button class="btn mx-auto"
+                data-action="live#action"
+                data-live-action-param="clearFilters"
+                data-loading="addAttribute(disabled)"
+        >Clear Filters
+        </button>
+        <!-- <span data-loading="action(clearFilters)|show">Loading</span> -->
+    </section>
+
+    <div class="container flex flex-col items-center">
+        <div id="invoices" data-loading="addClass(opacity-50)"
+             class="p-2 md:p-5 flex flex-wrap justify-center gap-x-4 gap-y-6">
+            {% for invoice in computed.invoices %}
+                <twig:Invoice:Card invoice="{{ invoice }}"/>
+            {% endfor %}
+
+        </div>
 
         <div class="grid grid-flow-row sm:grid-flow-col gap-2 fixed end-6 sm:end-auto bottom-6 sm:bottom-4">
             <a
