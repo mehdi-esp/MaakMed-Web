@@ -21,23 +21,9 @@ class InvoiceController extends AbstractController
 {
     #[Route('/', name: 'app_invoice_index', methods: ['GET'])]
     #[IsGranted(InvoiceVoter::LIST_ALL)]
-    public function index(InvoiceRepository $invoiceRepository): Response
+    public function index(): Response
     {
-        /** @var Pharmacy|Patient|Admin $user */
-        $user = $this->getUser();
-
-        $criteria = [];
-        $visibilityCriterion = match (true) {
-            $user instanceof Admin => [],
-            $user instanceof Pharmacy => ['pharmacy' => $user],
-            $user instanceof Patient => ['patient' => $user],
-        };
-        $criteria = array_merge($criteria, $visibilityCriterion);
-
-        $invoices = $invoiceRepository->findBy($criteria);
-        return $this->render('invoice/index.html.twig', [
-            'invoices' => $invoices,
-        ]);
+        return $this->render('invoice/index.html.twig');
     }
 
     #[Route('/new', name: 'app_invoice_new', methods: ['GET', 'POST'])]
