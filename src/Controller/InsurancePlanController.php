@@ -111,12 +111,14 @@ class InsurancePlanController extends AbstractController
                 'controller_name' => 'InsurancePlanController',
             ]);
         }
-        #[Route('/insurance/plan/ListPlans', name: 'app_insurance_plan_ListPlans')]
+        #[Route('/ListPlans', name: 'app_insurance_plan_ListPlans')]
         public function listPlansPatient(EntityManagerInterface $entityManager):Response
         {
             $plans = $entityManager->getRepository(InsurancePlan::class)->findAll();
-            return $this->render('insurance_plan/ListPlansPatient.html.twig', [
-                'plans' => $plans,
-            ]);
+                $user = $this->getUser(); // Get the current user
+                return $this->render('insurance_plan/ListPlansPatient.html.twig', [
+                    'plans' => $plans,
+                    'user' => $user,
+                ]);
         }
 }
