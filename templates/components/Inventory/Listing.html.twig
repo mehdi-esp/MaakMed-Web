@@ -16,16 +16,35 @@
         {{ form_rest(form) }}
         {{ form_end(form) }}
     {% else %}
-        <button
-                type="button"
-                class="btn btn-primary"
-                data-model="editing"
-                data-value="true"
-                data-action="live#update"
-        >
-            Edit
-
-        </button>
-        {{ 'your display here' }}
     {% endif %}
+  <!--   <button
+            type="button"
+            class="btn btn-primary"
+            data-model="editing"
+            data-value="true"
+            data-action="live#update"
+    >
+        Edit
+
+    </button>  -->
+    <!-- Add this button to trigger the generateAndUploadFile live action -->
+    <button
+            type="button"
+            class="btn btn-primary"
+            data-action="live#action"
+            data-live-action-param="generateAndUploadFile"
+    >
+        Generate and Upload File
+    </button>
+    <!-- Add this div to display the returned link -->
+    <a id="fileio-link">{{ fileLink }}</a>
+    <button
+            type="button"
+            class="btn btn-primary"
+            data-action="live#action"
+            data-live-action-param="export"
+    >
+        downlaod Inventory
+    </button>
+
 </div>

@@ -16,6 +16,7 @@
         "doctrine/doctrine-bundle": "^2.11",
         "doctrine/doctrine-migrations-bundle": "^3.3",
         "doctrine/orm": "^3.1",
+        "guzzlehttp/guzzle": "^7.8",
         "jungi/framework-extra-bundle": "^1.4",
         "kambo/huggingface-php": "^0.1.0",
         "knplabs/knp-time-bundle": "^2.2",
