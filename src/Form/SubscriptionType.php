@@ -28,7 +28,6 @@ class SubscriptionType extends AbstractType
                 'choices'  => [
                     'Pending' => 'pending',
                     'Active' => 'active',
-                    'Deleted' => 'deleted',
                     'Canceled' => 'canceled',
                 ],
             ])

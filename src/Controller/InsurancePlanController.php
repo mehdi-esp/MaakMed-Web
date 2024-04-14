@@ -115,8 +115,10 @@ class InsurancePlanController extends AbstractController
         public function listPlansPatient(EntityManagerInterface $entityManager):Response
         {
             $plans = $entityManager->getRepository(InsurancePlan::class)->findAll();
-            return $this->render('insurance_plan/ListPlansPatient.html.twig', [
-                'plans' => $plans,
-            ]);
+                $user = $this->getUser(); // Get the current user
+                return $this->render('insurance_plan/ListPlansPatient.html.twig', [
+                    'plans' => $plans,
+                    'user' => $user, // Pass the user to the Twig template
+                ]);
         }
 }
