@@ -47,8 +47,10 @@ class Listing extends AbstractController
         if (!$this->form->isValid()) {
             return;
         }
-        $this->editing = false;
+        $this->editing = true;
         $this->entityManager->flush();
+        $this->addFlash('success', 'Save was successful!');
+
     }
 
 

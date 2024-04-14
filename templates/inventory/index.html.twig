@@ -4,4 +4,11 @@
 
 {% block body %}
     <twig:Inventory:Listing/>
+    <!-- Add this line where you want the button to appear -->
+    <a href="{{ path('app_inventory_export') }}" class="btn btn-primary">Download Inventory</a>
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
 {% endblock %}
