@@ -29,7 +29,6 @@ class Prescription
 
     #[ORM\OneToOne(mappedBy: 'prescription', cascade: ['persist', 'remove'])]
     private ?Visit $visit = null;
-  private  ?string $PrescriptionSpeech = null;
 
     public function __construct()
     {
@@ -114,9 +113,9 @@ class Prescription
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getPrescriptionSpeech(): ?string
+    public function getPrescriptionSpeech(): string
     {
         $message = "Follow these instructions carefully: ";
 
@@ -124,7 +123,6 @@ class Prescription
             $message .= $medication->getMedication()->getName() ." Please". $medication->getInstructions();
         }
 
-        $this->PrescriptionSpeech=$message ;
-        return $this->PrescriptionSpeech;
+        return $message;
     }
 }

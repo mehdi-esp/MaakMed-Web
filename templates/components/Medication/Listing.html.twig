@@ -1,4 +1,4 @@
-<div{{ attributes.defaults({...stimulus_controller("medication-listing"), ...stimulus_action("medication-listing", "clearFilters", "filters:clear") }) }}>
+<div {{ attributes }}>
     <div class="prose"><h1 id="medications">Medications</h1></div>
     {% if is_granted('ROLE_ADMIN') %}
     {% endif %}
@@ -37,8 +37,8 @@
                         Insured:
                         <select data-model="insured" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
                             <option value="">All </option>
-                            <option value="1">Yes </option>
-                            <option value="0">No </option>
+                            <option value="true">Yes </option>
+                            <option value="false">No </option>
                         </select>
                     </label>
                 </div>

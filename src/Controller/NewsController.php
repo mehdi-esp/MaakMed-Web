@@ -11,18 +11,11 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 #[Route('/news')]
 class NewsController extends AbstractController
 {
-    private $client;
-
-    public function __construct(HttpClientInterface $client)
-    {
-        $this->client = $client;
-    }
-
     #[Route('/', name: 'app_news_index', methods: ['GET'])]
     #[IsGranted("ROLE_DOCTOR")]
-    public function index(): Response
+    public function index(HttpClientInterface $client): Response
     {
-        $response = $this->client->request('GET', 'https://newsapi.org/v2/top-headlines', [
+        $response = $client->request('GET', 'https://newsapi.org/v2/top-headlines', [
             'query' => [
                 'apiKey' => 'a5ffe43954f44e1588f6cfa23fed6a63',
                 'category' => 'health',

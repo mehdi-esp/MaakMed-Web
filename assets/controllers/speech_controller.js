@@ -13,11 +13,12 @@ import {useDebounce, useThrottle} from "stimulus-use";
 export default class extends Controller {
 
     static values = {route: String};
+    static targets = ["loading", "button"];
 
     static debounces = [
         {
             name: "playInstructionSound",
-            wait: 3000,
+            wait: 500,
         }
     ];
     static throttles = [
@@ -32,13 +33,17 @@ export default class extends Controller {
         useThrottle(this);
     }
 
-    playInstructionSound() {
-        fetch(this.routeValue)
+    async playInstructionSound() {
+        this.loadingTarget.classList.remove("hidden");
+        this.buttonTarget.disabled = true;
+        await fetch(this.routeValue)
             .then(response => response.blob())
             .then(blob => {
                 const audioUrl = URL.createObjectURL(blob);
                 const audio = new Audio(audioUrl);
                 audio.play();
             });
+        this.loadingTarget.classList.add("hidden");
+        this.buttonTarget.disabled = false;
     }
 }

@@ -16,9 +16,16 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Unique;
 use Symfony\UX\LiveComponent\Form\Type\LiveCollectionType;
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Security\Core\Security;
 
 class PrescriptionType extends AbstractType
 {
+    private Security $security;
+
+    public function __construct(Security $security)
+    {
+        $this->security = $security;
+    }
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -27,7 +34,9 @@ class PrescriptionType extends AbstractType
                 'query_builder' => function (EntityRepository $er) {
                     return $er->createQueryBuilder('v')
                         ->leftJoin('v.prescription', 'p')
-                        ->where('p.id IS NULL');
+                        ->where('p.id IS NULL')
+                        ->andWhere('v.doctor = :doctor')
+                        ->setParameter('doctor', $this->security->getUser());
                 },
                 'choice_label' => function (?Visit $visit) {
                     return $visit ? $visit->getPatient()->getUsername() : 'All visits have a prescription';
