@@ -215,6 +215,36 @@ class SubscriptionController extends AbstractController
             return 'An error occurred while creating the Stripe Checkout Session: ' . $e->getMessage();
         }
     }
+    #[Route('/subscription/cancel/{planId}', name: 'app_subscription_Cancel')]
+    #[IsGranted("ROLE_PATIENT")]
+    public function cancelSubscription(int $planId, EntityManagerInterface $entityManager): Response
+    {
+        $user = $this->getUser();
+        if (!$user instanceof Patient) {
+            throw new \Exception('Logged in user must be a Patient');
+        }
+
+        $subscription = $entityManager->getRepository(Subscription::class)
+            ->findOneBy([
+                'patient' => $user,
+                'plan' => $planId,
+                'status' => ['active', 'pending']
+            ]);
+
+        if (!$subscription) {
+            $this->addFlash('warning', 'No active or pending subscription found for this plan.');
+            return $this->redirectToRoute('app_insurance_plan_ListPlans');
+        }
+
+        $subscription->setStatus('canceling');
+        $entityManager->persist($subscription);
+        $entityManager->flush();
+
+        $this->addFlash('message', 'Subscription is being canceled.');
+        $this->addFlash('status', 'success');
+
+        return $this->redirectToRoute('app_insurance_plan_ListPlans');
+    }
 
    #[Route('/subscription/success', name: 'app_subscription_success', methods: ['GET'])]
    #[IsGranted("ROLE_PATIENT")]
@@ -222,4 +252,5 @@ class SubscriptionController extends AbstractController
    {
        return $this->render('subscription/success.html.twig');
    }
+
 }
