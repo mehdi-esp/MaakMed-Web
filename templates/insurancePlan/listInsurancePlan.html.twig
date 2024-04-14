@@ -4,81 +4,57 @@
 
 {% block body %}
     <h1 class="text-3xl font-bold text-center mt-3 mb-4">Insurance Plan</h1>
-    <div class="flex flex-col items-end">
-       <div class="mb-4">
-             <label for="costFilter" class="block mb-1">Filter by Plan Cost:</label>
-             <div class="flex items-center">
-                 <select class=" w-44 bg-gray-200 rounded border-0 p-2 focus:ring-2 focus:ring-blue-600 mr-2" id="costFilter">
-                     <option value="">Select cost filter</option>
-                     <option value="high">High</option>
-                     <option value="low">Low</option>
-                 </select>
-                 <input type="text" class=" mr-2 bg-gray-200 rounded border-0 p-2 focus:ring-2 focus:ring-blue-600" id="searchBar" placeholder="Search...">
-             </div>
-         </div>
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Name</th>
-            <th>Description</th>
-            <th>Cost</th>
-            <th>Reimbursement Rate</th>
-            <th>Ceiling</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for insurancePlan in insurancePlans %}
+    <div class="flex flex-col items-end" {{ stimulus_controller("insurancePlan") }}>
+        <div class="mb-4">
+            <label for="costFilter" class="block mb-1">Filter by Plan Cost:</label>
+            <div class="flex items-center">
+                <select class=" w-44 bg-gray-200 rounded border-0 p-2 focus:ring-2 focus:ring-blue-600 mr-2"
+                        id="costFilter">
+                    <option value="">Select cost filter</option>
+                    <option value="high">High</option>
+                    <option value="low">Low</option>
+                </select>
+                <input type="text" class=" mr-2 bg-gray-200 rounded border-0 p-2 focus:ring-2 focus:ring-blue-600"
+                       id="searchBar" placeholder="Search...">
+            </div>
+        </div>
+        <table class="table">
+            <thead>
             <tr>
-                <td>{{ insurancePlan.name  }}</td>
-                <td>{{ insurancePlan.description }}</td>
-                <td>{{ insurancePlan.cost }}</td>
-                <td>{{ insurancePlan.reimbursementRate }}</td>
-                <td>{{ insurancePlan.ceiling }}</td>
-                <td><a class="btn btn-primary text-white" href="{{ path('app_insurancePlan_edit', {'id': insurancePlan.id}) }}">Update</a></td>
-                <td><a class="btn btn-primary text-white" href="{{path('app_insurancePlan_delete', {'id': insurancePlan.id}) }}" >Delete</a></td>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Cost</th>
+                <th>Reimbursement Rate</th>
+                <th>Ceiling</th>
             </tr>
-        {% else %}
-            <tr>
-                <td colspan="4">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-</div>
-  {% if is_granted('ROLE_ADMIN') %}
-  <div class="flex items-center justify-center ">
-     <a class="px-8 py-4  btn btn-primary  text-white rounded inline-block mt-8 font-semibold   " href="{{ path('app_insurancePlan_add') }}">Create new Insurance Plan</a>
-  </div>
+            </thead>
+            <tbody>
+            {% for insurancePlan in insurancePlans %}
+                <tr>
+                    <td>{{ insurancePlan.name }}</td>
+                    <td>{{ insurancePlan.description }}</td>
+                    <td>{{ insurancePlan.cost }}</td>
+                    <td>{{ insurancePlan.reimbursementRate }}</td>
+                    <td>{{ insurancePlan.ceiling }}</td>
+                    <td><a class="btn btn-primary text-white"
+                           href="{{ path('app_insurancePlan_edit', {'id': insurancePlan.id}) }}">Update</a></td>
+                    <td><a class="btn btn-primary text-white"
+                           href="{{ path('app_insurancePlan_delete', {'id': insurancePlan.id}) }}">Delete</a></td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% if is_granted('ROLE_ADMIN') %}
+        <div class="flex items-center justify-center ">
+            <a class="px-8 py-4  btn btn-primary  text-white rounded inline-block mt-8 font-semibold   "
+               href="{{ path('app_insurancePlan_add') }}">Create new Insurance Plan</a>
+        </div>
 
-  {% endif %}
+    {% endif %}
 {% endblock %}
-{% block javascripts %}
-<script>
-document.addEventListener('DOMContentLoaded', (event) => {
-    const searchBar = document.getElementById('searchBar');
-    const costFilter = document.getElementById('costFilter');
-    const tableBody = document.querySelector('.table tbody');
 
-    searchBar.addEventListener('input', () => filterTable('search'));
-    costFilter.addEventListener('change', () => filterTable('cost'));
-
-    function filterTable(type) {
-        const searchValue = searchBar.value;
-        const costValue = costFilter.value;
-
-        const url = new URL(window.location.href);
-        url.searchParams.set('searchTerm', searchValue);
-        url.searchParams.set('costFilter', costValue);
-
-        fetch(url)
-            .then(response => response.text())
-            .then(data => {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(data, 'text/html');
-                const newTableBody = doc.querySelector('.table tbody');
-                tableBody.innerHTML = newTableBody.innerHTML;
-            });
-    }
-});
-</script>
-{% endblock %}
