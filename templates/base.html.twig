@@ -84,6 +84,13 @@
                                 Profile
                             </a>
                         </li>
+                        {% if is_granted('ROLE_DOCTOR') %}
+                            <li>
+                                <a href="{{ path("app_news_index") }}" class="justify-between">
+                                    News
+                                </a>
+                            </li>
+                        {% endif %}
                         <li><a href="{{ path("app_logout") }}">Logout</a></li>
                     </ul>
                 </div>
