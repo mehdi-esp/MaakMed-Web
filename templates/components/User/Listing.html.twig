@@ -1,11 +1,11 @@
 <div{{ attributes }} style="margin-left: 150px;">
     <div class="form-control" style="margin-top: 50px;">
-        <div class="search-container" style="position: relative; display: inline-block;">
+        <div style="position: relative; display: inline-block;">
             <input type="text"
                    data-model="query"
                    placeholder="   Search for users"
                    class="input input-bordered w-96 "
-                   style="padding-left: 30px; border-color:#A6C0CD;"/>
+                   style="padding-left: 30px; border-color:#18B495;"/>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                  stroke="currentColor" class="w-6 h-6"
                  style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%);">
@@ -14,9 +14,10 @@
             </svg>
         </div>
         <br>
+
         <div class="select-container" style="position: relative; display: inline-block;">
             <select data-model="sort" class="input input-bordered w-96 "
-                    style="padding-left: 30px; border-color:#A6C0CD;">
+                    style="padding-left: 30px; border-color:#18B495;">
                 <option value="asc"> Sort by username in ascending order (A-Z)</option>
                 <option value="desc"> Sort by username in descending order (Z-A)</option>
             </select>
@@ -28,6 +29,9 @@
             </svg>
         </div>
     </div>
+    <br>
+    <br>
+    <br>
     {% if computed.users|length > 0 %}
         <div data-loading="addClass(opacity-50)" class="mt-3 flex flex-wrap gap-4">
             {# @var user \App\Entity\User #}
