@@ -3,8 +3,10 @@
 namespace App\Form;
 
 use App\Entity\Patient;
+use PixelOpen\CloudflareTurnstileBundle\Type\TurnstileType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -70,7 +72,9 @@ class PatientType extends AbstractType
             ])
 
 
-            ->add('dateOfBirth')
+            ->add('dateOfBirth', DateType::class, [
+                'years' => range(date('Y') - 100, date('Y')),
+            ])
             ->add('nationalId', options: [
                 'label' => 'NationalId',
                 'attr' => [
@@ -87,6 +91,7 @@ class PatientType extends AbstractType
                 ],
             ])
             ->add('plainPassword', PasswordCreationType::class)
+            ->add('security', TurnstileType::class, ['label' => false])
         ;
     }
 
