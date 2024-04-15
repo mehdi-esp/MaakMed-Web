@@ -98,7 +98,7 @@
                                 </a>
                             </li>
                         {% endif %}
-                        <li><a href="{{ path("app_logout") }}">Logout</a></li>
+                        <li><a data-turbo-prefetch="false" href="{{ path("app_logout") }}">Logout</a></li>
                     </ul>
                 </div>
             {% else %}
