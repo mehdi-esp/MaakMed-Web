@@ -193,7 +193,6 @@ abstract class User implements UserInterface, PasswordAuthenticatedUserInterface
             $this instanceof Pharmacy => substr($this->getName(), 0, 2),
             $this instanceof Admin => substr($this->getUsername(), 0, 2)
         };
-
     }
 
     /**
