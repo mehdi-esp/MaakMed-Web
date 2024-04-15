@@ -77,10 +77,11 @@ class DoctorP extends AbstractType
                         'message' => 'The email "{{ value }}" is not a valid email.'
 
                     ]),
-
+                    new NotBlank([
+                        'message' => 'Please enter your email',
+                    ]),
                 ],
             ])
-
             ->add('specialization', options: [
                 'label' => 'Specialization',
                 'attr' => [
@@ -127,11 +128,10 @@ class DoctorP extends AbstractType
                         'exactMessage' => 'Your phone number must be exactly {{ limit }} characters long',
                     ]),
                     new NotBlank([
-                        'message' => 'Please enter your phone number',
+                        'message' => 'Please enter your number',
                     ]),
                 ],
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
