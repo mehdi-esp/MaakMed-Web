@@ -106,7 +106,9 @@
             {% endif %}
         </div>
     </nav>
-    <div class="h-1 bg-primary w-full start-0 fixed z-50" {{ stimulus_controller("scroll-progress") }}></div>
+    {% if (show_progress_bar ?? true) is same as(true) %}
+        <div class="h-1 bg-primary w-full start-0 fixed z-50" {{ stimulus_controller("scroll-progress") }}></div>
+    {% endif %}
 </header>
 
 {% block body %}{% endblock %}
