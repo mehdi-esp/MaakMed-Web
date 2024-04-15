@@ -79,6 +79,13 @@
                     </div>
                     <ul tabindex="0"
                         class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                        {% if app.user is defined and app.user.isVerified is defined and not app.user.isVerified %}
+                            <li>
+                                <a href="" class="justify-between">
+                                    Verify email
+                                </a>
+                            </li>
+                        {% endif %}
                         <li>
                             <a href="{{ path("profile") }}" class="justify-between">
                                 Profile
