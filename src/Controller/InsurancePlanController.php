@@ -45,7 +45,7 @@ class InsurancePlanController extends AbstractController
     }
 
 
-    #[Route('/addInsurancePlan', name: 'app_insurancePlan_add', methods: ['GET', 'POST'])]
+    #[Route('/addInsurancePlan', name: 'app_insurancePlan_add', methods: ['GET','POST'])]
     #[IsGranted('ROLE_ADMIN')]
     public function add(Request $req,EntityManagerInterface $entityManager): Response
     {
@@ -72,7 +72,7 @@ class InsurancePlanController extends AbstractController
 
         ], $response);
     }
-    #[Route('/{id}/IPedit', name: 'app_insurancePlan_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/IPedit', name: 'app_insurancePlan_edit', methods: ['GET','POST'])]
     #[IsGranted('ROLE_ADMIN')]
     public function edit(Request $req, InsurancePlan $ip, EntityManagerInterface $entityManager): Response
     {
@@ -96,7 +96,7 @@ class InsurancePlanController extends AbstractController
 
         ], $response);
     }
-    #[Route('/{id}/IPdelete', name: 'app_insurancePlan_delete', methods: ['GET','POST'])]
+    #[Route('/{id}/IPdelete', name: 'app_insurancePlan_delete', methods: ['GET'])]
     #[IsGranted('ROLE_ADMIN')]
     public function delete(Request $req, InsurancePlan $ip, EntityManagerInterface $entityManager): Response
     {
