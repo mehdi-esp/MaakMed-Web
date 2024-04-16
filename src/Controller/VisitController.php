@@ -24,7 +24,7 @@ class VisitController extends AbstractController
     #[IsGranted(VisitVoter::LIST_ALL)]
     public function index(Breadcrumbs $breadcrumbs): Response
     {
-        $breadcrumbs->addItem("Visits", $this->generateUrl("app_visit_index"));
+        $breadcrumbs->addRouteItem("Visits", "app_visit_index");
         return $this->render('visit/index.html.twig');
     }
 
@@ -63,8 +63,8 @@ class VisitController extends AbstractController
         Breadcrumbs $breadcrumbs
     ): Response {
 
-        $breadcrumbs->addItem("Visits", $this->generateUrl("app_visit_index"));
-        $breadcrumbs->addItem("New", $this->generateUrl("app_visit_new"));
+        $breadcrumbs->addRouteItem("Visits", "app_visit_index");
+        $breadcrumbs->addRouteItem("New", "app_visit_new");
 
         /** @var Doctor $doctor */
         $doctor = $this->getUser();
@@ -100,8 +100,8 @@ class VisitController extends AbstractController
     #[IsGranted(VisitVoter::VIEW, subject: 'visit')]
     public function show(Visit $visit, Breadcrumbs $breadcrumbs): Response
     {
-        $breadcrumbs->addItem("Visits", $this->generateUrl("app_visit_index"));
-        $breadcrumbs->addItem($visit->getId(), $this->generateUrl("app_visit_show", ["id" => $visit->getId()]));
+        $breadcrumbs->addRouteItem("Visits", "app_visit_index");
+        $breadcrumbs->addRouteItem($visit->getId(), "app_visit_show", ["id" => $visit->getId()]);
         return $this->render('visit/show.html.twig', [
             'visit' => $visit,
         ]);
@@ -115,9 +115,9 @@ class VisitController extends AbstractController
         EntityManagerInterface $entityManager,
         Breadcrumbs $breadcrumbs
     ): Response {
-        $breadcrumbs->addItem("Visits", $this->generateUrl("app_visit_index"));
-        $breadcrumbs->addItem($visit->getId(), $this->generateUrl("app_visit_show", ["id" => $visit->getId()]));
-        $breadcrumbs->addItem("Edit", $this->generateUrl("app_visit_edit", ["id" => $visit->getId()]));
+        $breadcrumbs->addRouteItem("Visits", "app_visit_index");
+        $breadcrumbs->addRouteItem($visit->getId(), "app_visit_show", ["id" => $visit->getId()]);
+        $breadcrumbs->addRouteItem("Edit", "app_visit_edit", ["id" => $visit->getId()]);
 
         $form = $this->createForm(VisitType::class, $visit);
         $form->handleRequest($request);
