@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2059cfc511c6604c2f0b05efa13cd4a7",
+    "content-hash": "0d1306bff63d49472b478f201ca03377",
     "packages": [
         {
             "name": "api-platform/core",
@@ -2326,6 +2326,63 @@
                 "source": "https://github.com/MarkBaker/PHPMatrix/tree/3.0.1"
             },
             "time": "2022-12-02T22:17:43+00:00"
+        },
+        {
+            "name": "mhujer/breadcrumbs-bundle",
+            "version": "1.5.9",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mhujer/BreadcrumbsBundle.git",
+                "reference": "e7116d1339c1c5a2108c48ad1acfd904a161b141"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mhujer/BreadcrumbsBundle/zipball/e7116d1339c1c5a2108c48ad1acfd904a161b141",
+                "reference": "e7116d1339c1c5a2108c48ad1acfd904a161b141",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.1",
+                "symfony/framework-bundle": "^5.4|^6.0|^7.0",
+                "symfony/translation-contracts": "^1.1|^2.0|^3.0",
+                "symfony/twig-bundle": "^5.4|^6.0|^7.0",
+                "twig/twig": "^1.38.1|^2.7.1|^3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "10.5.5",
+                "symfony/browser-kit": "^5.4|^6.0|^7.0"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-4": {
+                    "WhiteOctober\\BreadcrumbsBundle\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Rich Sage",
+                    "email": "rich.sage@gmail.com"
+                },
+                {
+                    "name": "Martin Hujer",
+                    "email": "mail@martinhujer.cz"
+                }
+            ],
+            "description": "Breadcrumbs bundle for Symfony",
+            "homepage": "https://github.com/mhujer/BreadcrumbsBundle",
+            "keywords": [
+                "breadcrumbs",
+                "symfony"
+            ],
+            "support": {
+                "issues": "https://github.com/mhujer/BreadcrumbsBundle/issues",
+                "source": "https://github.com/mhujer/BreadcrumbsBundle/tree/1.5.9"
+            },
+            "time": "2023-12-30T11:11:23+00:00"
         },
         {
             "name": "monolog/monolog",
