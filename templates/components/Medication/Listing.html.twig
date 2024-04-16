@@ -1,16 +1,17 @@
 <div {{ attributes }}>
     <div class="prose"><h1 id="medications">Medications</h1></div>
     {% if is_granted('ROLE_ADMIN') %}
+        <div class="flex">
+            <a role="button" class="btn btn-primary mx-auto" href="{{ path('app_medication_new') }}">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                     stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+                </svg>
+                New Medication
+            </a>
+        </div>
     {% endif %}
-    <div class="flex">
-        <a role="button" class="btn btn-primary mx-auto" href="{{ path('app_medication_new') }}">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                 stroke="currentColor" class="size-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
-            </svg>
-            New Medication
-        </a>
-    </div>
+
     <section id="filters" class="grid justify-start mb-4">
         <div class="prose">
             <div class="flex space-x-4">

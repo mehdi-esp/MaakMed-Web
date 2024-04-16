@@ -69,7 +69,6 @@ class PatientP extends AbstractType
                     ]),
                 ],
             ])
-
             ->add('email', EmailType::class, [
                 'label' => 'Email',
                 'attr' => [
@@ -80,7 +79,9 @@ class PatientP extends AbstractType
                         'message' => 'The email "{{ value }}" is not a valid email.'
 
                     ]),
-
+                    new NotBlank([
+                        'message' => 'Please enter your email',
+                    ]),
                 ],
             ])
             ->add('dateOfBirth', DateType::class, [
@@ -117,11 +118,10 @@ class PatientP extends AbstractType
                         'exactMessage' => 'Your phone number must be exactly {{ limit }} characters long',
                     ]),
                     new NotBlank([
-                        'message' => 'Please enter your phone number',
+                        'message' => 'Please enter your number',
                     ]),
                 ],
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

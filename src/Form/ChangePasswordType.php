@@ -11,6 +11,9 @@ use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\Sequentially;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Validator\Constraints\EqualTo;
+
 
 class ChangePasswordType extends AbstractType
 {
@@ -19,12 +22,18 @@ class ChangePasswordType extends AbstractType
         $builder
             ->add('current_password', PasswordType::class, [
                 'constraints' => [
-                    new NotBlank(),
+
                     new UserPassword(),
                 ],
                 'mapped' => false,
             ])
-            ->add('new_password', PasswordType::class, [
+            ->add('new_password', RepeatedType::class, [
+                'type' => PasswordType::class,
+                'invalid_message' => 'The password fields must match.',
+                'options' => ['attr' => ['class' => 'password-field']],
+                'required' => true,
+                'first_options' => ['label' => 'New Password'],
+                'second_options' => ['label' => 'Confirm New Password'],
                 'mapped' => false,
                 'constraints' => [
                     new NotBlank([

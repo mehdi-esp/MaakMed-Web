@@ -19,6 +19,8 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use App\Service\InventoryService;
+
 /** @method Pharmacy getUser() */
 #[AsLiveComponent]
 class Listing extends AbstractController
@@ -27,7 +29,8 @@ class Listing extends AbstractController
     use LiveCollectionTrait;
 
     public function __construct(
-        private readonly EntityManagerInterface $entityManager
+        private readonly EntityManagerInterface $entityManager,
+        private readonly InventoryService $inventoryService
     )
     {
 
@@ -70,49 +73,12 @@ class Listing extends AbstractController
         );
     }
 
-    #[LiveAction]
-    public function export(InventoryEntryRepository $inventoryRepository): StreamedResponse
-    {
-        $temp_file = $this->getSheet($inventoryRepository);
 
-        // Create a StreamedResponse object and set the necessary headers
-        $response = new StreamedResponse(function () use ($temp_file) {
-            $fp = fopen($temp_file, 'rb');
-            fpassthru($fp);
-            fclose($fp);
-            unlink($temp_file); // Delete the temporary file
-        });
-
-        $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        $response->headers->set('Content-Disposition', $response->headers->makeDisposition(
-            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            'inventory.xlsx'
-        ));
-
-        return $response;
-    }
     #[LiveAction]
     public function generateAndUploadFile(InventoryEntryRepository $inventoryRepository): RedirectResponse
     {
-        $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
-
-        // Fetch the inventory data
-        $inventoryEntries = $inventoryRepository->findBy(['pharmacy' => $this->getUser()]);
-
-        // Add data to the spreadsheet
-        $sheet->setCellValue('A1', 'Medication');
-        $sheet->setCellValue('B1', 'Quantity');
-        foreach ($inventoryEntries as $index => $entry) {
-            $sheet->setCellValue('A' . ($index + 2), $entry->getMedication()->getName());
-            $sheet->setCellValue('B' . ($index + 2), $entry->getQuantity());
-        }
-
-        // Create a writer object and save the spreadsheet to a temporary file
-        $writer = new Xlsx($spreadsheet);
-        $temp_file = tempnam(sys_get_temp_dir(), 'inventory');
-        $temp_file .= '.xlsx'; // Add the .xlsx extension to the temporary file
-        $writer->save($temp_file);
+        // Get the temporary file from the InventoryService
+        $temp_file = $this->inventoryService->getSheet($inventoryRepository, $this->getUser());
 
         // Initialize Guzzle client
         $client = new Client();
@@ -148,34 +114,5 @@ class Listing extends AbstractController
         return new RedirectResponse($this->fileLink);
     }
 
-    public function getSheet(InventoryEntryRepository $inventoryRepository): string|false
-    {
-        $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
 
-        // Fetch the inventory data
-        $inventoryEntries = $inventoryRepository->findBy(['pharmacy' => $this->getUser()]);
-
-        // Add data to the spreadsheet
-        $sheet->setCellValue('A1', 'Medication');
-        $sheet->setCellValue('B1', 'Quantity');
-        foreach ($inventoryEntries as $index => $entry) {
-            $sheet->setCellValue('A' . ($index + 2), $entry->getMedication()->getName());
-            $sheet->setCellValue('B' . ($index + 2), $entry->getQuantity());
-        }
-
-        // Create a writer object and save the spreadsheet to a temporary file
-        $writer = new Xlsx($spreadsheet);
-        $temp_file = $this->getTempFile('inventory', 'xlsx');
-        $writer->save($temp_file);
-        return $temp_file;
-    }
-
-    private function getTempFile($prefix, $extension): string
-    {
-        $temp_dir = sys_get_temp_dir();
-        $temp_file = tempnam($temp_dir, $prefix);
-        unlink($temp_file);
-        return $temp_file . '.' . $extension;
-    }
 }

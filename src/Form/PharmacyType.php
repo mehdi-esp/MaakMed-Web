@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Pharmacy;
+use PixelOpen\CloudflareTurnstileBundle\Type\TurnstileType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
@@ -63,6 +64,7 @@ class PharmacyType extends AbstractType
                 ],
             ])
             ->add('plainPassword', PasswordCreationType::class)
+            ->add('security', TurnstileType::class, ['label' => false])
         ;
     }
 
