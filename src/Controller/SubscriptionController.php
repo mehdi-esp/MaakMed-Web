@@ -177,8 +177,7 @@ class SubscriptionController extends AbstractController
 
                 $entityManager->persist($subscription);
                 $entityManager->flush();
-               $this->addFlash('message', 'Subscription created successfully.');
-               $this->addFlash('status', 'success');
+               $this->addFlash('success', 'Subscription created successfully.');
         \Stripe\Stripe::setApiKey($_ENV['STRIPE_KEY']);
         header('Content-Type: application/json');
         // Get the plan with the given ID
