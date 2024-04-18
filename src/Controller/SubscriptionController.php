@@ -143,7 +143,7 @@ class SubscriptionController extends AbstractController
         $entityManager->flush();
         return $this->redirectToRoute('app_subscription_listAdmin');
     }
-    #[Route('/stripe/checkout/{planId}/{amount}', name: 'app_subscription_Activate')]
+    #[Route('/{planId<\d+>}/{amount}', name: 'app_subscription_Activate')]
     #[IsGranted("ROLE_PATIENT")]
     public function createCheckoutSession(int $planId, float $amount, EntityManagerInterface $entityManager): JsonResponse|RedirectResponse
     {
@@ -203,12 +203,10 @@ class SubscriptionController extends AbstractController
                     'quantity' => 1,
                 ]],
                 'mode' => 'payment',
-                'success_url' => 'https://www.google.com',
-                'cancel_url' => 'https://www.youtube.com',
+                'success_url' => 'http://127.0.0.1:8000/subscription/success',
+                'cancel_url' => 'http://127.0.0.1:8000/subscription/failure',
             ]);
-             header("HTTP/1.1 303 See Other");
-              header("Location: " . $session->url);
-            return new RedirectResponse($session->url, 303);
+            return new RedirectResponse($session->url);
         } catch (\Stripe\Exception\ApiErrorException $e) {
             error_log($e->getMessage());
             return 'An error occurred while creating the Stripe Checkout Session: ' . $e->getMessage();
@@ -251,5 +249,10 @@ class SubscriptionController extends AbstractController
    {
        return $this->render('subscription/success.html.twig');
    }
-
+   #[Route('/subscription/failure', name: 'app_subscription_failure', methods: ['GET'])]
+      #[IsGranted("ROLE_PATIENT")]
+      public function paymentFailure(): Response
+      {
+          return $this->render('subscription/failure.html.twig');
+      }
 }

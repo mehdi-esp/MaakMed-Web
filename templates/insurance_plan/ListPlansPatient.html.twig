@@ -72,7 +72,7 @@
                             </button>
                         </form>
                     {% else %}
-                        <form method="POST" action="{{ path('app_subscription_Activate', {'planId': plan.id, 'amount': plan.cost}) }}">
+                        <form method="POST" data-turbo="false" action="{{ path('app_subscription_Activate', {'planId': plan.id, 'amount': plan.cost}) }}">
                             <button type="submit" class="flex items-center mt-auto text-white bg-indigo-500 border-0 py-2 px-4 w-full focus:outline-none hover:bg-indigo-600 rounded" data-subscribe-button="true">
                                 Subscribe
                                 <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-auto" viewBox="0 0 24 24">
