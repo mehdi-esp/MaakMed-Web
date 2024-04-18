@@ -39,7 +39,7 @@
                     <td>{{ insurancePlan.ceiling }}</td>
                     <td><a class="btn btn-primary text-white"
                            href="{{ path('app_insurancePlan_edit', {'id': insurancePlan.id}) }}">Update</a></td>
-                    <td><a class="btn btn-primary text-white"
+                    <td><a class="btn btn-primary text-white" data-turbo-method="post"
                            href="{{ path('app_insurancePlan_delete', {'id': insurancePlan.id}) }}">Delete</a></td>
                 </tr>
             {% else %}
