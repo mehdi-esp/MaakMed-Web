@@ -145,22 +145,38 @@ class SubscriptionController extends AbstractController
     }
     #[Route('/{planId<\d+>}/{amount}', name: 'app_subscription_Activate')]
     #[IsGranted("ROLE_PATIENT")]
-    public function createCheckoutSession(int $planId, float $amount, EntityManagerInterface $entityManager): JsonResponse|RedirectResponse
+    public function Subscribe(int $planId, float $amount, EntityManagerInterface $entityManager): JsonResponse|RedirectResponse
     {
+         \Stripe\Stripe::setApiKey($_ENV['STRIPE_KEY']);
          $user = $this->getUser();
                if (!$user instanceof Patient) {
                    throw new \Exception('Logged in user must be a Patient');
                }
+               try {
+                       $plan = $entityManager->getRepository(InsurancePlan::class)->find($planId);
+                       if (!$plan) {
+                           throw $this->createNotFoundException('The plan does not exist');
+                       }
 
                $existingSubscription = $entityManager->getRepository(Subscription::class)
                           ->findOneBy([
                               'patient' => $user,
-                              'status' => ['pending', 'active']
+                              'status' => ['active']
                           ]);
                       if ($existingSubscription) {
                           $this->addFlash('warning', 'You already have an active or pending subscription.');
                           return $this->redirectToRoute('app_insurance_plan_ListPlans');
                       }
+               $pendingSubscriber = $entityManager->getRepository(Subscription::class)
+                           ->findOneBy([
+                               'patient' => $user,
+                               'status' => ['pending']
+                           ]);
+               if($pendingSubscriber){
+               $this->addFlash('success', 'Plan Pending redirecting to payment session .');
+                $session = $this->createCheckoutSession($plan->getName(), $amount);
+                           return new RedirectResponse($session->url);
+               }
                $subscription = new Subscription();
                $subscription->setPatient($user);
                $currentDate = new \DateTimeImmutable();
@@ -171,47 +187,46 @@ class SubscriptionController extends AbstractController
                $subscription->setEndDate($endDate);
                $subscription->setStatus('pending');
 
-               // Get the plan with the given ID and set it on the subscription
+
                $plan = $entityManager->getRepository(InsurancePlan::class)->find($planId);
                $subscription->setPlan($plan);
-
                 $entityManager->persist($subscription);
                 $entityManager->flush();
                $this->addFlash('success', 'Subscription created successfully.');
-        \Stripe\Stripe::setApiKey($_ENV['STRIPE_KEY']);
-        header('Content-Type: application/json');
-        // Get the plan with the given ID
-        $plan = $entityManager->getRepository(InsurancePlan::class)->find($planId);
-        if (!$plan) {
-            throw $this->createNotFoundException('The plan does not exist');
-        }
-
-        $namePlan = $plan->getName();
-        $amountInCents = $amount * 100;
-
-        try {
-            $session = \Stripe\Checkout\Session::create([
-                'payment_method_types' => ['card'],
-                'line_items' => [[
-                    'price_data' => [
-                        'currency' => 'usd',
-                        'unit_amount' => $amountInCents,
-                        'product_data' => [
-                            'name' => $namePlan,
-                        ],
-                    ],
-                    'quantity' => 1,
-                ]],
-                'mode' => 'payment',
-                'success_url' => 'http://127.0.0.1:8000/subscription/success',
-                'cancel_url' => 'http://127.0.0.1:8000/subscription/failure',
-            ]);
+            $session = $this->createCheckoutSession($plan->getName(), $amount);
             return new RedirectResponse($session->url);
         } catch (\Stripe\Exception\ApiErrorException $e) {
             error_log($e->getMessage());
-            return 'An error occurred while creating the Stripe Checkout Session: ' . $e->getMessage();
+            throw new \Exception('An error occurred while creating the Stripe Checkout Session: ' . $e->getMessage());
         }
     }
+
+    public function createCheckoutSession(string $namePlan, float $amount) : \Stripe\Checkout\Session
+    {
+    \Stripe\Stripe::setApiKey($_ENV['STRIPE_KEY']);
+        $amountInCents = $amount * 100;
+
+        $session = \Stripe\Checkout\Session::create([
+            'payment_method_types' => ['card'],
+            'line_items' => [[
+                'price_data' => [
+                    'currency' => 'usd',
+                    'unit_amount' => $amountInCents,
+                    'product_data' => [
+                        'name' => $namePlan,
+                    ],
+                ],
+                'quantity' => 1,
+            ]],
+            'mode' => 'payment',
+            'success_url' => $this->generateUrl('app_subscription_success', [], UrlGeneratorInterface::ABSOLUTE_URL),
+            'cancel_url' => $this->generateUrl('app_subscription_failure', [], UrlGeneratorInterface::ABSOLUTE_URL),
+        ]);
+
+        return $session;
+    }
+
+
     #[Route('/subscription/cancel/{planId}', name: 'app_subscription_Cancel')]
     #[IsGranted("ROLE_PATIENT")]
     public function cancelSubscription(int $planId, EntityManagerInterface $entityManager): Response
