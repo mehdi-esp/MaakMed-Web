@@ -96,7 +96,8 @@ class InsurancePlanController extends AbstractController
 
         ], $response);
     }
-    #[Route('/{id}/IPdelete', name: 'app_insurancePlan_delete', methods: ['GET'])]
+
+    #[Route('/{id}/IPdelete', name: 'app_insurancePlan_delete', methods: ['POST'])]
     #[IsGranted('ROLE_ADMIN')]
     public function delete(Request $req, InsurancePlan $ip, EntityManagerInterface $entityManager): Response
     {

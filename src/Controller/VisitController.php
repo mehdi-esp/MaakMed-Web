@@ -15,14 +15,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use WhiteOctober\BreadcrumbsBundle\Model\Breadcrumbs;
 
 #[Route('/visit')]
 class VisitController extends AbstractController
 {
     #[Route('/', name: 'app_visit_index', methods: ['GET'])]
     #[IsGranted(VisitVoter::LIST_ALL)]
-    public function index(): Response
+    public function index(Breadcrumbs $breadcrumbs): Response
     {
+        $breadcrumbs->addRouteItem("Visits", "app_visit_index");
         return $this->render('visit/index.html.twig');
     }
 
@@ -55,8 +57,15 @@ class VisitController extends AbstractController
 
     #[Route('/new', name: 'app_visit_new', methods: ['GET', 'POST'])]
     #[IsGranted("ROLE_DOCTOR")]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
+    public function new(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        Breadcrumbs $breadcrumbs
+    ): Response {
+
+        $breadcrumbs->addRouteItem("Visits", "app_visit_index");
+        $breadcrumbs->addRouteItem("New", "app_visit_new");
+
         /** @var Doctor $doctor */
         $doctor = $this->getUser();
 
@@ -89,8 +98,10 @@ class VisitController extends AbstractController
 
     #[Route('/{id}', name: 'app_visit_show', methods: ['GET'])]
     #[IsGranted(VisitVoter::VIEW, subject: 'visit')]
-    public function show(Visit $visit): Response
+    public function show(Visit $visit, Breadcrumbs $breadcrumbs): Response
     {
+        $breadcrumbs->addRouteItem("Visits", "app_visit_index");
+        $breadcrumbs->addRouteItem($visit->getId(), "app_visit_show", ["id" => $visit->getId()]);
         return $this->render('visit/show.html.twig', [
             'visit' => $visit,
         ]);
@@ -98,8 +109,16 @@ class VisitController extends AbstractController
 
     #[Route('/{id}/edit', name: 'app_visit_edit', methods: ['GET', 'POST'])]
     #[IsGranted(VisitVoter::MANAGE, subject: 'visit')]
-    public function edit(Request $request, Visit $visit, EntityManagerInterface $entityManager): Response
-    {
+    public function edit(
+        Request $request,
+        Visit $visit,
+        EntityManagerInterface $entityManager,
+        Breadcrumbs $breadcrumbs
+    ): Response {
+        $breadcrumbs->addRouteItem("Visits", "app_visit_index");
+        $breadcrumbs->addRouteItem($visit->getId(), "app_visit_show", ["id" => $visit->getId()]);
+        $breadcrumbs->addRouteItem("Edit", "app_visit_edit", ["id" => $visit->getId()]);
+
         $form = $this->createForm(VisitType::class, $visit);
         $form->handleRequest($request);
 
