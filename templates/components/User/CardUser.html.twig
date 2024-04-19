@@ -1,25 +1,22 @@
 {# @var user \App\Entity\User #}
 {% props user = null %}
-<div {{ attributes }}>
+<div {{ attributes }} class="relative">
 
-    <div class="card card-side bg-base-100 shadow-xl my-5 mx-5 w-[22rem] border border-t-4 border-t-blue-600">
+    <div class="card card-side card-bordered bg-base-100 shadow-xl w-[26rem] min-h-[14rem] hover:scale-105 hover:border-t-accent">
         <figure>
-            <!-- You can replace this with an actual image of the user if you have one -->
             <img class="object-contain w-[80px] h-[80px] m-[10px]"
                  src="{{ asset('images/' ~ user.iconPath) }}"
                  alt="{{ user.username }}"/>
         </figure>
-        <div class="card-body">
-            <h2 class="card-title" style="color: #6B7B8C;">{{ user.username }}</h2>
-
-            <p>
-                {{ user.roleName }}
-            </p>
-            {# <div class="card-actions justify-end">
-            <!-- You can replace this with an actual action for the user -->
-            <button class="btn btn-outline btn-info ">Ban</button>
-
-        </div> #}
+        <div class="card-body w-[10rem]">
+            <h2 class="card-title text-[#0069AC] truncate"> Username: <a class="link link-hover"
+                                                                href="{{ path('user_profile', {username: user.username}) }}">{{ user.username }}</a>
+            </h2>
+            <p style="color: red; font-size: 0.8em; font-style: italic;"> Role: {{ user.roleName }}</p>
+            {% if user.email is not null %}
+                <p class="bold-text"><span style="color: #41C9E2;">Email:</span> <span
+                            style="color: black;">{{ user.email }}</span></p>
+            {% endif %}
         </div>
     </div>
 </div>

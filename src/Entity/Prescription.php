@@ -30,7 +30,6 @@ class Prescription
     #[ORM\OneToOne(mappedBy: 'prescription', cascade: ['persist', 'remove'])]
     private ?Visit $visit = null;
 
-    
     public function __construct()
     {
         $this->medications = new ArrayCollection();
@@ -111,5 +110,19 @@ class Prescription
         $this->visit = $visit;
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPrescriptionSpeech(): string
+    {
+        $message = "Follow these instructions carefully: ";
+
+        foreach ( $this->getMedications() as $medication) {
+            $message .= $medication->getMedication()->getName() ." Please". $medication->getInstructions();
+        }
+
+        return $message;
     }
 }

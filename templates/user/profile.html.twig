@@ -1,0 +1,193 @@
+{% extends 'base.html.twig' %}
+
+        {% block title %}Profile{% endblock %}
+
+        {% block body %}
+
+            {% if app.user is same as(user) %}
+                <h3 style="font-size: 1.5em; color: #0069AC; margin-left: 30px; margin-top: 30px; font-weight: bold;">
+                    Welcome, {{ user.username }}</h3>
+
+                <h4 style="font-size: 1em; color: #262626; margin-left: 30px; margin-top: 20px; font-weight: bold;">Your
+                    Profile</h4>
+            {% else %}
+                <h3 style="font-size: 1em; color: #262626; margin-left: 30px; margin-top: 20px; font-weight: bold;">{{ user.username }}
+                    's Profile</h3>
+            {% endif %}
+
+
+            <div style="display:flex; justify-content: center; align-items: center; height: 80vh;">
+
+                {% if 'ROLE_DOCTOR' in user.roles %}
+
+                    <div class="flex justify-center items-center min-h-screen ">
+                        <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl m-4">
+                            <div class="md:flex">
+                                <div class="md:flex-shrink-0">
+                                    <img class="h-48 w-full object-cover md:w-48" src="{{ asset('images/doctor.png') }}"
+                                         alt="Doctor">
+                                </div>
+                                <div class="p-8">
+                                    <div class="uppercase tracking-wide text-sm text-[#41C9E2]  font-bold">Doctor</div>
+                                    <p class="block mt-1 text-lg leading-tight font-medium ">
+                                        UserName: {{ user.username }}</p>
+                                    <br>
+                                    <br>
+                                    {% if user.email is not null %}
+                                        <p><strong>Email: </strong>{{ user.email }}</p>
+                                    {% endif %}
+                                    <p><strong>Full Name: </strong>{{ user.firstName }} {{ user.lastName }}</p>
+                                    <p><strong>Specialization: </strong>{{ user.specialization }}</p>
+                                    <p><strong>NationalId: </strong>{{ user.nationalId }}</p>
+                                    {% if user.number is not null %}
+                                        <p><strong>Number: </strong>{{ user.number }}</p>
+
+                                    {% endif %}
+                                    <br>
+                                    <br>
+                                    <div class="mt-4 space-x-4">
+                                        <a href="{{ path('profile_edit') }}"
+                                           class="btn btn-secondary border border-transparent text-sm leading-4 font-medium rounded-md text-white  hover: focus:outline-none focus:ring-2 focus:ring-offset-2 ">
+                                            Edit Profile
+                                        </a>
+                                        <a href="{{ path('password_change') }}"
+                                           class="btn btn-primary border border-transparent text-sm leading-4 font-medium rounded-md text-white  hover: focus:outline-none focus:ring-2 focus:ring-offset-2 ">
+                                            Change Password
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% elseif 'ROLE_PATIENT' in user.roles %}
+                    <div class="flex justify-center items-center min-h-screen ">
+                        <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl m-4">
+                            <div class="md:flex">
+                                <div class="md:flex-shrink-0">
+                                    <img class="h-48 w-full object-cover md:w-48"
+                                         src="{{ asset('images/patient.png') }}" alt="Patient">
+                                </div>
+                                <div class="p-8">
+                                    <div class="uppercase tracking-wide text-sm text-[#41C9E2] font-bold">Patient</div>
+                                    <p class="block mt-1 text-lg leading-tight text-[#1E578D] font-medium ">
+                                        UserName: {{ user.username }}</p>
+                                    <br>
+                                    <br>
+                                    {% if user.email is not null %}
+                                        <p><strong>Email: </strong>{{ user.email }}</p>
+                                    {% endif %}
+                                    <p><strong>Full Name: </strong>{{ user.firstName }} {{ user.lastName }}</p>
+                                    <p><strong>Date of Birth: </strong>{{ user.dateOfBirth|date('Y-m-d') }}</p>
+                                    <p><strong>NationalID Number: </strong> {{ user.nationalId }}</p>
+                                    {% if user.number is not null %}
+                                        <p><strong>Number: </strong>{{ user.number }}</p>
+                                    {% endif %}
+                                    <br>
+                                    <br>
+                                    {% if app.user is same as(user) %}
+
+                                        <div class="mt-4 space-x-4">
+                                            <a href="{{ path('profile_edit') }}"
+                                               class="btn btn-secondary border border-transparent text-sm leading-4 font-medium rounded-md text-white  hover: focus:outline-none focus:ring-2 focus:ring-offset-2 ">
+                                                Edit Profile
+                                            </a>
+                                            <a href="{{ path('password_change') }}"
+                                               class="btn btn-primary border border-transparent text-sm leading-4 font-medium rounded-md text-white  hover: focus:outline-none focus:ring-2 focus:ring-offset-2 ">
+                                                Change Password
+                                            </a>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% elseif 'ROLE_ADMIN' in user.roles %}
+                    <div class="flex justify-center items-center min-h-screen ">
+                        <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl m-4">
+                            <div class="md:flex">
+                                <div class="md:flex-shrink-0">
+                                    <img class="h-48 w-full object-cover md:w-48" src="{{ asset('images/admin.png') }}"
+                                         alt="Admin">
+                                </div>
+                                <div class="p-8">
+                                    <div class=" uppercase tracking-wide text-sm text-[#41C9E2] font-bold ">Admin</div>
+                                    <p class="block mt-1 text-lg leading-tight text-[#1E578D] font-medium ">
+                                        UserName: {{ user.username }}</p>
+                                    <br>
+                                    <br>
+                                    {% if user.email is not null %}
+                                        <p><strong>Email: </strong>{{ user.email }}</p>
+                                    {% endif %}
+                                    <br>
+                                    <br>
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <a href="{{ path('profile_edit') }}"
+                                           class="btn btn-secondary border border-transparent text-sm leading-4 font-medium rounded-md text-white  hover: focus:outline-none focus:ring-2 focus:ring-offset-2 ">
+                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                 stroke-width="1.5" stroke="currentColor" class="size-5">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                      d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"/>
+                                            </svg>
+                                        </a>
+                                        <a href="{{ path('password_change') }}"
+                                           class="btn btn-primary border border-transparent text-sm leading-4 font-medium rounded-md text-white  hover: focus:outline-none focus:ring-2 focus:ring-offset-2 ">
+                                            Change Password
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                {% elseif 'ROLE_PHARMACY' in user.roles %}
+                    <div class="flex justify-center items-center min-h-screen ">
+                        <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl m-4">
+                            <div class="md:flex">
+                                <div class="md:flex-shrink-0">
+                                    <img class="h-48 w-full object-cover md:w-48"
+                                         src="{{ asset('images/pharmacy.png') }}" alt="Pharmacy">
+                                </div>
+                                <div class="p-8">
+                                    <div class="uppercase tracking-wide text-sm text-[#41C9E2] font-bold">Pharmacy</div>
+                                    <p class="block mt-1 text-lg leading-tight text-[#1E578D] font-medium ">
+                                        UserName: {{ user.username }}</p>
+                                    <br>
+                                    <br>
+                                    {% if user.email is not null %}
+                                        <p><strong>Email: </strong>{{ user.email }}</p>
+                                    {% endif %}
+                                    <p><strong>Name: </strong> {{ user.name }}</p>
+                                    <p><strong>Address: </strong> {{ user.address }}</p>
+                                    {% if user.number is not null %}
+                                        <p><strong>Number: </strong> {{ user.number }}</p>
+                                    {% endif %}
+                                    <br>
+                                    <br>
+                                    <div class="mt-4 space-x-4">
+                                        <a href="{{ path('profile_edit') }}"
+                                           class="btn btn-secondary border border-transparent text-sm leading-4 font-medium rounded-md text-white  hover: focus:outline-none focus:ring-2 focus:ring-offset-2 ">
+                                            Edit Profile
+                                        </a>
+                                        <a href="{{ path('password_change') }}"
+                                           class="btn btn-primary border border-transparent text-sm leading-4 font-medium rounded-md text-white  hover: focus:outline-none focus:ring-2 focus:ring-offset-2 ">
+                                            Change Password
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                {% endif %}
+                <br> <br> <br>
+            </div>
+        {% endblock %}
+
+
+
+
+

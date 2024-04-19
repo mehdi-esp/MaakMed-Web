@@ -1,0 +1,8 @@
+{% extends ('ROLE_ADMIN' in app.user.roles) ? 'base_admin.html.twig' : 'base.html.twig' %}
+
+
+{% block title %}Update Subscription{% endblock %}
+
+{% block body %}
+    {% include 'components/Subscription/UpdateSub.html.twig' with {'form': form} %}
+{% endblock %}

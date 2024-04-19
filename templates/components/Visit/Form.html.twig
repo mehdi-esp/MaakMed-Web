@@ -28,8 +28,7 @@
                   class: 'textarea absolute textarea-bordered textarea-lg w-full resize-none min-h-96',
                   ...stimulus_target("diagnosis", "writingArea"),
                   ...(
-                      client != null ?
-                      (
+                      client != null ? (
                           stimulus_action("diagnosis", "dismissSuggestion")|
                           stimulus_action("diagnosis", "dismissSuggestion", "focusout")|
                           stimulus_action("diagnosis", "dismissSuggestion", "keydown.esc")|

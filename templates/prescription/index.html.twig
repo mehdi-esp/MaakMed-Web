@@ -1,90 +1,9 @@
-{% extends 'base.html.twig' %}
+{% extends is_granted('ROLE_ADMIN') ? 'base_admin.html.twig' : 'base.html.twig' %}
 
-{% block title %}  Prescription Page{% endblock %}
+{% block title %}Prescription Page{% endblock %}
 
 {% block body %}
     <main class="md:container md:mx-auto px-6 scroll-smooth mb-8">
-        <div class="prose"><h1 id="visits">Prescriptions</h1></div>
-        {% if is_granted('ROLE_DOCTOR') %}
-            <div class="flex">
-                <a role="button" class="btn btn-primary mx-auto" href="{{ path('app_prescription_new') }}">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                         stroke="currentColor" class="size-6">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
-                    </svg>
-                    New Prescription
-                </a>
-            </div>
-        {% endif %}
-
-        <!-- Filter form -->
-        <!-- Filter form -->
-        <form method="get" action="{{ path('app_prescription_index') }}" class="container p-2 md:p-5 flex flex-wrap justify-center gap-x-4 gap-y-6">
-            <div class="flex flex-col md:flex-row gap-4">
-
-                <div>
-                    <label for="confirmed" class="block text-sm font-medium text-gray-700">Confirmed:</label>
-                    <select id="confirmed" name="confirmed" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                        <option value="">All</option>
-                        <option value="1">Yes</option>
-                        <option value="0">No</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="order" class="block text-sm font-medium text-gray-700">Order by:</label>
-                    <select id="order" name="order" class="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                        <option value="newest">Newest</option>
-                        <option value="oldest">Oldest</option>
-                    </select>
-                </div>
-            </div>
-            <div class="flex justify-center mt-6">
-                <input type="submit" value="Get" class="btn-primary inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-            </div>
-        </form>
-
-        <div class="container p-2 md:p-5 flex flex-wrap justify-center gap-x-4 gap-y-6">
-            {% for pres in prescriptions %}
-                <twig:Prescription:Card prescription="{{ pres }}"/>
-            {% endfor %}
-            </section>
-            <div class="grid justify-end">
-                <a
-                        class="fixed bottom-4 start-4 md:bottom-16 md:start-16 btn rounded-full"
-                        role="button"
-                        href="#visits"
-                        id="btn-back-to-top">
-            <span class="[&>svg]:w-4">
-              <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="3"
-                      stroke="currentColor">
-                <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M4.5 10.5 12 3m0 0 7.5 7.5M12 3v18"/>
-              </svg>
-            </span>
-                </a>
-            </div>
+        <twig:Prescription:Listing/>
     </main>
-
-    <div class="toast">
-        {% for label, messages in app.flashes %}
-            {% for message in messages %}
-                <div role="alert" class="alert alert-{{ label }}">
-                    <span class="text-white">{{ message }}</span>
-                    <button onclick="this.parentNode.remove()">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
-                            <path class="text-white" fill-rule="evenodd"
-                                  d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z"
-                                  clip-rule="evenodd"/>
-                        </svg>
-                    </button>
-                </div>
-            {% endfor %}
-        {% endfor %}
-    </div>
 {% endblock %}

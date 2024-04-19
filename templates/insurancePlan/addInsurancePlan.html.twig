@@ -1,0 +1,8 @@
+{% extends ('ROLE_ADMIN' in app.user.roles) ? 'base_admin.html.twig' : 'base.html.twig' %}
+
+
+{% block title %}New InsurancePlan{% endblock %}
+
+{% block body %}
+    <twig:InsurancePlanForm form="{{ form }}" initialFormData="{{ insurancePlan }}"/>
+{% endblock %}

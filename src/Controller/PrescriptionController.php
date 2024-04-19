@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controller;
+
 use App\Entity\Admin;
 use App\Entity\Doctor;
 use App\Entity\Patient;
@@ -18,8 +19,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\Prescription;
 use App\Repository\VisitRepository;
 use App\Form\PrescriptionType;
-
-
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 
 #[Route('/prescription')]
@@ -29,20 +29,14 @@ class PrescriptionController extends AbstractController
     #[IsGranted(PrescriptionVoter::LIST_ALL)]
     public function index(
         PrescriptionRepository $prescriptionRepository,
-        Request $request
+        Request                $request
     ): Response
     {
         /** @var Doctor|Admin|Patient $user */
         $user = $this->getUser();
 
-        $confirmed = $request->query->get('confirmed');
-        $order = $request->query->get('order');
 
-        $prescriptions = $prescriptionRepository->findByUserAndFilters($user, $confirmed, $order);
-
-        return $this->render('prescription/index.html.twig', [
-            'prescriptions' => $prescriptions,
-        ]);
+        return $this->render('prescription/index.html.twig');
     }
 
     #[Route('/new', name: 'app_prescription_new', methods: ['GET', 'POST'])]
@@ -92,6 +86,7 @@ class PrescriptionController extends AbstractController
             'prescription' => $prescription,
         ]);
     }
+
     #[Route('/{id}/edit', name: 'app_prescription_edit', methods: ['GET', 'POST'])]
     #[IsGranted(PrescriptionVoter::MANAGE, subject: 'prescription')]
     public function edit(Request $request, Prescription $prescription, EntityManagerInterface $entityManager): Response
@@ -122,6 +117,7 @@ class PrescriptionController extends AbstractController
             'form' => $form->createView(),
         ], $response);
     }
+
     #[Route('/{id}', name: 'app_prescription_delete', methods: ['POST'])]
     #[IsGranted(PrescriptionVoter::MANAGE, subject: 'prescription')]
     public function delete(Request $request, Prescription $prescription, EntityManagerInterface $entityManager): Response
@@ -133,4 +129,27 @@ class PrescriptionController extends AbstractController
 
         return $this->redirectToRoute('app_prescription_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    #[Route('/{id}/speech', name: 'app_prescription_speech', methods: ['POST', 'GET'])]
+    public function speech(Request $request, Prescription $prescription, HttpClientInterface $client): Response
+    {
+        /** @var Doctor|Admin|Patient $user */
+        $user = $this->getUser();
+        $response = $client->request('POST', 'https://api.deepgram.com/v1/speak?model=aura-asteria-en', [
+            'headers' => [
+                'Authorization' => 'Token ***REMOVED***',
+                'Content-Type' => 'application/json',
+            ],
+            'json' => ['text' =>  "Hi". $user->getUsername() .",".$prescription->getPrescriptionSpeech()
+            ],
+        ]);
+
+        $content = $response->getContent();
+        return new Response($content,
+            $response->getStatusCode(),
+            [
+                'Content-Type' => $response->getHeaders()['content-type'][0],
+            ]);
+    }
+
 }

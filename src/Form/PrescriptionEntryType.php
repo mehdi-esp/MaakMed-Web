@@ -10,6 +10,8 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Positive;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class PrescriptionEntryType extends AbstractType
 {
@@ -32,7 +34,19 @@ class PrescriptionEntryType extends AbstractType
                 ],
                 'empty_data' => 1
             ])
-            ->add('instructions');
+            ->add('instructions', null, [
+                'constraints' => [
+                    new NotBlank(['message' => "Instructions cannot be blank"]),
+                    new Length([
+                        'max' => 50,
+                        'maxMessage' => 'Instructions cannot be longer than {{ limit }} characters',
+                    ]),
+                    new Regex([
+                        'pattern' => '/^[a-zA-Z0-9\s]*$/',
+                        'message' => 'Instructions should not contain special characters',
+                    ]),
+                ],
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

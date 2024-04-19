@@ -3,5 +3,8 @@
 {% block title %}Inventory{% endblock %}
 
 {% block body %}
+    <a href="{{ path('app_inventory_export') }}" class="btn btn-primary">Export Inventory</a>
+
     <twig:Inventory:Listing/>
+
 {% endblock %}

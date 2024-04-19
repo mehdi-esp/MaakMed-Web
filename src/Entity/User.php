@@ -186,6 +186,15 @@ abstract class User implements UserInterface, PasswordAuthenticatedUserInterface
         };
     }
 
+    public function getAvatarString(): string
+    {
+        return match (true) {
+            $this instanceof Patient, $this instanceof Doctor => $this->getFirstName()[0] . $this->getLastName()[0],
+            $this instanceof Pharmacy => substr($this->getName(), 0, 2),
+            $this instanceof Admin => substr($this->getUsername(), 0, 2)
+        };
+    }
+
     /**
      * Returning a salt is only needed, if you are not using a modern
      * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.

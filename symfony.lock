@@ -70,6 +70,12 @@
     "jungi/framework-extra-bundle": {
         "version": "v1.4.2"
     },
+    "knplabs/knp-time-bundle": {
+        "version": "v2.2.0"
+    },
+    "mhujer/breadcrumbs-bundle": {
+        "version": "1.5.9"
+    },
     "nelmio/cors-bundle": {
         "version": "2.4",
         "recipe": {

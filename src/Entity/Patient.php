@@ -52,7 +52,6 @@ class Patient extends User
     {
         return $this->address;
     }
-
     public function setAddress(?string $address): static
     {
         $this->address = $address;
@@ -71,7 +70,7 @@ class Patient extends User
     public function getActiveSubscription(): ?Subscription
     {
         return $this->subscriptions
-            ->filter(fn(Subscription $subscription) => $subscription->getStatus() === 'ACTIVE')
+            ->filter(fn(Subscription $subscription) => in_array($subscription->getStatus(), ['ACTIVE', 'PENDING']))
             ->first() ?: null;
     }
 
