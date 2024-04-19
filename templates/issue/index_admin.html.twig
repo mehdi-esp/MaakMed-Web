@@ -37,11 +37,11 @@
                                     </p>
                                 </div>
                                 <div class="flex items-center">
-                                    {# Delete button for admins only #}
-                                    {% if is_granted('ROLE_ADMIN') %}
-                                        <form action="{{ path('app_issue_delete', {'id': issue.id}) }}" method="post">
+                                {#   <form action="{{ path('app_issue_delete', {'id': issue.id}) }}" method="post">
                                             <button type="submit" class="btn btn-danger ml-auto">Delete</button>
-                                        </form>
+                                        </form> #}
+                                    {% if is_granted('ROLE_ADMIN') %}
+                                      
                                         <a href="{{ path('app_add_issue_response',{'issueId': issue.id} )}}" class="btn btn-primary ml-2">Respond</a>
                                     {% endif %}
                                 </div>

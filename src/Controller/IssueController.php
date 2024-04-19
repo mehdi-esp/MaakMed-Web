@@ -127,6 +127,17 @@ class IssueController extends AbstractController
 
         return $this->redirectToRoute('app_issue_index', [], Response::HTTP_SEE_OTHER);
     }
+
+
+
+    public function getCategories(IssueRepository $issueRepository): Response
+    {
+        // Fetch the categories from your Issue repository
+        $categories = $issueRepository->findAllCategories(); // Assuming you have a method like this in your repository
+
+        // Return a JSON response with the categories
+        return $this->json($categories);
+    }
 }
 
 
