@@ -18,6 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 
 #[Route('/issue')]
@@ -25,20 +26,26 @@ class IssueController extends AbstractController
 {
     #[Route('/', name: 'app_issue_index', methods: ['GET'])]
     #[IsGranted(IssueVoter::LIST_ALL)]
-    public function index(IssueRepository $issueRepository): Response
+    public function index(IssueRepository $issueRepository, AuthorizationCheckerInterface $authChecker): Response
     {
         $user = $this->getUser();
 
         $criteria = [];
-        $userCriteria = match (true) {
-            $user instanceof Admin => [],
-            $user instanceof Patient => ['user' => $user],
-        };
-        $criteria = array_merge($criteria, $userCriteria);
+        // Check user role and set criteria accordingly
+        if ($authChecker->isGranted('ROLE_ADMIN')) {
+            // For admins, no additional criteria needed, fetch all issues
+        } else {
+            // For patients, fetch issues associated with the current patient
+            $criteria['user'] = $user;
+        }
 
+        // Fetch issues based on criteria
         $issues = $issueRepository->findBy($criteria);
 
-        return $this->render('issue/index.html.twig', [
+        // Render the appropriate template
+        $template = $authChecker->isGranted('ROLE_ADMIN') ? 'issue/index_admin.html.twig' : 'issue/index.html.twig';
+
+        return $this->render($template, [
             'issues' => $issues,
         ]);
     }
@@ -54,6 +61,8 @@ class IssueController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getUser()->addIssue($issue);
+
+            // Set creation date to current date and time
             $issue->setCreationDate(new \DateTimeImmutable());
 
             $entityManager->persist($issue);
@@ -73,7 +82,6 @@ class IssueController extends AbstractController
             'form' => $form->createView()
         ], $response);
     }
-
 
     #[Route('/{id}/edit', name: 'app_issue_edit', methods: ['GET', 'POST'])]
     #[IsGranted(IssueVoter::EDIT, subject: 'issue')]
@@ -118,6 +126,17 @@ class IssueController extends AbstractController
         }
 
         return $this->redirectToRoute('app_issue_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+
+
+    public function getCategories(IssueRepository $issueRepository): Response
+    {
+        // Fetch the categories from your Issue repository
+        $categories = $issueRepository->findAllCategories(); // Assuming you have a method like this in your repository
+
+        // Return a JSON response with the categories
+        return $this->json($categories);
     }
 }
 

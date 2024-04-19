@@ -45,4 +45,13 @@ class IssueRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+
+    public function findAllWithIssues(): array
+    {
+        return $this->createQueryBuilder('r')
+            ->leftJoin('r.issue', 'i')
+            ->addSelect('i')
+            ->getQuery()
+            ->getResult();
+    }
 }
