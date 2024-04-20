@@ -181,13 +181,9 @@ class SubscriptionController extends AbstractController
                $subscription->setPatient($user);
                $currentDate = new \DateTimeImmutable();
                $subscription->setStartDate($currentDate);
-
-               // Add one year to the current date
                $endDate = $currentDate->add(new \DateInterval('P1Y'));
                $subscription->setEndDate($endDate);
                $subscription->setStatus('pending');
-
-
                $plan = $entityManager->getRepository(InsurancePlan::class)->find($planId);
                $subscription->setPlan($plan);
                 $entityManager->persist($subscription);
@@ -226,7 +222,62 @@ class SubscriptionController extends AbstractController
         return $session;
     }
 
+    #[Route('/subscription/webhook',name: 'app_subscription_webhook', methods: ['POST'])]
+    public function handleWebhook(Request $request,EntityManagerInterface $entityManager): Response
+    {
+        $payload = $request->getContent();
+        $sigHeader = $request->headers->get('Stripe-Signature');
+        $endpoint_secret = $_ENV['ENDPOINT_SECRET'];
+        $event = null;
 
+        try {
+            $event = \Stripe\Webhook::constructEvent(
+                $payload,
+                $sigHeader,
+                $endpoint_secret
+            );
+        } catch (\Stripe\Exception\SignatureVerificationException $e) {
+            return new JsonResponse(['error' => 'Bad Request'], Response::HTTP_BAD_REQUEST);
+        }
+
+        if ($event->type === 'checkout.session.completed') {
+            $data = $event->data->object;
+            $email = $data->customer_details->email;
+            $userRepository = $entityManager->getRepository(\App\Entity\User::class);
+            $userId = $userRepository->findIdByEmail($email);
+            if (!$userId) {
+                error_log('User not found for email: ' . $email);
+                return new JsonResponse(['error' => 'Patient not found'], Response::HTTP_NOT_FOUND);
+            }
+            error_log('Activating subscription for user ID: ' . $userId);
+            $this->activateSubscription($userId, $entityManager);
+        }
+
+        return new JsonResponse(['status' => 'success']);
+    }
+
+public function activateSubscription(int $patientId, EntityManagerInterface $entityManager): Response
+{
+    error_log('In activateSubscription method for patient ID: ' . $patientId);
+    $patient = $entityManager->getRepository(Patient::class)->find($patientId);
+    if (!$patient) {
+        throw $this->createNotFoundException('The patient does not exist');
+    }
+    $subscription = $entityManager->getRepository(Subscription::class)
+        ->findOneBy([
+            'patient' => $patient,
+            'status' => ['pending', 'canceling']
+        ]);
+
+    if (!$subscription) {
+                $this->addFlash('warning', 'No pending or canceling subscription found for this patient.');
+                return $this->redirectToRoute('app_subscription_list');
+    }
+
+        $subscription->setStatus('active');
+        $entityManager->persist($subscription);
+        $entityManager->flush();
+}
     #[Route('/subscription/cancel/{planId}', name: 'app_subscription_Cancel')]
     #[IsGranted("ROLE_PATIENT")]
     public function cancelSubscription(int $planId, EntityManagerInterface $entityManager): Response
