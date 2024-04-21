@@ -22,6 +22,7 @@
         "knplabs/knp-time-bundle": "^2.2",
         "mhujer/breadcrumbs-bundle": "^1.5",
         "nelmio/cors-bundle": "^2.4",
+        "nucleos/dompdf-bundle": "^4.0",
         "nyholm/psr7": "^1.8",
         "phpdocumentor/reflection-docblock": "^5.3",
         "phpoffice/phpspreadsheet": "^2.0",
