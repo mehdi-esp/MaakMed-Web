@@ -2,6 +2,8 @@
 
 {% block title %}Invoices{% endblock %}
 
+{% set with_flash_messages = true %}
+
 {% block body %}
     <main class="container flex flex-col md:mx-auto px-2 md:px-6 my-8">
         <twig:Invoice:Listing/>
