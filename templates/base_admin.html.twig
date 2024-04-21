@@ -221,6 +221,11 @@
 
 <!-- ========== END MAIN CONTENT ========== -->
 
+{% block flash_messages %}
+    {% if (with_flash_messages ?? false) is same as(true) %}
+        <twig:Flash:Toast class="toast-center lg:toast-start z-[80]"/>
+    {% endif %}
+{% endblock %}
 <div class="w-full pt-10 px-4 sm:px-6 md:px-8 lg:ps-72">
 {% block body %}{% endblock %}
 </div>
