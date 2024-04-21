@@ -14,8 +14,10 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use WhiteOctober\BreadcrumbsBundle\Model\Breadcrumbs;
+use Nucleos\DompdfBundle\Wrapper\DompdfWrapperInterface;
 
 #[Route('/visit')]
 class VisitController extends AbstractController
@@ -150,5 +152,15 @@ class VisitController extends AbstractController
         }
 
         return $this->redirectToRoute('app_visit_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/{id}/export', name: 'app_visit_export', methods: ['GET'])]
+    #[IsGranted(VisitVoter::VIEW, subject: 'visit')]
+    public function export(
+        Visit $visit,
+        DompdfWrapperInterface $wrapper,
+    ): StreamedResponse {
+        $html = $this->renderView("pdf/visit.html.twig", ['visit' => $visit]);
+        return $wrapper->getStreamResponse($html, "MaakMed-Visit-{$visit->getId()}.pdf");
     }
 }

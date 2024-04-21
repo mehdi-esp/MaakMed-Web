@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Visit Information</title>
+    <style>
+        html, body, footer {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            padding: 0;
+            background-color: #EDEDED;
+            line-height: 1.6;
+        }
+
+        h1 {
+            color: #38b2ac;
+            text-align: center;
+            padding: 20px 0;
+            font-size: 2.5em;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .visit-info {
+            background-color: #edf2f7;
+            color: #5c99d6;
+            margin: 40px;
+            padding: 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            flex-direction: row;
+            justify-content: space-between;
+        }
+
+        .visit-info p {
+            color: #333333;
+            font-size: 1.2em;
+            text-align: center;
+            padding: 10px 20px;
+        }
+
+        .visit-info .info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .visit-info .type {
+            align-self: center;
+        }
+
+        .date {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.2em;
+            color: #333333;
+        }
+
+        .diagnosis {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 1.5em;
+        }
+
+        .diagnosis-label {
+            display: block;
+            font-weight: bold;
+            color: #38b2ac;
+        }
+
+        .diagnosis-body {
+            display: block;
+            margin-top: 10px;
+            color: #000000;
+        }
+
+        img {
+            padding-top: 20px;
+            display: block;
+            width: 10%;
+            margin-left: 45%;
+        }
+
+        footer {
+            background-color: #7b92b2;
+            color: #FFFFFF;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        @page {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+<img class="center" src="{{ absolute_url(asset("assets/MaakMed-logo-ui.png")) }}">
+<h1>Visit Information</h1>
+<p class="date"><span>{{ visit.date|date }}</span></p>
+<div class="visit-info">
+    <div class="info">
+        <h2>Doctor: <span>{{ visit.doctor.fullName }}</span></h2>
+        <h3>Patient: <span>{{ visit.patient.fullName }}</span></h3>
+    </div>
+    <div class="type">
+        <p>Type of Visit: <span style="color: #5c99d6;"><em>{{ visit.type.displayName }}</em></span></p>
+    </div>
+</div>
+<p class="diagnosis">
+    <span class="diagnosis-label"><strong>Diagnosis:</strong></span>
+    <span class="diagnosis-body">{{ visit.diagnosis }}</span>
+</p>
+<footer>
+    <p><em>MaakMed - {{ 'now' | date('Y') }}</em></p>
+</footer>
+</body>
+</html>
