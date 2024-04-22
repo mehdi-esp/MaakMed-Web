@@ -11,6 +11,7 @@
                                 <span data-action="mouseenter->popover#show mouseleave->popover#hide"
                                       class="dropdown dropdown-top dropdown-hover"><a
                                             class="link link-hover link-primary truncate"
+                                            data-turbo-action="replace"
                                             href="{{ path('app_visit_index', {(role): attribute(visit, role).id}) }}"
                                     >{{ attribute(visit, role).fullName }}</a></span>
                             </span>
@@ -20,8 +21,10 @@
             </header>
             <div class="flex justify-center space-x-4">
                 <a href="{{ path('app_visit_index', {'date': visit.date|date('Y-m-d')}) }}"
+                   data-turbo-action="replace"
                    class="badge badge-ghost">{{ visit.date|ago }}</a>
                 <a href="{{ path('app_visit_index', {'category': visit.type.name}) }}"
+                   data-turbo-action="replace"
                    class="badge badge-accent">{{ visit.type.displayName }}</a>
             </div>
             <div class="divider"></div>
