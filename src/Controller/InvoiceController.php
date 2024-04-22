@@ -15,21 +15,29 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use WhiteOctober\BreadcrumbsBundle\Model\Breadcrumbs;
 
 #[Route('/invoice')]
 class InvoiceController extends AbstractController
 {
     #[Route('/', name: 'app_invoice_index', methods: ['GET'])]
     #[IsGranted(InvoiceVoter::LIST_ALL)]
-    public function index(): Response
+    public function index(Breadcrumbs $breadcrumbs): Response
     {
+        $breadcrumbs->addRouteItem("Invoices", "app_invoice_index");
         return $this->render('invoice/index.html.twig');
     }
 
     #[Route('/new', name: 'app_invoice_new', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_PHARMACY')]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(
+        Request                $request,
+        EntityManagerInterface $entityManager,
+        Breadcrumbs            $breadcrumbs
+    ): Response
     {
+        $breadcrumbs->addRouteItem("Invoices", "app_invoice_index");
+        $breadcrumbs->addRouteItem("New", "app_invoice_new");
         $invoice = new Invoice();
         $form = $this->createForm(InvoiceType::class, $invoice);
         $form->handleRequest($request);
@@ -60,8 +68,10 @@ class InvoiceController extends AbstractController
 
     #[Route('/{id}', name: 'app_invoice_show', methods: ['GET'])]
     #[IsGranted(InvoiceVoter::VIEW, subject: 'invoice')]
-    public function show(Invoice $invoice): Response
+    public function show(Invoice $invoice, Breadcrumbs $breadcrumbs): Response
     {
+        $breadcrumbs->addRouteItem("Invoices", "app_invoice_index");
+        $breadcrumbs->addRouteItem($invoice->getId(), "app_invoice_show", ["id" => $invoice->getId()]);
         return $this->render('invoice/show.html.twig', [
             'invoice' => $invoice,
         ]);
@@ -69,8 +79,17 @@ class InvoiceController extends AbstractController
 
     #[Route('/{id}/edit', name: 'app_invoice_edit', methods: ['GET', 'POST'])]
     #[IsGranted(InvoiceVoter::MANAGE, subject: 'invoice')]
-    public function edit(Request $request, Invoice $invoice, EntityManagerInterface $entityManager): Response
+    public function edit(
+        Request                $request,
+        Invoice                $invoice,
+        EntityManagerInterface $entityManager,
+        Breadcrumbs            $breadcrumbs
+    ): Response
     {
+        $breadcrumbs->addRouteItem("Invoices", "app_invoice_index");
+        $breadcrumbs->addRouteItem($invoice->getId(), "app_invoice_show", ["id" => $invoice->getId()]);
+        $breadcrumbs->addRouteItem("Edit", "app_invoice_edit", ["id" => $invoice->getId()]);
+
         if ($request->getMethod() === 'POST') {
             $payload = $request->request->all();
             $payload['invoice']['submitted'] = true;
