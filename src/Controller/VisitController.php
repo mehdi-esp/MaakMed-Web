@@ -126,7 +126,7 @@ class VisitController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-
+            $this->addFlash('success', 'Visit changes saved.');
             return $this->redirectToRoute('app_visit_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -149,6 +149,7 @@ class VisitController extends AbstractController
         if ($this->isCsrfTokenValid('delete' . $visit->getId(), $request->request->get('_token'))) {
             $entityManager->remove($visit);
             $entityManager->flush();
+            $this->addFlash("info", "Visit deleted.");
         }
 
         return $this->redirectToRoute('app_visit_index', [], Response::HTTP_SEE_OTHER);
