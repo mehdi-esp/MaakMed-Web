@@ -9863,23 +9863,23 @@
         },
         {
             "name": "symfony/ux-live-component",
-            "version": "v2.16.0",
+            "version": "v2.17.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ux-live-component.git",
-                "reference": "bf40cb1786ec24d91834c59a953652d13875adfd"
+                "reference": "65947f886b3835a504dd86951b5d07ccc4dcb5e1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ux-live-component/zipball/bf40cb1786ec24d91834c59a953652d13875adfd",
-                "reference": "bf40cb1786ec24d91834c59a953652d13875adfd",
+                "url": "https://api.github.com/repos/symfony/ux-live-component/zipball/65947f886b3835a504dd86951b5d07ccc4dcb5e1",
+                "reference": "65947f886b3835a504dd86951b5d07ccc4dcb5e1",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.1",
                 "symfony/property-access": "^5.4.5|^6.0|^7.0",
                 "symfony/ux-twig-component": "^2.8",
-                "twig/twig": "~3.8.0"
+                "twig/twig": "^3.8.0"
             },
             "conflict": {
                 "symfony/config": "<5.4.0"
@@ -9896,14 +9896,14 @@
                 "symfony/form": "^5.4|^6.0|^7.0",
                 "symfony/framework-bundle": "^5.4|^6.0|^7.0",
                 "symfony/options-resolver": "^5.4|^6.0|^7.0",
-                "symfony/phpunit-bridge": "^6.0|^7.0",
+                "symfony/phpunit-bridge": "^6.1|^7.0",
                 "symfony/property-info": "^5.4|^6.0|^7.0",
                 "symfony/security-bundle": "^5.4|^6.0|^7.0",
                 "symfony/serializer": "^5.4|^6.0|^7.0",
                 "symfony/twig-bundle": "^5.4|^6.0|^7.0",
                 "symfony/validator": "^5.4|^6.0|^7.0",
                 "zenstruck/browser": "^1.2.0",
-                "zenstruck/foundry": "^1.33"
+                "zenstruck/foundry": "1.37.*"
             },
             "type": "symfony-bundle",
             "extra": {
@@ -9935,7 +9935,7 @@
                 "twig"
             ],
             "support": {
-                "source": "https://github.com/symfony/ux-live-component/tree/v2.16.0"
+                "source": "https://github.com/symfony/ux-live-component/tree/v2.17.0"
             },
             "funding": [
                 {
@@ -9951,7 +9951,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-02-29T16:20:59+00:00"
+            "time": "2024-04-22T18:53:03+00:00"
         },
         {
             "name": "symfony/ux-turbo",
