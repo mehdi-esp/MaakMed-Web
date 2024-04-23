@@ -1,0 +1,37 @@
+<div {{ attributes }}>
+    <div class="form-control w-96">
+        <label for="year" class="label">
+            Year: <code><small>({{ year }})</small></code>
+        </label>
+        <input
+                type="range"
+                class="range"
+                id="year"
+                data-model="year"
+                max="{{ "now"|date("Y") }}"
+                min="{{ "now"|date("Y") - 5 }}"
+        >
+        <div>
+            <label for="categorize" class="label">Categorize</label>
+            <input id="categorize" data-model="categorize" type="checkbox" class="toggle toggle-md" checked/>
+        </div>
+    </div>
+    <div>
+        <label for="visitTypes" class="form-label">Choose Visit Types</label>
+        <select
+                data-model="currentTypes"
+                multiple
+                id="visitTypes"
+                data-controller="symfony--ux-autocomplete--autocomplete"
+        >
+            {% for type in allTypes %}
+                <option value="{{ type.value }}">{{ type.displayName }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="min-h-[480px] mb-6">
+        {{ render_chart(chart) }}
+    </div>
+
+</div>
