@@ -6,11 +6,15 @@ use App\Form\Profile\AdminP;
 use App\Form\Profile\DoctorP;
 use App\Form\Profile\PatientP;
 use App\Form\Profile\PharmacyP;
+use App\Security\EmailVerifier;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\User;
+use App\Entity\RegularUser;
 use App\Entity\HumanUser;
 use App\Entity\Admin;
 use App\Entity\Doctor;
@@ -19,9 +23,19 @@ use App\Entity\Pharmacy;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Contracts\Translation\TranslatorInterface;
+use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
+use SymfonyCasts\Bundle\VerifyEmail\VerifyEmailHelperInterface;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
 
 class ProfileController extends AbstractController
 {
+
+
+    public function __construct(private readonly MailerInterface $mailer, private readonly EmailVerifier $emailVerifier)
+    {
+    }
 
     #[Route("/profile", name: "profile")]
     #[IsGranted("ROLE_USER")]
@@ -86,5 +100,96 @@ class ProfileController extends AbstractController
             return $this->redirectToRoute("profile");
         }
         return $this->render('user/profile.html.twig', ['user' => $user]);
+    }
+
+
+    #[Route('/verify/email', name: 'app_verify_email', methods: ['POST'])]
+    #[IsGranted("ROLE_USER")]
+    public function verifyUserEmail(VerifyEmailHelperInterface $verifyEmailHelper): Response
+    {
+        // deny access for admin
+        if ($this->isGranted('ROLE_ADMIN')) {
+            throw $this->createAccessDeniedException();
+        }
+
+        // Get the logged-in user
+        /** @var Doctor|Patient|Pharmacy $user */
+        $user = $this->getUser();
+
+        // If the user is already verified, redirect to the profile page
+        if ($user->getIsVerified()) {
+            $this->addFlash('info', 'Your email is already verified.');
+            return $this->redirectToRoute('profile');
+        }
+        // Generate the email verification link
+        $signatureComponents = $verifyEmailHelper->generateSignature(
+            'app_confirm_email',
+            $user->getId(),
+            $user->getEmail(),
+            ['id' => $user->getId()]
+        );
+
+        // Get the signed URL from the signature components
+        $signedUrl = $signatureComponents->getSignedUrl();
+
+        // Pass the signed URL to the sendEmailConfirmation method
+        $this->sendEmailConfirmation($signedUrl);
+
+        // Redirect to the profile page with a success message
+        $this->addFlash('success', 'A verification email has been sent to your email address.');
+        return $this->redirectToRoute('profile');
+    }
+
+    private function sendEmailConfirmation(string $signedUrl): void
+    {
+        $address = $this->getUser()->getEmail();
+        $email = (new TemplatedEmail())
+            ->from(new Address('***REMOVED***', 'Email Verification'))
+            ->to('***REMOVED***')
+            ->subject('Please Confirm your Email')
+            ->htmlTemplate('registration/confirmation_email.html.twig')
+            ->context([
+                'signedUrl' => $signedUrl,
+            ]);
+
+        $this->mailer->send($email);
+    }
+
+    #[Route('/confirm/email', name: 'app_confirm_email')]
+    public function confirmEmail(
+        Request                    $request,
+        VerifyEmailHelperInterface $verifyEmailHelper,
+        UserRepository             $userRepository,
+        EntityManagerInterface     $entityManager
+    ): Response
+    {
+        // Get the user by the 'id' parameter in the URL
+        $user = $userRepository->find($request->query->get('id'));
+
+        // If the user does not exist, throw a 404 error
+        if (!$user) {
+            throw $this->createNotFoundException();
+        }
+
+        // Validate the email confirmation link
+        try {
+            $verifyEmailHelper->validateEmailConfirmation(
+                $request->getUri(),
+                $user->getId(),
+                $user->getEmail()
+            );
+        } catch (VerifyEmailExceptionInterface $e) {
+            // If the link is invalid, redirect to the profile page with an error message
+            $this->addFlash('error', $e->getReason());
+            return $this->redirectToRoute('profile');
+        }
+
+        // If the link is valid, mark the user as verified and save the changes
+        $user->setIsVerified(true);
+        $entityManager->flush();
+
+        // Redirect to the profile page with a success message
+        $this->addFlash('success', 'Your email has been verified.');
+        return $this->redirectToRoute('profile');
     }
 }
