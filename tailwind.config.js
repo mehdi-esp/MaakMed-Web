@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
   content: [
     "./assets/**/*.js",
     "./templates/**/*.html.twig",
