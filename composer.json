@@ -58,6 +58,7 @@
         "symfony/string": "5.4.*",
         "symfony/translation": "5.4.*",
         "symfony/twig-bundle": "5.4.*",
+        "symfony/twilio-notifier": "5.4.*",
         "symfony/ux-autocomplete": "^2.12",
         "symfony/ux-chartjs": "^2.16",
         "symfony/ux-live-component": "^2.16",
