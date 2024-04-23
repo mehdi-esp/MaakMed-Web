@@ -50,8 +50,10 @@
                     <td><a class="btn primary-btn m-2"
                            href={{ path('app_subscription_Update', {'id': subscription.id}) }}  >Update</a>
                     </td>
-                    <td><a class="btn primary-btn m-2"
-                           href={{ path('app_subscription_Delete', {'id': subscription.id}) }}>Cancel</a>
+                    <td>
+                        <form method="post" action="{{ path('app_subscription_Delete', {'id': subscription.id}) }}">
+                            <button type="submit" class="btn primary-btn m-2">Cancel</button>
+                        </form>
                     </td>
                 </tr>
             {% endfor %}

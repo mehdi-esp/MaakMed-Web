@@ -110,7 +110,7 @@ class SubscriptionController extends AbstractController
        return new JsonResponse($subscriptionsArray);
    }
 
-    #[Route('/subscription/UpdateSubscription/{id}', name: 'app_subscription_Update')]
+    #[Route('/subscription/UpdateSubscription/{id}', name: 'app_subscription_Update', methods: ['GET', 'POST'])]
     #[IsGranted("ROLE_ADMIN")]
     public function UpdateSub(Request $req, Subscription $Sub, EntityManagerInterface $entityManager): Response
     {
@@ -119,7 +119,6 @@ class SubscriptionController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
-
             return $this->redirectToRoute('app_subscription_list', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -134,14 +133,14 @@ class SubscriptionController extends AbstractController
             'form' => $form->createView(),
         ], $response);
     }
-    #[Route('/subscription/DeleteSubscription/{id}', name: 'app_subscription_Delete')]
+    #[Route('/subscription/DeleteSubscription/{id}', name: 'app_subscription_Delete',methods: ['POST'])]
     #[IsGranted("ROLE_ADMIN")]
     public function CancelSub(Subscription $Sub, EntityManagerInterface $entityManager): Response
     {
         $Sub->setStatus('canceled');
         $entityManager->persist($Sub);
         $entityManager->flush();
-        return $this->redirectToRoute('app_subscription_listAdmin');
+        return $this->redirectToRoute('app_subscription_list');
     }
     #[Route('/{planId<\d+>}/{amount}', name: 'app_subscription_Activate')]
     #[IsGranted("ROLE_PATIENT")]
@@ -280,7 +279,7 @@ public function activateSubscription(int $patientId, EntityManagerInterface $ent
         $entityManager->persist($subscription);
         $entityManager->flush();
 }
-    #[Route('/subscription/cancel/{planId}', name: 'app_subscription_Cancel')]
+    #[Route('/subscription/cancel/{planId}', name: 'app_subscription_Cancel',methods: ['POST'])]
     #[IsGranted("ROLE_PATIENT")]
     public function cancelSubscription(int $planId, EntityManagerInterface $entityManager): Response
     {
