@@ -188,7 +188,7 @@ class SubscriptionController extends AbstractController
                $subscription->setPlan($plan);
                 $entityManager->persist($subscription);
                 $entityManager->flush();
-               $this->addFlash('success', 'Subscription created successfully.');
+               $this->addFlash('success', 'Subscription created .');
             $session = $this->createCheckoutSession($plan->getName(), $amount);
             return new RedirectResponse($session->url);
         } catch (\Stripe\Exception\ApiErrorException $e) {
@@ -243,12 +243,14 @@ class SubscriptionController extends AbstractController
         if ($event->type === 'checkout.session.completed') {
             $data = $event->data->object;
             $email = $data->customer_details->email;
+            error_log('Email from Stripe: ' . $email);
             $userRepository = $entityManager->getRepository(\App\Entity\User::class);
             $userId = $userRepository->findIdByEmail($email);
             if (!$userId) {
                 error_log('User not found for email: ' . $email);
                 return new JsonResponse(['error' => 'Patient not found'], Response::HTTP_NOT_FOUND);
             }
+            error_log('User ID for email ' . $email . ': ' . $userId);
             error_log('Activating subscription for user ID: ' . $userId);
             $this->activateSubscription($userId, $entityManager);
         }
