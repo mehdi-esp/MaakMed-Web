@@ -113,6 +113,11 @@
     {% endif %}
 </header>
 
+{% block flash_messages %}
+    {% if (with_flash_messages ?? false) is same as(true) %}
+        <twig:Flash:Toast/>
+    {% endif %}
+{% endblock %}
 {% block body %}{% endblock %}
 </body>
 </html>

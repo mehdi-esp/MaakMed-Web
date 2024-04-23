@@ -34,8 +34,8 @@ module.exports = {
 
           "error-content": 'oklch(100% 0 0)',
           "success-content": 'oklch(100% 0 0)',
-          // "warning-content": '#EDEDED',
-          // "info-content": '#EDEDED',
+          "warning-content": 'oklch(100% 0 0)',
+          "info-content": 'oklch(100% 0 0)',
         },
       },
       "light"

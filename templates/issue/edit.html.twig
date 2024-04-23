@@ -2,21 +2,78 @@
 
 {% block title %}Edit Issue{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .title-color {
+            color: #3082cfff; /* Color for the title "List of Issues" */
+        }
+        .card-title-color {
+            color: #38b2acff; /* Secondary color from the base template */
+        }
+        .text-black {
+            color: black; /* Black color for text */
+        }
+        /* Custom styles for the modal */
+        #updateProductModal {
+            background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #updateProductModal .modal-content {
+            background-color: white; /* White background for the modal content */
+            border-radius: 8px; /* Rounded corners */
+            padding: 20px; /* Padding inside the modal content */
+            max-width: 400px; /* Maximum width of the modal content */
+        }
+        #updateProductModal .modal-content input[type="text"],
+        #updateProductModal .modal-content textarea,
+        #updateProductModal .modal-content select {
+            background-color: #fff; /* White background for text fields and select */
+            border: 1px solid #ccc; /* Small border around text fields and select */
+            border-radius: 4px; /* Rounded corners for text fields and select */
+            padding: 8px; /* Padding inside text fields and select */
+            margin-bottom: 10px; /* Margin between text fields and select */
+            width: calc(100% - 16px); /* Full width with padding */
+        }
+        #updateProductModal .modal-content select[disabled] {
+            background-color: #f9f9f9; /* Light gray background for disabled select */
+            border-color: #e5e5e5; /* Light gray border color for disabled select */
+            color: #888; /* Gray text color for disabled select */
+        }
+        #updateProductModal .modal-content button[type="submit"] {
+            background-color: #38b2acff; /* Background color for submit button */
+            color: white; /* Text color for submit button */
+            border: none; /* No border for submit button */
+            border-radius: 4px; /* Rounded corners for submit button */
+            padding: 10px 20px; /* Padding inside submit button */
+            cursor: pointer; /* Cursor style for submit button */
+        }
+        #updateProductModal .modal-content button[type="button"] {
+            color: #dc2626; /* Red color for delete button */
+            background-color: transparent; /* Transparent background for delete button */
+            border: none; /* No border for delete button */
+            cursor: pointer; /* Cursor style for delete button */
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
-    <div class="container">
-        <h1 class="text-2xl font-bold title-color mb-4">Edit Issue</h1>
-        <div class="row">
-            <div class="col-md-12">
-                {{ form_start(form) }}
-                    {{ form_rest(form) }}
-                    <button type="submit" class="btn btn-primary">Update</button>
-                {{ form_end(form) }}
-                    <a href="{{ path('app_issue_index') }}" class="btn btn-secondary">Back to List</a>
-                </form>
-                <div>
-                    {{ include('issue/_delete_form.html.twig') }}
-                </div>
+    <!-- Main modal -->
+    <div id="updateProductModal" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-modal md:h-full">
+        <div class="modal-content">
+            <!-- Modal content -->
+            {{ form_start(form) }}
+            <!-- Form content -->
+            {{ form_row(form.title, {'label': 'Title', 'attr': {'placeholder': 'Enter issue title...'}}) }}
+            {{ form_row(form.content, {'label': 'Content', 'attr': {'placeholder': 'Enter issue content...'}}) }}
+            {{ form_row(form.category, {'label': 'Category', 'disabled': 'disabled'}) }}
+            <div class="flex items-center justify-between mt-4">
+                <button type="submit">Update</button>
+                <a href="{{ path('app_issue_index') }}">Back to List</a>
             </div>
+            {{ form_end(form) }}
         </div>
     </div>
 {% endblock %}
