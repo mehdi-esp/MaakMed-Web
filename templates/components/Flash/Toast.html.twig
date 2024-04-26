@@ -1,56 +1,7 @@
 <div {{ attributes.defaults({class:"toast"}) }} data-turbo-temporary>
     {% for label, messages in app.flashes(["error", "warning", "success", "info"]) %}
         {% for message in messages %}
-            <div
-                    role="alert"
-                    class="alert alert-{{ label }} transition transform duration-1000 hidden"
-                    {{ stimulus_controller("notification", {delay: _self.delay(label)}) }}
-                    data-transition-enter-from="opacity-0 translate-x-6"
-                    data-transition-enter-to="opacity-100 translate-x-0"
-                    data-transition-leave-from="opacity-100 translate-x-0"
-                    data-transition-leave-to="opacity-0 translate-x-6"
-            >
-                {{ _self.icon(label) }}
-                <span class="text-white">{{ message }}</span>
-                <button {{ stimulus_action("notification", "hide") }} >
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
-                         class="size-6">
-                        <path class="text-white" fill-rule="evenodd"
-                              d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z"
-                              clip-rule="evenodd"/>
-                    </svg>
-                </button>
-            </div>
+            <twig:Flash:Alert label="{{ label }}" message="{{ message }}"/>
         {% endfor %}
     {% endfor %}
 </div>
-{% macro delay(label) %}
-    {{ {"error": 5000, "warning": 4000, "success": 3000, "info": 2000}[label] }}
-{% endmacro %}
-{% macro icon(label) %}
-    {% if label == "error" %}
-        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 size-6" fill="none"
-             viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-        </svg>
-    {% elseif label == "warning" %}
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-             class="stroke-current shrink-0 size-6">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-        </svg>
-    {% elseif label == "success" %}
-        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 size-6" fill="none"
-             viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-        </svg>
-    {% elseif label == "info" %}
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-             class="stroke-current shrink-0 size-6">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-        </svg>
-    {% endif %}
-{% endmacro %}
