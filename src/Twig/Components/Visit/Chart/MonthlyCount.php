@@ -89,7 +89,7 @@ class MonthlyCount
         $monthRangeSoFar = range(1, $maxMonth);
 
         $months = array_map(
-            fn(int $month) => \DateTime::createFromFormat('!m', $month)->format('F'),
+            fn (int $month) => \DateTime::createFromFormat('!m', $month)->format('F'),
             range(1, 12)
         );
 
@@ -139,12 +139,12 @@ class MonthlyCount
                 $result[$type][$month] = $group['visit_count'];
                 return $result;
             }, array_fill_keys(
-                array_map(fn(VisitCategory $type) => $type->value, $this->currentTypes ?: $this->allTypes()),
+                array_map(fn (VisitCategory $type) => $type->value, $this->currentTypes ?: $this->allTypes()),
                 array_fill_keys($monthRangeSoFar, 0)
             ));
 
             $sets = array_map(
-                fn(string $type, array $counts) => [
+                fn (string $type, array $counts) => [
                     'label' => VisitCategory::from($type)->getDisplayName(),
                     'backgroundColor' => $colors[$type],
                     'borderColor' => $colors[$type],
@@ -154,7 +154,6 @@ class MonthlyCount
                 array_keys($transformed),
                 array_values($transformed)
             );
-
         }
         return ['labels' => $months, 'datasets' => $sets];
     }
