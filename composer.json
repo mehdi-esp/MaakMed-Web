@@ -134,6 +134,7 @@
         "symfony/stopwatch": "5.4.*",
         "symfony/web-profiler-bundle": "5.4.*",
         "vimeo/psalm": "^5.23",
-        "vincentlanglet/twig-cs-fixer": "^2.6"
+        "vincentlanglet/twig-cs-fixer": "^2.6",
+        "zenstruck/foundry": "^1.37"
     }
 }
