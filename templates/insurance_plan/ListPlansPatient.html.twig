@@ -1,41 +1,43 @@
 {% extends 'base.html.twig' %}
   {% block body %}
-{#      <div class="toast fixed top-1 right-0">#}
-{#          {% for label, messages in app.flashes %}#}
-{#              {% for message in messages %}#}
-{#                  <div#}
-{#                          role="alert"#}
-{#                          class="alert alert-{{ label }} transition transform duration-1000 hidden mt-16 "#}
-{#                          {{ stimulus_controller("notification", {delay: 3000}) }}#}
-{#                          data-transition-enter-from="opacity-0 translate-x-6"#}
-{#                          data-transition-enter-to="opacity-100 translate-x-0"#}
-{#                          data-transition-leave-from="opacity-100 translate-x-0"#}
-{#                          data-transition-leave-to="opacity-0 translate-x-6"#}
-{#                  >#}
-{#                      <span class="text-white">{{ message }}</span>#}
-{#                      <button {{ stimulus_action("notification", "hide") }} >#}
-{#                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"#}
-{#                               class="size-6">#}
-{#                              <path class="text-white" fill-rule="evenodd"#}
-{#                                    d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z"#}
-{#                                    clip-rule="evenodd"/>#}
-{#                          </svg>#}
-{#                      </button>#}
-{#                  </div>#}
-{#              {% endfor %}#}
-{#          {% endfor %}#}
-{#      </div>#}
+      <div class="toast fixed top-1 right-0">
+          {% for label, messages in app.flashes %}
+              {% for message in messages %}
+                  <div
+                          role="alert"
+                          class="alert alert-{{ label }} transition transform duration-1000 hidden mt-16 "
+                          {{ stimulus_controller("notification", {delay: 3000}) }}
+                          data-transition-enter-from="opacity-0 translate-x-6"
+                          data-transition-enter-to="opacity-100 translate-x-0"
+                          data-transition-leave-from="opacity-100 translate-x-0"
+                          data-transition-leave-to="opacity-0 translate-x-6"
+                  >
+                      <span class="text-white">{{ message }}</span>
+                      <button {{ stimulus_action("notification", "hide") }} >
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"
+                               class="size-6">
+                              <path class="text-white" fill-rule="evenodd"
+                                    d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm-1.72 6.97a.75.75 0 1 0-1.06 1.06L10.94 12l-1.72 1.72a.75.75 0 1 0 1.06 1.06L12 13.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L13.06 12l1.72-1.72a.75.75 0 1 0-1.06-1.06L12 10.94l-1.72-1.72Z"
+                                    clip-rule="evenodd"/>
+                          </svg>
+                      </button>
+                  </div>
+              {% endfor %}
+          {% endfor %}
+      </div>
       <!-- Open the modal using ID.showModal() method -->
 
       <dialog id="my_modal_1" class="modal">
           <div class="modal-box">
               <h3 class="font-bold text-lg">Hello!</h3>
-              <p class="py-4">Press ESC key or click the button below to close</p>
+              <p class="py-4">Choose Your option to pay online! get redirected to the checkout page or use the QR Code!</p>
+              <p class="py-4">Not paying will still create a subsription but it will stay pending until the payment is done!</p>
               <div class="modal-action">
                   <form method="dialog">
-                      <button id="redirect-button" class="btn">Redirect</button>
-                      <button id="generate-qr-button" class="btn">Generate QR Code</button>
+                      <button id="redirect-button" class="btn mr-2">Redirect Page</button>
+                      <button id="generate-qr-button" class="btn mr-20 ">Generate QR Code</button>
                   </form>
+                  <button class="btn" onclick="document.getElementById('my_modal_1').close()">Close</button>
               </div>
           </div>
       </dialog>
@@ -44,7 +46,7 @@
               <h3 class="font-bold text-lg">Your QR Code</h3>
               <p class="py-4">Scan this QR code to proceed</p>
               <div class="modal-content">
-                  <!-- Canvas for QR code -->
+                  <!-- The QR code should be rendered inside this canvas element -->
                   <canvas id="qr-code-canvas"></canvas>
               </div>
               <div class="modal-action">
