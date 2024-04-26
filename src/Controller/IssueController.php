@@ -5,6 +5,7 @@ namespace App\Controller;
 
 use App\Entity\Admin;
 use App\Entity\Issue;
+use App\Entity\IssueResponse;
 use App\Entity\Patient;
 
 use App\Form\IssueType;
@@ -138,6 +139,9 @@ class IssueController extends AbstractController
         // Return a JSON response with the categories
         return $this->json($categories);
     }
+
+
+
 }
 
 
