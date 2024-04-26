@@ -142,7 +142,7 @@ class SubscriptionController extends AbstractController
         $entityManager->flush();
         return $this->redirectToRoute('app_subscription_list');
     }
-    #[Route('/{planId<\d+>}/{amount}', name: 'app_subscription_Activate')]
+    #[Route('/{planId<\d+>}/{amount}', name: 'app_subscription_Activate',methods: ['GET','POST'])]
     #[IsGranted("ROLE_PATIENT")]
     public function Subscribe(int $planId, float $amount, EntityManagerInterface $entityManager): JsonResponse|RedirectResponse
     {
@@ -174,8 +174,12 @@ class SubscriptionController extends AbstractController
                if($pendingSubscriber){
                $this->addFlash('success', 'Plan Pending redirecting to payment session .');
                 $session = $this->createCheckoutSession($plan->getName(), $amount);
-                           return new RedirectResponse($session->url);
+                $jsonResponse = ['url' => $session->url];
+                           return new JsonResponse($jsonResponse);
                }
+                $session = $this->createCheckoutSession($plan->getName(), $amount);
+                $jsonResponse = ['url' => $session->url];
+
                $subscription = new Subscription();
                $subscription->setPatient($user);
                $currentDate = new \DateTimeImmutable();
@@ -187,9 +191,15 @@ class SubscriptionController extends AbstractController
                $subscription->setPlan($plan);
                 $entityManager->persist($subscription);
                 $entityManager->flush();
-               $this->addFlash('success', 'Subscription created .');
-            $session = $this->createCheckoutSession($plan->getName(), $amount);
-            return new RedirectResponse($session->url);
+//                $this->addFlash('success', 'Subscription created .');
+
+
+
+             //var_dump('JSON response: ' . json_encode($jsonResponse));
+
+                // Or print the JSON response using print_r
+
+           return new JsonResponse($jsonResponse);
         } catch (\Stripe\Exception\ApiErrorException $e) {
             error_log($e->getMessage());
             throw new \Exception('An error occurred while creating the Stripe Checkout Session: ' . $e->getMessage());
@@ -217,6 +227,8 @@ class SubscriptionController extends AbstractController
             'success_url' => $this->generateUrl('app_subscription_success', [], UrlGeneratorInterface::ABSOLUTE_URL),
             'cancel_url' => $this->generateUrl('app_subscription_failure', [], UrlGeneratorInterface::ABSOLUTE_URL),
         ]);
+        $jsonResponse = ['url' => $session->url];
+         //error_log('JSON response: ' . json_encode($jsonResponse));
 
         return $session;
     }
