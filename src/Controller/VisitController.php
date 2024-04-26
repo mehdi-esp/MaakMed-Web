@@ -9,6 +9,7 @@ use App\Entity\User;
 use App\Entity\Visit;
 use App\Form\VisitType;
 use App\Security\Voter\VisitVoter;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -45,10 +46,10 @@ class VisitController extends AbstractController
         $count = match (true) {
             $user instanceof Admin => $subject->getVisits()->count(),
             $user instanceof Doctor => $subject->getVisits()
-                ->filter(fn (Visit $visit) => $visit->getDoctor() === $user)
+                ->matching(Criteria::create()->where(Criteria::expr()->eq('doctor', $user)))
                 ->count(),
             $user instanceof Patient => $subject->getVisits()
-                ->filter(fn (Visit $visit) => $visit->getPatient() === $user)
+                ->matching(Criteria::create()->where(Criteria::expr()->eq('patient', $user)))
                 ->count(),
         };
 
