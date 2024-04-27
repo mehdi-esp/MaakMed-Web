@@ -97,22 +97,33 @@ final class Listing extends AbstractController
         /** @var Patient|Pharmacy|Admin $user */
         $user = $this->getUser();
 
-        $visibilityCriterion = match (true) {
-            $user instanceof Admin => [],
-            $user instanceof Pharmacy => ['pharmacy' => $user],
-            $user instanceof Patient => ['patient' => $user],
-        };
+        $qb = $this->invoiceRepository
+            ->createQueryBuilder('i')
+            ->join('i.pharmacy', 'pharmacy')
+            ->join('i.patient', 'patient')
+            ->join('i.invoiceEntries', 'entries')
+            ->addSelect('pharmacy')
+            ->addSelect('patient')
+            ->addSelect('entries');
+
+
+        if ($user instanceof Patient) {
+            $qb->andWhere('patient = :patient')->setParameter('patient', $user);
+        } elseif ($user instanceof Pharmacy) {
+            $qb->andWhere('pharmacy = :pharmacy')->setParameter('pharmacy', $user);
+        }
+
         $filters = array_filter([
             'patient' => $this->patient,
             'pharmacy' => $this->pharmacy,
         ]);
 
-        $criteria = array_merge($visibilityCriterion, $filters);
+        foreach ($filters as $key => $value) {
+            $qb->andWhere("i.$key = :$key")->setParameter($key, $value);
+        }
 
-        $ordering = [$this->orderBy => $this->orderDir];
+        $qb->orderBy('i.' . $this->orderBy, $this->orderDir);
 
-        return $this->invoiceRepository->findBy($criteria, $ordering);
-
+        return $qb->getQuery()->getResult();
     }
-
 }
