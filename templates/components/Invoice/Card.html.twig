@@ -14,7 +14,7 @@
 
                     <!-- Buttons -->
                     <div class="card-actions gap-0 join">
-                        {% if is_granted("ROLE_PHARMACY") %}
+                        {% if "ROLE_PHARMACY" in app.user.roles %}
                             <a class="btn btn-ghost text-primary join-item"
                                href="{{ path("app_invoice_edit",{id: invoice.id}) }}">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -45,13 +45,13 @@
                     <!-- End Buttons -->
                 </div>
                 <div class="container flex justify-evenly items-center">
-                    {% if is_granted("ROLE_PHARMACY") or is_granted("ROLE_ADMIN") %}
+                        {% if "ROLE_PATIENT" not in app.user.roles %}
                         <dl class="text-center">
                             <dt>Issued to:</dt>
                             <dd><a class="link link-hover link-accent">{{ invoice.patient.fullName }}</a></dd>
                         </dl>
                     {% endif %}
-                    {% if is_granted("ROLE_PATIENT") or is_granted("ROLE_ADMIN") %}
+                        {% if "ROLE_PHARMACY" not in app.user.roles %}
                         <dl class="text-center">
                             <dt>Issued by:</dt>
                             <dd><a class="link link-hover link-accent">{{ invoice.pharmacy.name }}</a></dd>
