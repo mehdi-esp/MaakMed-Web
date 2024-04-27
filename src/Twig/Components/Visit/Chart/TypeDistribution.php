@@ -22,7 +22,6 @@ class TypeDistribution
     {
     }
 
-    #[ExposeInTemplate]
     public function getChart(): Chart
     {
         $chart = $this->chartBuilder->createChart(Chart::TYPE_PIE);

@@ -35,7 +35,6 @@ class MonthlyCount
         $this->year = (int)date('Y');
     }
 
-    #[ExposeInTemplate]
     public function getChart(): Chart
     {
         $chart = $this->chartBuilder->createChart(Chart::TYPE_BAR);
