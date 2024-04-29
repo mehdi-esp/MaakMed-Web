@@ -20,6 +20,45 @@ class SubscriptionRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Subscription::class);
     }
+    public function getActiveUsersPercentage(): float
+        {
+            $totalUsers = $this->getTotalUsersCount();
+            if ($totalUsers === 0) {
+                return 0.0;
+            }
+
+            $activeUsers = $this->createQueryBuilder('s')
+                ->select('COUNT(s.id)')
+                ->where('s.status = :status')
+                ->setParameter('status', 'active')
+                ->getQuery()
+                ->getSingleScalarResult();
+
+            return ($activeUsers / $totalUsers) * 100.0;
+        }
+        public function getCancelingUsersPercentage(): float
+            {
+                $totalUsers = $this->getTotalUsersCount();
+                if ($totalUsers === 0) {
+                    return 0.0; // Avoid division by zero
+                }
+
+                $cancelingUsers = $this->createQueryBuilder('s')
+                    ->select('COUNT(s.id)')
+                    ->where('s.status = :status')
+                    ->setParameter('status', 'canceling')
+                    ->getQuery()
+                    ->getSingleScalarResult();
+
+                return ($cancelingUsers / $totalUsers) * 100.0;
+            }
+        private function getTotalUsersCount(): int
+        {
+            return $this->createQueryBuilder('s')
+                ->select('COUNT(s.id)')
+                ->getQuery()
+                ->getSingleScalarResult();
+        }
 
    public function getPlanWithMostSubscribers(): ?array
        {
@@ -35,6 +74,26 @@ class SubscriptionRepository extends ServiceEntityRepository
                ->getQuery()
                ->getOneOrNullResult();
        }
+       public function getTotalActiveSubscribers(): int
+       {
+           return $this->createQueryBuilder('s')
+               ->select('COUNT(s.id) as count')
+               ->where('s.status = :status')
+               ->setParameter('status', 'active')
+               ->getQuery()
+               ->getSingleScalarResult();
+       }
+        public function getTotalCancelingSubscribers(): int
+              {
+                  return $this->createQueryBuilder('s')
+                      ->select('COUNT(s.id) as count')
+                      ->where('s.status = :status')
+                      ->setParameter('status', 'canceling')
+                      ->getQuery()
+                      ->getSingleScalarResult();
+              }
+
+
     public function getTotalRevenuePerPlan()
        {
            $currentYearStart = new \DateTime(date('Y-01-01'));
@@ -65,14 +124,6 @@ class SubscriptionRepository extends ServiceEntityRepository
            }
 
            return $revenueData;
-       }
-       public function getDistinctStatuses(): ?array
-       {
-          return $this->createQueryBuilder('s')
-                ->select('s.status')
-                ->distinct()
-                ->getQuery()
-                ->getResult();
        }
 
        public function getPlanWithMostCanceledStatus(): ?array

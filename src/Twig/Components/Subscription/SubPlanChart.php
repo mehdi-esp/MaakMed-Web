@@ -30,6 +30,14 @@ class SubPlanChart
 
         #[ExposeInTemplate]
         private array $planWithMostCancelingStatus;
+        #[ExposeInTemplate]
+        private int $TotalActiveSubscribers;
+        #[ExposeInTemplate]
+        private int $getTotalCancelingSubscribers;
+        #[ExposeInTemplate]
+        private float $ActiveUsersPercentage;
+        #[ExposeInTemplate]
+        private float $CancelingUsersPercentage;
         #[LiveProp(writable: true)]
         public array $distinctStatuses = ['active','pending','canceling','canceled'];
 
@@ -45,8 +53,27 @@ class SubPlanChart
             $this->planWithMostCanceledStatus = $this->SubscriptionRepository->getPlanWithMostCanceledStatus();
             $this->planWithMostCancelingStatus = $this->SubscriptionRepository->getPlanWithMostCancelingStatus();
             $this->TotalRevenuePerPlan = $this->SubscriptionRepository->getTotalRevenuePerPlan();
+            $this->TotalActiveSubscribers = $this->SubscriptionRepository->getTotalActiveSubscribers();
+            $this->getTotalCancelingSubscribers = $this->SubscriptionRepository->getTotalCancelingSubscribers();
+            $this->ActiveUsersPercentage = $this->SubscriptionRepository->getActiveUsersPercentage();
+            $this->CancelingUsersPercentage = $this->SubscriptionRepository->getCancelingUsersPercentage();
     }
-
+        public function getCancelingUsersPercentage(): float
+        {
+            return $this->CancelingUsersPercentage;
+        }
+        public function getActiveUsersPercentage(): float
+        {
+            return $this->ActiveUsersPercentage;
+        }
+        public function getTotalCancelingSubscribers(): int
+        {
+            return $this->getTotalCancelingSubscribers;
+        }
+        public function getTotalActiveSubscribers(): int
+        {
+            return $this->TotalActiveSubscribers;
+        }
        public function getPlanWithMostSubscribers(): array
          {
              return $this->planWithMostSubscribers;
