@@ -17,14 +17,17 @@ export default class extends Controller {
 
         searchBar.addEventListener('input', () => filterTable('search'));
         costFilter.addEventListener('change', () => filterTable('cost'));
+        ceilingFilter.addEventListener('change', () => filterTable('ceiling'));
 
         function filterTable(type) {
             const searchValue = searchBar.value;
             const costValue = costFilter.value;
+            const ceilingValue = ceilingFilter.value;
 
             const url = new URL(window.location.href);
             url.searchParams.set('searchTerm', searchValue);
             url.searchParams.set('costFilter', costValue);
+            url.searchParams.set('ceilingFilter', ceilingValue);
 
             fetch(url)
                 .then(response => response.text())
