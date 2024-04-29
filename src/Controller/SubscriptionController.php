@@ -7,6 +7,7 @@ use App\Entity\Patient;
 use App\Entity\Subscription;
 use App\Form\SubscriptionType;
 use Stripe\Stripe;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -52,36 +53,40 @@ class SubscriptionController extends AbstractController
 
         return new JsonResponse($response);
     }
-    #[Route('/subscription/ListSubscriptions', name: 'app_subscription_list', methods: ['GET'])]
-    #[IsGranted("ROLE_ADMIN")]
-    public function ListSubscriptionsAdmin(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $status = $request->query->get('status');
-        $planName = $request->query->get('planName');
-        $queryBuilder = $entityManager->getRepository(Subscription::class)->createQueryBuilder('s')
-            ->leftJoin('s.plan', 'p');
+   #[Route('/subscription/ListSubscriptions', name: 'app_subscription_list', methods: ['GET'])]
+   #[IsGranted("ROLE_ADMIN")]
+   public function ListSubscriptionsAdmin(Request $request, EntityManagerInterface $entityManager, PaginatorInterface $paginator): Response
+   {
+       $status = $request->query->get('status');
+       $planName = $request->query->get('planName');
+       $queryBuilder = $entityManager->getRepository(Subscription::class)->createQueryBuilder('s')
+           ->leftJoin('s.plan', 'p');
 
-        if (!empty($status)) {
-            $queryBuilder->where('s.status = :status')
-                ->setParameter('status', $status);
-        }
+       if (!empty($status)) {
+           $queryBuilder->where('s.status = :status')
+               ->setParameter('status', $status);
+       }
 
-        if (!empty($planName)) {
-            $queryBuilder->andWhere('p.name LIKE :planName')
-                ->setParameter('planName', $planName . '%');
-        }
+       if (!empty($planName)) {
+           $queryBuilder->andWhere('p.name LIKE :planName')
+               ->setParameter('planName', '%' . $planName . '%');
+       }
 
+       $queryBuilder->orderBy('s.status', 'ASC');
 
-        $subscriptions = $queryBuilder
-            ->orderBy('s.status', 'ASC')
-            ->getQuery()
-            ->getResult();
+       // Pagination
+       $page = $request->query->getInt('page', 1); // Get the current page number, default is 1
+       $limit = 5; // Set the limit of entries per page
+       $pagination = $paginator->paginate(
+           $queryBuilder, // Pass query builder instance
+           $page,         // Current page number
+           $limit         // Limit of entries per page
+       );
 
-
-        return $this->render('subscription/ListSubscriptionsAdmin.html.twig', [
-            'subscriptions' => $subscriptions,
-        ]);
-    }
+       return $this->render('subscription/ListSubscriptionsAdmin.html.twig', [
+           'pagination' => $pagination,
+       ]);
+   }
    #[Route('/subscription/search', name: 'app_subscription_search', methods: ['GET'])]
    #[IsGranted("ROLE_ADMIN")]
    public function search(Request $request, EntityManagerInterface $entityManager): Response

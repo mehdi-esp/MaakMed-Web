@@ -1,6 +1,5 @@
 {% extends ('ROLE_ADMIN' in app.user.roles) ? 'base_admin.html.twig' : 'base.html.twig' %}
 
-
 {% block title %}List Subscriptions{% endblock %}
 
 {% block body %}
@@ -39,8 +38,7 @@
             </thead>
             <tbody>
 
-            {% for subscription in subscriptions %}
-
+            {% for subscription in pagination %}
                 <tr>
                     <td>{{ subscription.plan.getName }}</td>
                     <td>{{ subscription.patient.getUsername() }}</td>
@@ -59,5 +57,13 @@
             {% endfor %}
             </tbody>
         </table>
+        <div class="join text-center mt-4">
+            {% for i in 1..pagination.getPageCount %}
+                <input class="join-item btn btn-square" type="radio" name="options" id="page{{ i }}" value="{{ i }}"
+                       aria-label="{{ i }}" {{ i == pagination.getCurrentPageNumber ? 'checked' : '' }}
+                       onclick="window.location.href='{{ path('app_subscription_list', {'page': i}) }}';"/>
+            {% endfor %}
+        </div>
     </div>
+
 {% endblock %}
