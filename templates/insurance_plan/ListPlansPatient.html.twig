@@ -106,14 +106,20 @@
                             </button>
                         </form>
                     {% else %}
-                        <form id="subscription-form" method="POST" data-turbo="false" action="{{ path('app_subscription_Activate', {'planId': plan.id, 'amount': plan.cost}) }}">
-                            <button type="button" id="subscribe-button" class="flex items-center mt-auto text-white bg-indigo-500 border-0 py-2 px-4 w-full focus:outline-none hover:bg-indigo-600 rounded" data-subscribe-button="true" onclick="my_modal_1.showModal()" >
-                                Subscribe
-                                <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-auto" viewBox="0 0 24 24">
-                                    <path d="M5 12h14M12 5l7 7-7 7"></path>
-                                </svg>
-                            </button>
-                        </form>
+
+                        <button type="button"
+                                id="subscribe-button"
+                                class="flex items-center mt-auto text-white bg-indigo-500 border-0 py-2 px-4 w-full focus:outline-none hover:bg-indigo-600 rounded"
+                                data-subscribe-button="true"
+                                onclick="my_modal_1.showModal()"
+                                data-plan-id="{{ plan.id }}"
+                                data-plan-cost="{{ plan.cost }}">
+                            Subscribe
+                            <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-auto" viewBox="0 0 24 24">
+                                <path d="M5 12h14M12 5l7 7-7 7"></path>
+                            </svg>
+                        </button>
+
                     {% endif %}
                 </div>
             </div>
