@@ -1,24 +1,13 @@
  <div {{ attributes }}>
-<div class="col-8">
-    <label for="dinoTypes" class="form-label">Choose Status </label>
-    <select
-            id="dinoTypes"
-            data-model="distinctStatuses"
-            multiple
-            data-controller="symfony--ux-autocomplete--autocomplete"
-    >
-        {% for status in distinctStatuses %}
-            <option value="{{ status }}">{{ status }}</option>
-        {% endfor %}
-    </select>
-</div>
 
-    <div class="size-[32rem] ">
-        {{ render_chart(computed.chart) }}
-    </div>
-
-</div>
-
+     <div class="flex justify-between">
+         <div class="w-1/2 mr-4">
+             {{ render_chart(computed.chart) }}
+         </div>
+         <div class="w-1/2">
+             {{ render_chart(computed.PieChart) }}
+         </div>
+     </div>
 
 
  <details class="collapse bg-base-200">
