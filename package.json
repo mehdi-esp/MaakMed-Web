@@ -34,6 +34,7 @@
         "build": "encore production --progress"
     },
     "dependencies": {
+        "@floating-ui/dom": "^1.6.4",
         "@stimulus-components/notification": "^3.0.0",
         "@stimulus-components/popover": "^7.0.0",
         "@stimulus-components/scroll-progress": "^5.0.0",
