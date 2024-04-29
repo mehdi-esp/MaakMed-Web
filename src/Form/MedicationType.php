@@ -22,8 +22,8 @@ class MedicationType extends AbstractType
                         'maxMessage' => 'The name cannot be longer than {{ limit }} characters',
                     ]),
                     new Assert\Regex([
-                        'pattern' => '/^[A-Z][a-zA-Z0-9]*$/',
-                        'message' => 'The name should start with a capital letter and should not contain special characters',
+                        'pattern' => '/^[A-Z][a-zA-Z0-9 .]*$/',
+                        'message' => 'The name should start with a capital letter and can contain alphanumeric characters, spaces, and dots',
                     ]),
                 ],
             ])
@@ -31,13 +31,13 @@ class MedicationType extends AbstractType
                 'constraints' => [
                     new Assert\Length([
                         'min' => 2,
-                        'max' => 50,
+                        'max' => 500,
                         'minMessage' => 'The description must be at least {{ limit }} characters long',
                         'maxMessage' => 'The description cannot be longer than {{ limit }} characters',
                     ]),
                     new Assert\Regex([
-                        'pattern' => '/^[A-Z][a-zA-Z0-9]*$/',
-                        'message' => 'The description should start with a capital letter and should not contain special characters',
+                        'pattern' => '/^[A-Z][a-zA-Z0-9 .]*$/',
+                        'message' => 'The description should start with a capital letter and can contain alphanumeric characters, spaces, and dots',
                     ]),
                 ],
             ])
