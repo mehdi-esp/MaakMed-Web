@@ -7,6 +7,10 @@ use App\Entity\Patient;
 use App\Entity\Subscription;
 use App\Form\SubscriptionType;
 use Stripe\Stripe;
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mime\Email;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\Mime\Address;
 use Stripe\Checkout\Session;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -22,6 +26,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class SubscriptionController extends AbstractController
 {
+
     #[Route('/subscription/active', name: 'app_subscription_active')]
     #[IsGranted("ROLE_PATIENT")]
     public function getActivePlan(EntityManagerInterface $entityManager): JsonResponse
@@ -247,21 +252,30 @@ class SubscriptionController extends AbstractController
         if ($event->type === 'checkout.session.completed') {
             $data = $event->data->object;
             $email = $data->customer_details->email;
-            error_log('Email from Stripe: ' . $email);
+            $this->sendEmailConfirmation($email);
             $userRepository = $entityManager->getRepository(\App\Entity\User::class);
             $userId = $userRepository->findIdByEmail($email);
             if (!$userId) {
-                error_log('User not found for email: ' . $email);
+
                 return new JsonResponse(['error' => 'Patient not found'], Response::HTTP_NOT_FOUND);
             }
-            error_log('User ID for email ' . $email . ': ' . $userId);
-            error_log('Activating subscription for user ID: ' . $userId);
             $this->activateSubscription($userId, $entityManager);
         }
 
         return new JsonResponse(['status' => 'success']);
     }
-
+     public function __construct(private readonly MailerInterface $mailer)
+            {
+            }
+    public function sendEmailConfirmation(string $address): void
+    {
+        $email = (new TemplatedEmail())
+            ->from(new Address('***REMOVED***', 'Payment Confirmation MaakMed'))
+            ->to($address)
+            ->subject('Payment Confirmation MaakMed')
+            ->htmlTemplate('subscription/confirmationPayment.html.twig');
+        $this->mailer->send($email);
+    }
 public function activateSubscription(int $patientId, EntityManagerInterface $entityManager): Response
 {
     error_log('In activateSubscription method for patient ID: ' . $patientId);
@@ -283,6 +297,7 @@ public function activateSubscription(int $patientId, EntityManagerInterface $ent
         $subscription->setStatus('active');
         $entityManager->persist($subscription);
         $entityManager->flush();
+        return new Response('Subscription activated successfully');
 }
     #[Route('/subscription/cancel/{planId}', name: 'app_subscription_Cancel',methods: ['POST'])]
     #[IsGranted("ROLE_PATIENT")]
