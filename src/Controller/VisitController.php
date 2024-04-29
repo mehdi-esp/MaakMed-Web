@@ -11,14 +11,17 @@ use App\Form\VisitType;
 use App\Security\Voter\VisitVoter;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
+use Jungi\FrameworkExtraBundle\Attribute\QueryParam;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use WhiteOctober\BreadcrumbsBundle\Model\Breadcrumbs;
 use Nucleos\DompdfBundle\Wrapper\DompdfWrapperInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 #[Route('/visit')]
 class VisitController extends AbstractController
@@ -164,5 +167,37 @@ class VisitController extends AbstractController
     ): StreamedResponse {
         $html = $this->renderView("pdf/visit.html.twig", ['visit' => $visit]);
         return $wrapper->getStreamResponse($html, "MaakMed-Visit-{$visit->getId()}.pdf");
+    }
+
+    #[Route('/api/encyclopedia', name: 'app_visit_encyclopedia', methods: ['GET'])]
+    #[IsGranted('ROLE_DOCTOR')]
+    public function encyclopediaArticle(
+        #[QueryParam] string $term,
+        HttpClientInterface $httpClient,
+    ): Response {
+        $baseUrl = 'https://wsearch.nlm.nih.gov/ws/query';
+        $queryParams = [
+            'db' => 'healthTopics',
+            'term' => $term,
+            'retmax' => 1,
+        ];
+        $response = $httpClient->request('GET', $baseUrl, ['query' => $queryParams]);
+        $content = $response->getContent();
+        $crawler = new Crawler($content);
+        $nlmSearchResult = $crawler->filter('nlmSearchResult');
+        $count = (int)$nlmSearchResult->filter("count")->text(0, true);
+        if ($count === 0) {
+            return $this->json(
+                ["error" => "No results found for the term '$term'."],
+            );
+        }
+        try {
+            $summary = $nlmSearchResult->filter('document content[name="FullSummary"]')->text();
+        } catch (\InvalidArgumentException  $e) {
+            return $this->json(
+                ["error" => "No results found for the term '$term'."],
+            );
+        }
+        return $this->json(["summary" => $summary]);
     }
 }
