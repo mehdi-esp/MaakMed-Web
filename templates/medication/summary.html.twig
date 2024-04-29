@@ -1,0 +1,21 @@
+{# templates/medication/summary.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Summary{% endblock %}
+
+{% block body %}
+    <div id="notification" class="fixed inset-0 flex items-center justify-center flex-col">
+        <div class="alert alert-success alert-dismissible mb-4">
+            <div class="flex-1">
+                <label>{{ summaryText }}</label>
+            </div>
+            <button class="btn btn-sm btn-ghost" onclick="this.parentElement.remove()">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-6 h-6 stroke-current">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <a href="{{ path('app_medication_index') }}" class="btn btn-primary">Back to List</a>
+    </div>
+{% endblock %}
