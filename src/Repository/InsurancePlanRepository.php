@@ -20,7 +20,6 @@ class InsurancePlanRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, InsurancePlan::class);
     }
-
 //    /**
 //     * @return InsurancePlan[] Returns an array of InsurancePlan objects
 //     */

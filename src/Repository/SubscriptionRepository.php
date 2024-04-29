@@ -21,6 +21,88 @@ class SubscriptionRepository extends ServiceEntityRepository
         parent::__construct($registry, Subscription::class);
     }
 
+   public function getPlanWithMostSubscribers(): ?array
+       {
+           return $this->createQueryBuilder('s')
+               ->select('p.name as plan,p.cost as cost, COUNT(s.id) as count')
+               ->join('s.plan', 'p')
+               ->where('s.status = :status')
+               ->setParameter('status', 'active')
+               ->groupBy('p.name')
+                ->addGroupBy('p.cost')
+               ->orderBy('count', 'DESC')
+               ->setMaxResults(1)
+               ->getQuery()
+               ->getOneOrNullResult();
+       }
+    public function getTotalRevenuePerPlan()
+       {
+           $currentYearStart = new \DateTime(date('Y-01-01'));
+           $qb = $this->getEntityManager()->createQueryBuilder();
+
+           $result = $qb->select('p.name as plan, p.cost as cost, COUNT(s.id) as count')
+               ->from('App\Entity\Subscription', 's')
+               ->join('s.plan', 'p')
+               ->where($qb->expr()->andX(
+                   $qb->expr()->neq('s.status', ':status'),
+                   $qb->expr()->gte('s.startDate', ':startDate')
+               ))
+               ->setParameter('status', 'pending')
+               ->setParameter('startDate', $currentYearStart)
+               ->groupBy('p.name')
+               ->addGroupBy('p.cost')
+               ->getQuery()
+               ->getResult();
+
+           $revenueData = [];
+           foreach ($result as $row) {
+               $totalRevenue = $row['cost'] * $row['count'];
+               $revenueData[] = [
+                   'plan' => $row['plan'],
+                   'cost' => $row['cost'],
+                   'totalRevenue' => $totalRevenue,
+               ];
+           }
+
+           return $revenueData;
+       }
+       public function getDistinctStatuses(): ?array
+       {
+          return $this->createQueryBuilder('s')
+                ->select('s.status')
+                ->distinct()
+                ->getQuery()
+                ->getResult();
+       }
+
+       public function getPlanWithMostCanceledStatus(): ?array
+       {
+           return $this->createQueryBuilder('s')
+               ->select('p.name as plan, COUNT(s.id) as count')
+               ->join('s.plan', 'p')
+               ->where('s.status = :status')
+               ->setParameter('status', 'canceled')
+               ->groupBy('p.name')
+
+               ->orderBy('count', 'DESC')
+               ->setMaxResults(1)
+               ->getQuery()
+               ->getOneOrNullResult();
+       }
+
+       public function getPlanWithMostCancelingStatus(): ?array
+       {
+           return $this->createQueryBuilder('s')
+               ->select('p.name as plan, COUNT(s.id) as count')
+               ->join('s.plan', 'p')
+               ->where('s.status = :status')
+               ->setParameter('status', 'canceling')
+               ->groupBy('p.name')
+               ->orderBy('count', 'DESC')
+               ->setMaxResults(1)
+               ->getQuery()
+               ->getOneOrNullResult();
+       }
 //    /**
 //     * @return Subscription[] Returns an array of Subscription objects
 //     */

@@ -21,6 +21,7 @@ class InsurancePlanController extends AbstractController
 
         $searchTerm = $request->query->get('searchTerm');
         $costFilter = $request->query->get('costFilter');
+        $ceilingFilter = $request->query->get('ceilingFilter');
 
         $queryBuilder = $repository->createQueryBuilder('ip');
 
@@ -37,12 +38,21 @@ class InsurancePlanController extends AbstractController
             }
         }
 
+        if ($ceilingFilter) {
+            if ($ceilingFilter === '>') {
+                $queryBuilder->andWhere('ip.ceiling >= 1000');
+            } elseif ($ceilingFilter === '<') {
+                $queryBuilder->andWhere('ip.ceiling < 1000');
+            }
+        }
+
         $insurancePlans = $queryBuilder->getQuery()->getResult();
 
         return $this->render('insurancePlan/listInsurancePlan.html.twig', [
             'insurancePlans' => $insurancePlans,
         ]);
     }
+
 
 
     #[Route('/addInsurancePlan', name: 'app_insurancePlan_add', methods: ['GET','POST'])]

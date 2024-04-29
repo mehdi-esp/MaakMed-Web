@@ -1,0 +1,62 @@
+ <div {{ attributes }}>
+<div class="col-8">
+    <label for="dinoTypes" class="form-label">Choose Status </label>
+    <select
+            id="dinoTypes"
+            data-model="distinctStatuses"
+            multiple
+            data-controller="symfony--ux-autocomplete--autocomplete"
+    >
+        {% for status in distinctStatuses %}
+            <option value="{{ status }}">{{ status }}</option>
+        {% endfor %}
+    </select>
+</div>
+
+    <div class="size-[32rem] ">
+        {{ render_chart(computed.chart) }}
+    </div>
+
+</div>
+
+
+
+ <details class="collapse bg-base-200">
+     <summary class="collapse-title text-xl font-medium"> Total Revenue from every Plan from the beginning of the current year </summary>
+     <div class="collapse-content">
+         {% for revenue in computed.TotalRevenuePerPlan %}
+             <h2> Revenue  for {{ revenue.plan }} = {{ revenue.totalRevenue }}TND</h2>
+         {% endfor %}
+     </div>
+ </details>
+<div class="collapse bg-base-100/10">
+    <input type="radio" name="my-accordion-1" checked="checked" />
+    <div class="collapse-title text-xl font-medium">
+        Plan with the most Active Subscribers
+    </div>
+    <div class="collapse-content">
+        {{ planWithMostSubscribers.plan }} ==> {{ planWithMostSubscribers.count }} subscriber(s)
+        {% if planWithMostSubscribers.cost is defined and planWithMostSubscribers.count is defined %}
+            Total Revenue: {{ planWithMostSubscribers.cost * planWithMostSubscribers.count }}TND
+        {% endif %}
+
+    </div>
+</div>
+<div class="collapse bg-base-100/10">
+    <input type="radio" name="my-accordion-1" />
+    <div class="collapse-title text-xl font-medium">
+        Plan with the most Canceled Status
+    </div>
+    <div class="collapse-content">
+        <p>{{ planWithMostCanceledStatus.plan }} ==> {{ planWithMostCanceledStatus.count }} subscriber(s)</p>
+    </div>
+</div>
+<div class="collapse bg-base-100/10">
+    <input type="radio" name="my-accordion-1" />
+    <div class="collapse-title text-xl font-medium">
+        Plan with the most unsatisfied clients
+    </div>
+    <div class="collapse-content">
+        <p>{{ planWithMostCancelingStatus.plan }} ==> {{ planWithMostCancelingStatus.count }}  subscriber(s)</p>
+    </div>
+</div>

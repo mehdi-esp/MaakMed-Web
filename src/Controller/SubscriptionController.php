@@ -53,7 +53,6 @@ class SubscriptionController extends AbstractController
     {
         $status = $request->query->get('status');
         $planName = $request->query->get('planName');
-
         $queryBuilder = $entityManager->getRepository(Subscription::class)->createQueryBuilder('s')
             ->leftJoin('s.plan', 'p');
 
@@ -67,10 +66,12 @@ class SubscriptionController extends AbstractController
                 ->setParameter('planName', $planName . '%');
         }
 
+
         $subscriptions = $queryBuilder
             ->orderBy('s.status', 'ASC')
             ->getQuery()
             ->getResult();
+
 
         return $this->render('subscription/ListSubscriptionsAdmin.html.twig', [
             'subscriptions' => $subscriptions,
@@ -82,15 +83,17 @@ class SubscriptionController extends AbstractController
    {
        $planName = $request->query->get('planName');
        $status = $request->query->get('status');
-
        $queryBuilder = $entityManager->getRepository(Subscription::class)->createQueryBuilder('s')
            ->leftJoin('s.plan', 'p')
            ->where('p.name LIKE :planName')
            ->setParameter('planName', $planName . '%');
+
+
         if (!empty($status)) {
                 $queryBuilder->andWhere('s.status = :status')
                     ->setParameter('status', $status);
             }
+
        $subscriptions = $queryBuilder
            ->orderBy('s.status', 'ASC')
            ->getQuery()
@@ -191,14 +194,6 @@ class SubscriptionController extends AbstractController
                $subscription->setPlan($plan);
                 $entityManager->persist($subscription);
                 $entityManager->flush();
-//                $this->addFlash('success', 'Subscription created .');
-
-
-
-             //var_dump('JSON response: ' . json_encode($jsonResponse));
-
-                // Or print the JSON response using print_r
-
            return new JsonResponse($jsonResponse);
         } catch (\Stripe\Exception\ApiErrorException $e) {
             error_log($e->getMessage());
@@ -228,8 +223,6 @@ class SubscriptionController extends AbstractController
             'cancel_url' => $this->generateUrl('app_subscription_failure', [], UrlGeneratorInterface::ABSOLUTE_URL),
         ]);
         $jsonResponse = ['url' => $session->url];
-         //error_log('JSON response: ' . json_encode($jsonResponse));
-
         return $session;
     }
 
