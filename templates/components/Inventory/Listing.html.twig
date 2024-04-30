@@ -1,23 +1,7 @@
 <div {{ attributes }}>
     {% if editing %}
 
-        <button
-                type="button"
-                class="btn btn-primary"
-                data-action="live#action"
-                data-live-action-param="save"
-        >
-            Save
 
-        </button>
-        <button
-                type="button"
-                class="btn btn-primary"
-                data-action="live#action"
-                data-live-action-param="generateAndUploadFile"
-        >
-            Generate and Upload File
-        </button>
         {% form_theme form 'components/Inventory/_form_theme_inventory.html.twig' %}
         {{ form_start(form) }}
         {{ form_errors(form) }}
@@ -29,6 +13,32 @@
 
     <!-- Add this div to display the returned link -->
     <a id="fileio-link">{{ fileLink }}</a>
+    <button
+            type="button"
+            class="btn btn-primary"
+            data-action="live#action"
+            data-live-action-param="save"
+    >
+        Save
 
+    </button>
+    <button
+            type="button"
+            class="btn btn-primary"
+            data-action="live#action"
+            data-live-action-param="generateAndUploadFile"
+    >
+        Generate and Upload File
+    </button>
+    <a href="{{ path('app_inventory_export') }}" class="btn btn-primary">Export Inventory</a>
 
+    <div class="toast">
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ label }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+    </div>
 </div>
