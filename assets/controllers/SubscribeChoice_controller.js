@@ -14,35 +14,24 @@ export default class extends Controller {
                 if (event.target.dataset.subscribeButton) {
                     planId = event.target.dataset.planId;
                     planCost = event.target.dataset.planCost;
-
-                    // Call the callback function
                     callback(planId, planCost);
                 }
             });
         }
 
-// Use the handleClick function
         handleClick(function(planId, planCost) {
-            console.log("new button events", planId, planCost);
             let formActionUrl = "http://127.0.0.1:8000/"+planId+"/"+planCost;
             function generateQrCode(url) {
-                let canvas = document.getElementById('qr-code-canvas'); // Replace with the id of your canvas element
+                let canvas = document.getElementById('qr-code-canvas');
 
                 QRCode.toCanvas(canvas, url, function (error) {
                     if (error) console.error(error);
-                    console.log('QR code generated!');
-
-                    // Show the QR code modal
                     let qrCodeModal = document.getElementById('qr_code_modal');
                     if (qrCodeModal) {
                         qrCodeModal.showModal();
                     }
                 });
             }
-
-
-
-
 
             if (redirectButton) {
                 redirectButton.addEventListener('click', function(event) {
@@ -63,24 +52,18 @@ export default class extends Controller {
                 generateQrButton.addEventListener('click', function(event) {
                     try {
                         event.preventDefault();
-
-                        // Get the new dialog
                         let qrCodeModal = document.getElementById('qr_code_modal');
                         if (qrCodeModal) {
-                            // Create a new canvas element for the QR code
+
                             let canvas = document.createElement('canvas');
                             canvas.id = 'qr-code-canvas';
 
-                            // Remove old canvas if it exists
                             let oldCanvas = qrCodeModal.querySelector('#qr-code-canvas');
                             if (oldCanvas && oldCanvas.parentNode) {
                                 oldCanvas.parentNode.removeChild(oldCanvas);
                             }
 
-                            // Append the new canvas to the new dialog
                             qrCodeModal.appendChild(canvas);
-
-                            // Show the new dialog
                             qrCodeModal.showModal();
 
                             fetch(formActionUrl)
@@ -106,10 +89,6 @@ export default class extends Controller {
                     }
                 });
             }
-
         });
-
         }
-
-
 }
