@@ -45,12 +45,12 @@
                     <td>{{ subscription.startDate ? subscription.startDate|date('Y-m-d') : '' }}</td>
                     <td>{{ subscription.endDate ? subscription.endDate|date('Y-m-d') : '' }}</td>
                     <td>{{ subscription.status }}</td>
-                    <td><a class="btn primary-btn m-2"
+                    <td><a class="btn btn-primary m-2"
                            href={{ path('app_subscription_Update', {'id': subscription.id}) }}  >Update</a>
                     </td>
                     <td>
                         <form method="post" action="{{ path('app_subscription_Delete', {'id': subscription.id}) }}">
-                            <button type="submit" class="btn primary-btn m-2">Cancel</button>
+                            <button type="submit" class="btn btn-primary m-2">Cancel</button>
                         </form>
                     </td>
                 </tr>
