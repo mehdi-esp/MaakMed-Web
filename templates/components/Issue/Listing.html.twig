@@ -1,0 +1,88 @@
+<div {{ attributes }}>
+    <section class="flex items-center mb-4">
+        <div class="max-w-screen-xl px-4 mx-auto lg:px-12 w-full">
+            <div class="relative bg-white shadow-md sm:rounded-lg">
+                <div class="flex flex-col items-center justify-between p-4 space-y-3 md:flex-row md:space-y-0 md:space-x-4">
+                    <div class="w-full md:w-1/2">
+                        <form class="flex items-center">
+                            <label for="simple-search" class="sr-only">Search</label>
+                            <div class="relative w-full">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <svg aria-hidden="true" class="w-5 h-5 text-gray-500" fill="currentColor"
+                                         viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                        <path fill-rule="evenodd"
+                                              d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                                              clip-rule="evenodd"/>
+                                    </svg>
+                                </div>
+                                <input type="text"
+                                       id="simple-search"
+                                       data-model="query"
+                                       class="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-primary-500 focus:border-primary-500"
+                                       placeholder="Search">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="flex flex-col items-stretch justify-end flex-shrink-0 w-full space-y-2 md:w-auto md:flex-row md:space-y-0 md:items-center md:space-x-3">
+                        {% if is_granted('ROLE_PATIENT') %}
+                            <a href="{{ path('app_addIssue') }}" class="btn btn-primary">Add Issue</a>
+                        {% endif %}
+
+                        <!-- Category dropdown -->
+                        <select
+                                class="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52"
+                                data-model="category"
+                        >
+                            <option value="">All</option>
+                            <option value="Pharmacy">Pharmacy</option>
+                            <option value="Doctor">Doctor</option>
+                            <option value="Other">Other</option>
+                            <!-- Add more options as needed -->
+                        </select><label class="swap">
+
+                            <input type="checkbox" name="sorting" data-model="orderDir"/>
+
+                            <!-- Arrow Down ( descending ) -->
+                            <svg class="swap-on size-6" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                 viewBox="0 0 24 24"
+                                 stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      d="M3 4.5h14.25M3 9h9.75M3 13.5h5.25m5.25-.75L17.25 9m0 0L21 12.75M17.25 9v12"/>
+                            </svg>
+
+                            <!-- Arrow Up ( ascending ) -->
+                            <svg class="swap-off size-6" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                 viewBox="0 0 24 24"
+                                 stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                      d="M3 4.5h14.25M3 9h9.75M3 13.5h9.75m4.5-4.5v12m0 0-3.75-3.75M17.25 21 21 17.25"/>
+                            </svg>
+
+                        </label>
+                    </div>
+                    <div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lower Section -->
+    <div data-loading="addClass(opacity-50)" class="container">
+        <div class="lower-container">
+            {% if is_granted('ROLE_PATIENT') %}
+                <h2 class="text-2xl title-color mb-4">Your submitted Issues</h2>
+            {% endif %}
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="grid lg:grid-cols-2 lg:gap-y-8 gap-6">
+                        {% for issue in computed.issues %}
+                            <twig:Issue:Card :issue="issue"/>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
