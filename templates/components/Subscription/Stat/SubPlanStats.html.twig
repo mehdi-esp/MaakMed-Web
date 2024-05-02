@@ -1,0 +1,31 @@
+<div {{ attributes }}>
+    <div class="stats stats-vertical lg:stats-horizontal shadow">
+        {% for revenue in computed.TotalRevenuePerPlan %}
+            <div class="stat ">
+                <div class="stat-title">{{ revenue.plan }}</div>
+                <div class="stat-value">{{ revenue.totalRevenue }} TND</div>
+                <div class="stat-desc">Jan 1st - Dec 31</div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="stats shadow">
+        <div class="stat">
+            <div class="stat-title">Plan with the most Active Subscribers</div>
+            <div class="stat-value">  {{ computed.planWithMostSubscribers.plan }} </div>
+            <div class="stat-desc">{{ computed.planWithMostSubscribers.count }} subscriber(s)
+                {% if computed.planWithMostSubscribers.cost is defined and computed.planWithMostSubscribers.count is defined %}
+                    Total Revenue: {{ computed.planWithMostSubscribers.cost * computed.planWithMostSubscribers.count }}TND
+                {% endif %}</div>
+        </div>
+        <div class="stat">
+            <div class="stat-title">Plan with the most Canceled Status</div>
+            <div class="stat-value">  {{ computed.planWithMostCanceledStatus.plan }} </div>
+            <div class="stat-desc">{{ computed.planWithMostCanceledStatus.count }} subscriber(s)</div>
+        </div>
+        <div class="stat">
+            <div class="stat-title">Plan with the most unsatisfied clients</div>
+            <div class="stat-value">  {{ computed.planWithMostCancelingStatus.plan }}  </div>
+            <div class="stat-desc">{{ computed.planWithMostCancelingStatus.count }} subscriber(s)</div>
+        </div>
+    </div>
+</div>

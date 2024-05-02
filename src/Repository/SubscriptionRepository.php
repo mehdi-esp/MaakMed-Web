@@ -34,7 +34,7 @@ class SubscriptionRepository extends ServiceEntityRepository
                 ->getQuery()
                 ->getSingleScalarResult();
 
-            return ($activeUsers / $totalUsers) * 100.0;
+            return round(($activeUsers / $totalUsers) * 100.0, 2);
         }
         public function getCancelingUsersPercentage(): float
             {
@@ -50,7 +50,7 @@ class SubscriptionRepository extends ServiceEntityRepository
                     ->getQuery()
                     ->getSingleScalarResult();
 
-                return ($cancelingUsers / $totalUsers) * 100.0;
+                return round(($cancelingUsers / $totalUsers) * 100.0, 2);
             }
         private function getTotalUsersCount(): int
         {
