@@ -20,24 +20,27 @@ use WhiteOctober\BreadcrumbsBundle\Model\Breadcrumbs;
 #[Route('/invoice')]
 class InvoiceController extends AbstractController
 {
+    public function __construct(
+        private readonly Breadcrumbs $breadcrumbs,
+    ) {
+    }
+
     #[Route('/', name: 'app_invoice_index', methods: ['GET'])]
     #[IsGranted(InvoiceVoter::LIST_ALL)]
-    public function index(Breadcrumbs $breadcrumbs): Response
+    public function index(): Response
     {
-        $breadcrumbs->addRouteItem("Invoices", "app_invoice_index");
+        $this->breadcrumbs->addRouteItem("Invoices", "app_invoice_index");
         return $this->render('invoice/index.html.twig');
     }
 
     #[Route('/new', name: 'app_invoice_new', methods: ['GET', 'POST'])]
     #[IsGranted('ROLE_PHARMACY')]
     public function new(
-        Request                $request,
+        Request $request,
         EntityManagerInterface $entityManager,
-        Breadcrumbs            $breadcrumbs
-    ): Response
-    {
-        $breadcrumbs->addRouteItem("Invoices", "app_invoice_index");
-        $breadcrumbs->addRouteItem("New", "app_invoice_new");
+    ): Response {
+        $this->breadcrumbs->addRouteItem("Invoices", "app_invoice_index");
+        $this->breadcrumbs->addRouteItem("New", "app_invoice_new");
         $invoice = new Invoice();
         $form = $this->createForm(InvoiceType::class, $invoice);
         $form->handleRequest($request);
@@ -68,10 +71,10 @@ class InvoiceController extends AbstractController
 
     #[Route('/{id}', name: 'app_invoice_show', methods: ['GET'])]
     #[IsGranted(InvoiceVoter::VIEW, subject: 'invoice')]
-    public function show(Invoice $invoice, Breadcrumbs $breadcrumbs): Response
+    public function show(Invoice $invoice): Response
     {
-        $breadcrumbs->addRouteItem("Invoices", "app_invoice_index");
-        $breadcrumbs->addRouteItem($invoice->getId(), "app_invoice_show", ["id" => $invoice->getId()]);
+        $this->breadcrumbs->addRouteItem("Invoices", "app_invoice_index");
+        $this->breadcrumbs->addRouteItem($invoice->getId(), "app_invoice_show", ["id" => $invoice->getId()]);
         return $this->render('invoice/show.html.twig', [
             'invoice' => $invoice,
         ]);
@@ -82,13 +85,11 @@ class InvoiceController extends AbstractController
     public function edit(
         Request                $request,
         Invoice                $invoice,
-        EntityManagerInterface $entityManager,
-        Breadcrumbs            $breadcrumbs
-    ): Response
-    {
-        $breadcrumbs->addRouteItem("Invoices", "app_invoice_index");
-        $breadcrumbs->addRouteItem($invoice->getId(), "app_invoice_show", ["id" => $invoice->getId()]);
-        $breadcrumbs->addRouteItem("Edit", "app_invoice_edit", ["id" => $invoice->getId()]);
+        EntityManagerInterface $entityManager
+    ): Response {
+        $this->breadcrumbs->addRouteItem("Invoices", "app_invoice_index");
+        $this->breadcrumbs->addRouteItem($invoice->getId(), "app_invoice_show", ["id" => $invoice->getId()]);
+        $this->breadcrumbs->addRouteItem("Edit", "app_invoice_edit", ["id" => $invoice->getId()]);
 
         if ($request->getMethod() === 'POST') {
             $payload = $request->request->all();
