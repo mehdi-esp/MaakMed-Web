@@ -10,13 +10,21 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use WhiteOctober\BreadcrumbsBundle\Model\Breadcrumbs;
 
 class InsurancePlanController extends AbstractController
 {
+    public function __construct(
+                private readonly Breadcrumbs $breadcrumbs,
+            ) {
+            }
+
     #[Route('/listInsurancePlan', name: 'app_insurancePlan_list', methods: ['GET'])]
     #[IsGranted('ROLE_ADMIN')]
     public function listIP(Request $request, EntityManagerInterface $entityManager): Response
     {
+        $this->breadcrumbs->addRouteItem("Plans", "app_insurancePlan_list");
+
         $repository = $entityManager->getRepository(InsurancePlan::class);
 
         $searchTerm = $request->query->get('searchTerm');
@@ -47,7 +55,6 @@ class InsurancePlanController extends AbstractController
         }
 
         $insurancePlans = $queryBuilder->getQuery()->getResult();
-
         return $this->render('insurancePlan/listInsurancePlan.html.twig', [
             'insurancePlans' => $insurancePlans,
         ]);
@@ -59,6 +66,8 @@ class InsurancePlanController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     public function add(Request $req,EntityManagerInterface $entityManager): Response
     {
+        $this->breadcrumbs->addRouteItem("Plans", "app_insurancePlan_list");
+        $this->breadcrumbs->addRouteItem("Add", "app_insurancePlan_add");
         $insurancePlan = new InsurancePlan();
         $form = $this->createForm(InsurancePlanType::class, $insurancePlan);
         $form->handleRequest($req);
@@ -75,7 +84,6 @@ class InsurancePlanController extends AbstractController
                 Response::HTTP_UNPROCESSABLE_ENTITY :
                 Response::HTTP_OK,
         );
-
         return $this->render('insurancePlan/addInsurancePlan.html.twig', [
             'insurancePlan' => $insurancePlan,
             'form' => $form->createView(),
@@ -86,6 +94,9 @@ class InsurancePlanController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     public function edit(Request $req, InsurancePlan $ip, EntityManagerInterface $entityManager): Response
     {
+        $this->breadcrumbs->addRouteItem("Plans", "app_insurancePlan_list");
+        $this->breadcrumbs->addItem("Edit");
+        $this->breadcrumbs->addRouteItem($ip->getId(), "app_insurancePlan_edit", ["id" => $ip->getId()]);
         $form = $this->createForm(InsurancePlanType::class, $ip);
         $form->handleRequest($req);
 
@@ -99,7 +110,6 @@ class InsurancePlanController extends AbstractController
                 Response::HTTP_UNPROCESSABLE_ENTITY :
                 Response::HTTP_OK,
         );
-
         return $this->render('insurancePlan/editInsurancePlan.html.twig', [
             'insurancePlan' => $ip,
             'form' => $form->createView(),
@@ -125,6 +135,7 @@ class InsurancePlanController extends AbstractController
         #[Route('/ListPlans', name: 'app_insurance_plan_ListPlans')]
         public function listPlansPatient(EntityManagerInterface $entityManager):Response
         {
+        $this->breadcrumbs->addRouteItem("Plans", "app_insurance_plan_ListPlans");
             $plans = $entityManager->getRepository(InsurancePlan::class)->findAll();
                 $user = $this->getUser(); // Get the current user
                 return $this->render('insurance_plan/ListPlansPatient.html.twig', [

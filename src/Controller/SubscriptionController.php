@@ -23,10 +23,16 @@ use Doctrine\ORM\Query;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use WhiteOctober\BreadcrumbsBundle\Model\Breadcrumbs;
 
 
 class SubscriptionController extends AbstractController
 {
+     public function __construct(
+            private readonly Breadcrumbs $breadcrumbs,
+            private readonly MailerInterface $mailer,
+        ) {
+        }
 
     #[Route('/subscription/active', name: 'app_subscription_active')]
     #[IsGranted("ROLE_PATIENT")]
@@ -75,14 +81,14 @@ class SubscriptionController extends AbstractController
        $queryBuilder->orderBy('s.status', 'ASC');
 
        // Pagination
-       $page = $request->query->getInt('page', 1); // Get the current page number, default is 1
-       $limit = 5; // Set the limit of entries per page
+       $page = $request->query->getInt('page', 1);
+       $limit = 5;
        $pagination = $paginator->paginate(
-           $queryBuilder, // Pass query builder instance
-           $page,         // Current page number
-           $limit         // Limit of entries per page
+           $queryBuilder,
+           $page,
+           $limit
        );
-
+        $this->breadcrumbs->addRouteItem("Subscription", "app_subscription_list");
        return $this->render('subscription/ListSubscriptionsAdmin.html.twig', [
            'pagination' => $pagination,
        ]);
@@ -127,6 +133,8 @@ class SubscriptionController extends AbstractController
     #[IsGranted("ROLE_ADMIN")]
     public function UpdateSub(Request $req, Subscription $Sub, EntityManagerInterface $entityManager): Response
     {
+        $this->breadcrumbs->addRouteItem("Subscription", "app_subscription_list");
+        $this->breadcrumbs->addRouteItem($Sub->getId(), "app_subscription_Update", ["id" => $Sub->getId()]);
         $form = $this->createForm(SubscriptionType::class, $Sub);
         $form->handleRequest($req);
 
@@ -140,7 +148,6 @@ class SubscriptionController extends AbstractController
                 Response::HTTP_UNPROCESSABLE_ENTITY :
                 Response::HTTP_OK,
         );
-
         return $this->render('subscription/update.html.twig', [
             'Subscription' => $Sub,
             'form' => $form->createView(),
@@ -253,7 +260,6 @@ class SubscriptionController extends AbstractController
         } catch (\Stripe\Exception\SignatureVerificationException $e) {
             return new JsonResponse(['error' => 'Bad Request'], Response::HTTP_BAD_REQUEST);
         }
-
         if ($event->type === 'checkout.session.completed') {
             $data = $event->data->object;
             $email = $data->customer_details->email;
@@ -269,9 +275,6 @@ class SubscriptionController extends AbstractController
 
         return new JsonResponse(['status' => 'success']);
     }
-     public function __construct(private readonly MailerInterface $mailer)
-            {
-            }
     public function sendEmailConfirmation(string $address): void
     {
         $email = (new TemplatedEmail())
@@ -281,8 +284,8 @@ class SubscriptionController extends AbstractController
             ->htmlTemplate('subscription/confirmationPayment.html.twig');
         $this->mailer->send($email);
     }
-public function activateSubscription(int $patientId, EntityManagerInterface $entityManager): Response
-{
+    public function activateSubscription(int $patientId, EntityManagerInterface $entityManager): Response
+    {
     error_log('In activateSubscription method for patient ID: ' . $patientId);
     $patient = $entityManager->getRepository(Patient::class)->find($patientId);
     if (!$patient) {
@@ -298,12 +301,11 @@ public function activateSubscription(int $patientId, EntityManagerInterface $ent
                 $this->addFlash('warning', 'No pending or canceling subscription found for this patient.');
                 return $this->redirectToRoute('app_subscription_list');
     }
-
         $subscription->setStatus('active');
         $entityManager->persist($subscription);
         $entityManager->flush();
         return new Response('Subscription activated successfully');
-}
+    }
     #[Route('/subscription/cancel/{planId}', name: 'app_subscription_Cancel',methods: ['POST'])]
     #[IsGranted("ROLE_PATIENT")]
     public function cancelSubscription(int $planId, EntityManagerInterface $entityManager): Response
@@ -335,13 +337,13 @@ public function activateSubscription(int $patientId, EntityManagerInterface $ent
         return $this->redirectToRoute('app_insurance_plan_ListPlans');
     }
 
-   #[Route('/subscription/success', name: 'app_subscription_success', methods: ['GET'])]
-   #[IsGranted("ROLE_PATIENT")]
-   public function paymentSuccess(): Response
-   {
+      #[Route('/subscription/success', name: 'app_subscription_success', methods: ['GET'])]
+      #[IsGranted("ROLE_PATIENT")]
+      public function paymentSuccess(): Response
+        {
        return $this->render('subscription/success.html.twig');
-   }
-   #[Route('/subscription/failure', name: 'app_subscription_failure', methods: ['GET'])]
+        }
+      #[Route('/subscription/failure', name: 'app_subscription_failure', methods: ['GET'])]
       #[IsGranted("ROLE_PATIENT")]
       public function paymentFailure(): Response
       {
