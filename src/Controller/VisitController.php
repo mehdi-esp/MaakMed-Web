@@ -26,11 +26,16 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 #[Route('/visit')]
 class VisitController extends AbstractController
 {
+    public function __construct(
+        private readonly Breadcrumbs $breadcrumbs,
+    ) {
+    }
+
     #[Route('/', name: 'app_visit_index', methods: ['GET'])]
     #[IsGranted(VisitVoter::LIST_ALL)]
-    public function index(Breadcrumbs $breadcrumbs): Response
+    public function index(): Response
     {
-        $breadcrumbs->addRouteItem("Visits", "app_visit_index");
+        $this->breadcrumbs->addRouteItem("Visits", "app_visit_index");
         return $this->render('visit/index.html.twig');
     }
 
@@ -66,11 +71,10 @@ class VisitController extends AbstractController
     public function new(
         Request $request,
         EntityManagerInterface $entityManager,
-        Breadcrumbs $breadcrumbs
     ): Response {
 
-        $breadcrumbs->addRouteItem("Visits", "app_visit_index");
-        $breadcrumbs->addRouteItem("New", "app_visit_new");
+        $this->breadcrumbs->addRouteItem("Visits", "app_visit_index");
+        $this->breadcrumbs->addRouteItem("New", "app_visit_new");
 
         /** @var Doctor $doctor */
         $doctor = $this->getUser();
@@ -104,10 +108,10 @@ class VisitController extends AbstractController
 
     #[Route('/{id}', name: 'app_visit_show', methods: ['GET'])]
     #[IsGranted(VisitVoter::VIEW, subject: 'visit')]
-    public function show(Visit $visit, Breadcrumbs $breadcrumbs): Response
+    public function show(Visit $visit): Response
     {
-        $breadcrumbs->addRouteItem("Visits", "app_visit_index");
-        $breadcrumbs->addRouteItem($visit->getId(), "app_visit_show", ["id" => $visit->getId()]);
+        $this->breadcrumbs->addRouteItem("Visits", "app_visit_index");
+        $this->breadcrumbs->addRouteItem($visit->getId(), "app_visit_show", ["id" => $visit->getId()]);
         return $this->render('visit/show.html.twig', [
             'visit' => $visit,
         ]);
@@ -119,11 +123,10 @@ class VisitController extends AbstractController
         Request $request,
         Visit $visit,
         EntityManagerInterface $entityManager,
-        Breadcrumbs $breadcrumbs
     ): Response {
-        $breadcrumbs->addRouteItem("Visits", "app_visit_index");
-        $breadcrumbs->addRouteItem($visit->getId(), "app_visit_show", ["id" => $visit->getId()]);
-        $breadcrumbs->addRouteItem("Edit", "app_visit_edit", ["id" => $visit->getId()]);
+        $this->breadcrumbs->addRouteItem("Visits", "app_visit_index");
+        $this->breadcrumbs->addRouteItem($visit->getId(), "app_visit_show", ["id" => $visit->getId()]);
+        $this->breadcrumbs->addRouteItem("Edit", "app_visit_edit", ["id" => $visit->getId()]);
 
         $form = $this->createForm(VisitType::class, $visit);
         $form->handleRequest($request);

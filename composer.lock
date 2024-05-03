@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "75a10ea2585907e0976fb1c1a6bf0fc4",
+    "content-hash": "1d9884edd39c6b18f4dceb356cd585b4",
     "packages": [
         {
             "name": "api-platform/core",
@@ -323,6 +323,46 @@
                 "source": "https://github.com/beberlei/DoctrineExtensions/tree/v1.5.0"
             },
             "time": "2024-03-03T17:55:15+00:00"
+        },
+        {
+            "name": "buchin/badwords",
+            "version": "1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/buchin/badwords.git",
+                "reference": "9eac01b6b7310595431e7a93e7c7c1cb64dcb044"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/buchin/badwords/zipball/9eac01b6b7310595431e7a93e7c7c1cb64dcb044",
+                "reference": "9eac01b6b7310595431e7a93e7c7c1cb64dcb044",
+                "shasum": ""
+            },
+            "require-dev": {
+                "kahlan/kahlan": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Buchin\\Badwords\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Mochammad Masbuchin",
+                    "email": "buchin@dropsugar.com"
+                }
+            ],
+            "description": "Badwords filter in PHP",
+            "support": {
+                "issues": "https://github.com/buchin/badwords/issues",
+                "source": "https://github.com/buchin/badwords/tree/1.0.3"
+            },
+            "time": "2021-09-26T17:47:10+00:00"
         },
         {
             "name": "doctrine/annotations",

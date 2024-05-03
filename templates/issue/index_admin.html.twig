@@ -1,4 +1,4 @@
-{% extends 'base_admin.html.twig'  %}
+{% extends 'base_admin.html.twig' %}
 {% block title %}List of Issues{% endblock %}
 
 {% block stylesheets %}
@@ -7,50 +7,77 @@
         .title-color {
             color: #3082cfff; /* Color for the title "List of Issues" */
         }
+
         .card-title-color {
             color: #38b2acff; /* Secondary color from the base template */
         }
+
         .text-black {
             color: black; /* Black color for text */
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #E7E7E7;
+            border: 1px solid #38b2acff;
+            border-radius: 5px;
         }
     </style>
 {% endblock %}
 
 {% block body %}
-    <div class="container">
-        <h1 class="text-2xl font-bold title-color mb-4">List of Issues</h1>
-        <div class="row">
-            <div class="col-md-12">
-                <!-- Grid -->
-                <div class="grid lg:grid-cols-2 lg:gap-y-8 gap-6">
-                    {% for issue in issues %}
-                        <!-- Card -->
-                        <div class="group rounded-xl overflow-hidden dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
-                            <div class="sm:flex">
-                                <div class="grow mt-4 sm:mt-0 sm:ms-6 px-4 sm:px-0">
-                                    <h3 class="text-lg font-semibold card-title-color group-hover:text-gray-600 dark:text-gray-300 dark:group-hover:text-white">
-                                        {{ issue.title }}
-                                    </h3>
-                                    <p class="mt-2 text-sm text-black dark:text-gray-400">
-                                        {{ issue.content }}
-                                    </p>
-                                </div>
-                                <div class="flex items-center">
-                                {#   <form action="{{ path('app_issue_delete', {'id': issue.id}) }}" method="post">
-                                            <button type="submit" class="btn btn-danger ml-auto">Delete</button>
-                                        </form> #}
-                                    {% if is_granted('ROLE_ADMIN') %}
-                                      
-                                        <a href="{{ path('app_add_issue_response',{'issueId': issue.id} )}}" class="btn btn-primary ml-2">Respond</a>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-                        <!-- End Card -->
-                    {% endfor %}
-                </div>
-                <!-- End Grid -->
+    <twig:Issue:Listing/>
+
+    <!-- Toast Notification -->
+    <div id="toast-message-cta"
+         class="w-full max-w-xs p-4 text-gray-500 bg-white rounded-lg shadow"
+         role="alert" style="position: fixed; bottom: 20px; right: 20px; z-index: 100;">
+        <div class="flex">
+            <div class="ms-3 text-sm font-normal">
+                <h2 class="mb-1 text-lg font-semibold text-gray-900">Latest Issue</h2>
+                <span id="toast-title" class="mb-1 text-sm font-semibold text-gray-900"></span>
+                <div id="toast-content" class="mb-2 text-sm font-normal"></div>
+                <a id="toast-reply" href="#"
+                   class="inline-flex px-2.5 py-1.5 text-xs font-medium text-center text-white bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300">Reply</a>
             </div>
+            <button type="button"
+                    class="ms-auto -mx-1.5 -my-1.5 bg-white justify-center items-center flex-shrink-0 text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex h-8 w-8"
+                    onclick="closeToast()" aria-label="Close">
+                <span class="sr-only">Close</span>
+                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                     viewBox="0 0 14 14">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                </svg>
+            </button>
         </div>
     </div>
+    <script>
+        var latestIssueId = null;
+
+        function checkForNewIssue() {
+            fetch('/issue/latest')
+                .then(response => response.json())
+                .then(issue => {
+                    if (issue.id !== latestIssueId) {
+                        latestIssueId = issue.id;
+                        document.getElementById('toast-title').textContent = issue.title;
+                        document.getElementById('toast-content').textContent = issue.content;
+                        document.getElementById('toast-reply').href = '/issueResponse/new/' + issue.id;
+                        document.getElementById('toast-message-cta').classList.remove('hidden');
+                    }
+                });
+        }
+
+        function closeToast() {
+            document.getElementById('toast-message-cta').classList.add('hidden');
+        }
+
+        checkForNewIssue()
+    </script>
 {% endblock %}
