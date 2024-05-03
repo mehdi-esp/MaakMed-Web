@@ -58,12 +58,21 @@ class Listing extends AbstractController
         if (!$this->form->isValid()) {
             return;
         }
+
         $this->editing = true;
         $this->entityManager->flush();
+
+        // Iterate over each inventory entry
+        foreach ($this->initialFormData->getInventoryEntries() as $entry) {
+            // Check if the quantity is less than 50
+            if ($entry->getQuantity() < 50) {
+                // Add a flash message
+                $this->addFlash('warning', 'Inventory quantity for entry ' . $entry->getMedication()->getName() . ' is less than 50!');
+            }
+        }
+
         $this->addFlash('success', 'Save was successful!');
-
     }
-
 
     protected function instantiateForm(): FormInterface
     {
