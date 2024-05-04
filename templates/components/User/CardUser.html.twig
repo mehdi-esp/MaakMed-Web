@@ -26,7 +26,7 @@
                     <p style="color: red;">This user hasn't verified his email yet.</p>
                 {% endif %}
             {% endif %}
-            {% if 'ROLE_ADMIN' app.user.roles %}
+            {% if 'ROLE_ADMIN' in app.user.roles %}
                 <form method="post" action="{{ path('user_ban', {'id': user.id}) }}"
                       onsubmit="return confirm('Are you sure you want to ban this user?');">
                     <input type="hidden" name="_token" value="{{ csrf_token('ban' ~ user.id) }}">
