@@ -20,30 +20,31 @@
         <div class="flex items-center space-x-4">
             <div class="prose"><h3>Diagnosis</h3></div>
             <twig:Form:ErrorTooltip field="{{ form.diagnosis }}"/>
-            <pre class="invisible ml-2" data-loading="action(genCompletion)|removeClass(invisible)">Loading completion...   <span class="loading loading-spinner loading-xs"></span></pre>
+            <pre class="invisible ml-2" data-loading="action(genCompletion)|removeClass(invisible)">Loading completion...   <span
+                        class="loading loading-spinner loading-xs"></span></pre>
         </div>
         <div class="relative mb-96">
             {{ form_widget(form.diagnosis, {
                 attr: {
-                  class: 'textarea absolute textarea-bordered textarea-lg w-full resize-none min-h-96',
-                  ...stimulus_target("diagnosis", "writingArea")|stimulus_target("encyclopedia-article", "writingArea"),
-                  ...(
-                      client != null ? (
-                          stimulus_action("diagnosis", "dismissSuggestion")|
-                          stimulus_action("diagnosis", "dismissSuggestion", "focusout")|
-                          stimulus_action("diagnosis", "dismissSuggestion", "keydown.esc")|
-                          stimulus_action("diagnosis", "autoSuggest")|
-                          stimulus_action("diagnosis", "requestSuggestion", 'keydown.ctrl+space')|
-                          stimulus_action("diagnosis", "acceptSuggestion:prevent", 'keydown.tab')|
-                          stimulus_action("encyclopedia-article", "onMouseUp", 'mouseup')
-                      ) : stimulus_action("encyclopedia-article", "onMouseUp", 'mouseup')
-                  ),
+                    class: 'textarea absolute textarea-bordered textarea-lg w-full resize-none min-h-96',
+                    ...stimulus_target("diagnosis", "writingArea")|stimulus_target("encyclopedia-article", "writingArea"),
+                    ...(
+                    client != null ? (
+                    stimulus_action("diagnosis", "dismissSuggestion")|
+                    stimulus_action("diagnosis", "dismissSuggestion", "focusout")|
+                    stimulus_action("diagnosis", "dismissSuggestion", "keydown.esc")|
+                    stimulus_action("diagnosis", "autoSuggest")|
+                    stimulus_action("diagnosis", "requestSuggestion", 'keydown.ctrl+space')|
+                    stimulus_action("diagnosis", "acceptSuggestion:prevent", 'keydown.tab')|
+                    stimulus_action("encyclopedia-article", "onMouseUp", 'mouseup')
+                    ) : stimulus_action("encyclopedia-article", "onMouseUp", 'mouseup')
+                    ),
                 }
             }) }}
             <div
-              tabindex="-1"
-              class="textarea bg-transparent border-transparent text-gray-500 outline-transparent absolute textarea-lg w-full min-h-96 pointer-events-none whitespace-pre-wrap text-wrap overflow-hidden"
-              {{ client != null ? stimulus_target("diagnosis", "suggestion") }}
+                    tabindex="-1"
+                    class="textarea bg-transparent border-transparent text-gray-500 outline-transparent absolute textarea-lg w-full min-h-96 pointer-events-none whitespace-pre-wrap text-wrap overflow-hidden"
+                    {{ client != null ? stimulus_target("diagnosis", "suggestion") }}
             ></div>
         </div>
         {{ form_help(form.diagnosis) }}

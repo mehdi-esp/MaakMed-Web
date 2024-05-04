@@ -1,4 +1,4 @@
-<div {{ attributes.defaults({...stimulus_controller("tomselect-cleaner"), ...stimulus_action("tomselect-cleaner", "clearFilters", "filters:clear")}) }}>
+<div {{ attributes.defaults({...stimulus_controller('tomselect-cleaner'), ...stimulus_action('tomselect-cleaner', 'clearFilters', 'filters:clear')}) }}>
     <div class="prose"><h1 id="visits">Visits</h1></div>
 
     {% if is_granted('ROLE_DOCTOR') %}
@@ -17,22 +17,22 @@
         <div class="prose">
             <h2>Filters</h2>
             <ul>
-                {% if is_granted("ROLE_DOCTOR") or is_granted("ROLE_ADMIN") %}
+                {% if is_granted('ROLE_DOCTOR') or is_granted('ROLE_ADMIN') %}
                     <li><label>
                             Patient:
                             <select
                                     name="patient"
                                     data-model="patient"
                                     {{ stimulus_controller('symfony/ux-autocomplete/autocomplete', {
-                                        url: path('ux_entity_autocomplete', {alias: "patient"}),
-                                        noResultsFoundText: "No such patient",
+                                        url: path('ux_entity_autocomplete', {alias: 'patient'}),
+                                        noResultsFoundText: 'No such patient',
                                     }) }}
                                     {{ stimulus_target('tomselect-cleaner', 'picker') }}
                             ></select>
                         </label>
                     </li>
                 {% endif %}
-                {% if is_granted("ROLE_PATIENT") or is_granted("ROLE_ADMIN") %}
+                {% if is_granted('ROLE_PATIENT') or is_granted('ROLE_ADMIN') %}
                     <li>
                         <label>
                             Doctor:
@@ -40,7 +40,7 @@
                                     name="doctor"
                                     data-model="doctor"
                                     {{ stimulus_controller('symfony/ux-autocomplete/autocomplete', {
-                                        url: path('ux_entity_autocomplete', {alias: "doctor"})
+                                        url: path('ux_entity_autocomplete', {alias: 'doctor'})
                                     }) }}
                                     {{ stimulus_target('tomselect-cleaner', 'picker') }}
                             ></select>
@@ -61,7 +61,7 @@
                 </li>
             </ul>
         </div>
-        {#                <a class="btn mx-auto" href="{{ path('app_visit_index') }}">Clear Filters</a> #}
+        {# <a class="btn mx-auto" href="{{ path('app_visit_index') }}">Clear Filters</a> #}
         <button class="btn mx-auto"
                 data-action="live#action"
                 data-live-action-param="clearFilters"
@@ -112,7 +112,7 @@
         <a
                 class="fixed bottom-4 start-4 md:bottom-16 md:start-16 btn rounded-full"
                 role="button"
-                {{ stimulus_controller("scroll-to") }}
+                {{ stimulus_controller('scroll-to') }}
                 href="#visits"
                 id="btn-back-to-top">
             <span class="[&>svg]:w-4">
