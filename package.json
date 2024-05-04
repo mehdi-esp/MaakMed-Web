@@ -40,6 +40,7 @@
         "@stimulus-components/scroll-progress": "^5.0.0",
         "@stimulus-components/scroll-to": "^5.0.1",
         "@tailwindcss/container-queries": "^0.1.1",
+        "qrcode": "^1.5.3",
         "stimulus-library": "^1.1.0",
         "stimulus-textarea-autogrow": "^4.1.0",
         "stimulus-use": "^0.52.2"
