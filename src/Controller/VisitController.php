@@ -44,7 +44,7 @@ class VisitController extends AbstractController
     public function userInfoPopover(User $subject): Response
     {
         if (!$subject instanceof Patient && !$subject instanceof Doctor) {
-            return new Response(status: Response::HTTP_NOT_FOUND);
+            throw $this->createNotFoundException('No such user.');
         }
         /** @var Doctor|Patient|Admin $user */
         $user = $this->getUser();
