@@ -20,7 +20,7 @@ export default class extends Controller {
         }
 
         handleClick(function(planId, planCost) {
-            let formActionUrl = "http://127.0.0.1:8000/"+planId+"/"+planCost;
+            let formActionUrl = "http://127.0.0.1:8000/subscription/"+planId+"/"+planCost;
             function generateQrCode(url) {
                 let canvas = document.getElementById('qr-code-canvas');
 

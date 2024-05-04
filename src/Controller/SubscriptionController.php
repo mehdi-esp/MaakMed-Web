@@ -25,7 +25,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use WhiteOctober\BreadcrumbsBundle\Model\Breadcrumbs;
 
-
+#[Route('/subscription')]
 class SubscriptionController extends AbstractController
 {
      public function __construct(
@@ -34,32 +34,7 @@ class SubscriptionController extends AbstractController
         ) {
         }
 
-    #[Route('/subscription/active', name: 'app_subscription_active')]
-    #[IsGranted("ROLE_PATIENT")]
-    public function getActivePlan(EntityManagerInterface $entityManager): JsonResponse
-    {
-        $user = $this->getUser();
-        if (!$user instanceof Patient) {
-            throw new \Exception('Logged in user must be a Patient');
-        }
-
-        $activePlan = $entityManager->getRepository(Subscription::class)
-            ->findOneBy([
-                'patient' => $user,
-                'status' => 'active'
-            ]);
-
-        $response = [
-            'hasActivePlan' => $activePlan !== null
-        ];
-
-        if ($activePlan !== null) {
-            $response['planName'] = $activePlan->getPlan()->getName();
-        }
-
-        return new JsonResponse($response);
-    }
-   #[Route('/subscription/ListSubscriptions', name: 'app_subscription_list', methods: ['GET'])]
+   #[Route('/', name: 'app_subscription_list', methods: ['GET'])]
    #[IsGranted("ROLE_ADMIN")]
    public function ListSubscriptionsAdmin(Request $request, EntityManagerInterface $entityManager, PaginatorInterface $paginator): Response
    {
@@ -79,8 +54,6 @@ class SubscriptionController extends AbstractController
        }
 
        $queryBuilder->orderBy('s.status', 'ASC');
-
-       // Pagination
        $page = $request->query->getInt('page', 1);
        $limit = 5;
        $pagination = $paginator->paginate(
@@ -93,7 +66,7 @@ class SubscriptionController extends AbstractController
            'pagination' => $pagination,
        ]);
    }
-   #[Route('/subscription/search', name: 'app_subscription_search', methods: ['GET'])]
+   #[Route('/search', name: 'app_subscription_search', methods: ['GET'])]
    #[IsGranted("ROLE_ADMIN")]
    public function search(Request $request, EntityManagerInterface $entityManager): Response
    {
@@ -129,7 +102,7 @@ class SubscriptionController extends AbstractController
        return new JsonResponse($subscriptionsArray);
    }
 
-    #[Route('/subscription/UpdateSubscription/{id}', name: 'app_subscription_Update', methods: ['GET', 'POST'])]
+    #[Route('/{id}/update', name: 'app_subscription_Update', methods: ['GET', 'POST'])]
     #[IsGranted("ROLE_ADMIN")]
     public function UpdateSub(Request $req, Subscription $Sub, EntityManagerInterface $entityManager): Response
     {
@@ -153,7 +126,7 @@ class SubscriptionController extends AbstractController
             'form' => $form->createView(),
         ], $response);
     }
-    #[Route('/subscription/DeleteSubscription/{id}', name: 'app_subscription_Delete',methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'app_subscription_Delete',methods: ['POST'])]
     #[IsGranted("ROLE_ADMIN")]
     public function CancelSub(Subscription $Sub, EntityManagerInterface $entityManager): Response
     {
@@ -243,7 +216,7 @@ class SubscriptionController extends AbstractController
         return $session;
     }
 
-    #[Route('/subscription/webhook',name: 'app_subscription_webhook', methods: ['POST'])]
+    #[Route('/webhook',name: 'app_subscription_webhook', methods: ['POST'])]
     public function handleWebhook(Request $request,EntityManagerInterface $entityManager): Response
     {
         $payload = $request->getContent();
@@ -306,7 +279,7 @@ class SubscriptionController extends AbstractController
         $entityManager->flush();
         return new Response('Subscription activated successfully');
     }
-    #[Route('/subscription/cancel/{planId}', name: 'app_subscription_Cancel',methods: ['POST'])]
+    #[Route('/{planId}/cancel', name: 'app_subscription_Cancel',methods: ['POST'])]
     #[IsGranted("ROLE_PATIENT")]
     public function cancelSubscription(int $planId, EntityManagerInterface $entityManager): Response
     {
@@ -337,13 +310,13 @@ class SubscriptionController extends AbstractController
         return $this->redirectToRoute('app_insurance_plan_ListPlans');
     }
 
-      #[Route('/subscription/success', name: 'app_subscription_success', methods: ['GET'])]
+      #[Route('/success', name: 'app_subscription_success', methods: ['GET'])]
       #[IsGranted("ROLE_PATIENT")]
       public function paymentSuccess(): Response
         {
        return $this->render('subscription/success.html.twig');
         }
-      #[Route('/subscription/failure', name: 'app_subscription_failure', methods: ['GET'])]
+      #[Route('/failure', name: 'app_subscription_failure', methods: ['GET'])]
       #[IsGranted("ROLE_PATIENT")]
       public function paymentFailure(): Response
       {

@@ -40,7 +40,7 @@ class SubscriptionRepository extends ServiceEntityRepository
             {
                 $totalUsers = $this->getTotalUsersCount();
                 if ($totalUsers === 0) {
-                    return 0.0; // Avoid division by zero
+                    return 0.0;
                 }
 
                 $cancelingUsers = $this->createQueryBuilder('s')
