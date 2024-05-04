@@ -73,6 +73,7 @@ class IssueController extends AbstractController
     }
 
     #[Route('/api/categorize', name: 'app_issue_categorize', methods: ['POST'])]
+    #[IsGranted(IssueVoter::LIST_ALL)]
     public function categorize(
         #[RequestParam('content')] string $content,
         IssueCategorizer                  $issueCategorizer
@@ -83,6 +84,7 @@ class IssueController extends AbstractController
     }
 
     #[Route('/api/translate', name: 'app_issue_translate', methods: ['POST'])]
+    #[IsGranted(IssueVoter::LIST_ALL)]
     public function translate(#[RequestParam] string $content, HttpClientInterface $httpClient): Response
     {
         $API_TOKEN = $_ENV['HF_API_TOKEN'] ?? null;
