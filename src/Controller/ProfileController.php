@@ -23,11 +23,14 @@ use App\Entity\Pharmacy;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 use SymfonyCasts\Bundle\VerifyEmail\VerifyEmailHelperInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
+use Symfony\Component\Notifier\Message\SmsMessage;
+use Symfony\Component\Notifier\TexterInterface;
 
 class ProfileController extends AbstractController
 {
@@ -145,7 +148,7 @@ class ProfileController extends AbstractController
         $address = $this->getUser()->getEmail();
         $email = (new TemplatedEmail())
             ->from(new Address('***REMOVED***', 'Email Verification'))
-            ->to('***REMOVED***')
+            ->to($address)
             ->subject('Please Confirm your Email')
             ->htmlTemplate('registration/confirmation_email.html.twig')
             ->context([
@@ -192,4 +195,32 @@ class ProfileController extends AbstractController
         $this->addFlash('success', 'Your email has been verified.');
         return $this->redirectToRoute('profile');
     }
+    #[Route('/account/delete', name: 'app_account_delete', methods: ['POST'])]
+    #[IsGranted('IS_AUTHENTICATED_FULLY')]
+    public function deleteAccount(Request                $request,
+                                  EntityManagerInterface $entityManager,
+                                  TexterInterface        $texter,
+                             TokenStorageInterface $tokenStorage,
+    ): Response
+    {
+        $sms = new SmsMessage(
+        // the phone number to send the SMS message to
+            '+21653905361',
+            // the message
+            'Deleted account!',
+        );
+
+        $sentMessage = $texter->send($sms);
+
+        $entityManager->remove($this->getUser());
+        $entityManager->flush();
+
+        $tokenStorage->setToken(null);
+        $request->getSession()->invalidate();
+
+        $this->addFlash('success', 'Your account has been deleted.');
+
+        return $this->redirectToRoute('app_home');
+    }
+
 }
