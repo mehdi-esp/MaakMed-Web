@@ -21,6 +21,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/user/{id}/ban', name: 'user_ban', methods: ["POST"])]
+    #[IsGranted('ROLE_ADMIN')]
     public function ban(EntityManagerInterface $entityManager, User $user): Response
     {
         $entityManager->remove($user);
