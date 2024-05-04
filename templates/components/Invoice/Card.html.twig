@@ -3,7 +3,12 @@
 <div {{ attributes }}>
     <!-- Card -->
     <article
-            class="card card-bordered w-[25rem] sm:w-[30rem] md:w-[35rem] lg:w-[40rem] xl:w-[45rem] bg-white shadow-md">
+            class="
+            card card-bordered
+            {{ (app.request.pathInfo != path("app_invoice_show",{id: invoice.id})) ?
+            'w-[25rem] sm:w-[30rem] md:w-[35rem] lg:w-[40rem] xl:w-[45rem]' }}
+            bg-white shadow-md"
+    >
         <div class="card-body">
 
             <header class="flex flex-col justify-center items-center px-4 gap-y-4">
@@ -14,7 +19,7 @@
 
                     <!-- Buttons -->
                     <div class="card-actions gap-0 join">
-                        {% if is_granted("ROLE_PHARMACY") %}
+                        {% if "ROLE_PHARMACY" in app.user.roles %}
                             <a class="btn btn-ghost text-primary join-item"
                                href="{{ path("app_invoice_edit",{id: invoice.id}) }}">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -32,26 +37,28 @@
                                 </svg>
                             </button>
                         {% endif %}
-                        <a class="btn btn-ghost text-secondary join-item"
-                           href="{{ path("app_invoice_show",{id: invoice.id}) }}">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                 stroke-width="1.5"
-                                 stroke="currentColor" class="size-5">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                      d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/>
-                            </svg>
-                        </a>
+                        {% if app.request.pathInfo != path("app_invoice_show",{id: invoice.id}) %}
+                            <a class="btn btn-ghost text-secondary join-item"
+                               href="{{ path("app_invoice_show",{id: invoice.id}) }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                     stroke-width="1.5"
+                                     stroke="currentColor" class="size-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                          d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"/>
+                                </svg>
+                            </a>
+                        {% endif %}
                     </div>
                     <!-- End Buttons -->
                 </div>
                 <div class="container flex justify-evenly items-center">
-                    {% if is_granted("ROLE_PHARMACY") or is_granted("ROLE_ADMIN") %}
+                    {% if "ROLE_PATIENT" not in app.user.roles %}
                         <dl class="text-center">
                             <dt>Issued to:</dt>
                             <dd><a class="link link-hover link-accent">{{ invoice.patient.fullName }}</a></dd>
                         </dl>
                     {% endif %}
-                    {% if is_granted("ROLE_PATIENT") or is_granted("ROLE_ADMIN") %}
+                    {% if "ROLE_PHARMACY" not in app.user.roles %}
                         <dl class="text-center">
                             <dt>Issued by:</dt>
                             <dd><a class="link link-hover link-accent">{{ invoice.pharmacy.name }}</a></dd>
@@ -63,7 +70,7 @@
                 </time>
             </header>
             <!-- Table -->
-            <div class="overflow-auto h-40 md:h-60 mt-6">
+            <div class="overflow-auto {{ (app.request.pathInfo != path("app_invoice_show",{id: invoice.id})) ? 'h-40 md:h-60' }} mt-6">
                 <table class="table">
                     <!-- head -->
                     <thead>

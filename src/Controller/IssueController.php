@@ -5,49 +5,111 @@ namespace App\Controller;
 
 use App\Entity\Admin;
 use App\Entity\Issue;
+use App\Entity\IssueResponse;
 use App\Entity\Patient;
 
 use App\Form\IssueType;
 use App\Form\IssueUpdateType;
 use App\Repository\IssueRepository;
 use App\Security\Voter\IssueVoter;
+use App\Service\IssueCategorizer;
 use Doctrine\ORM\EntityManagerInterface;
+use Jungi\FrameworkExtraBundle\Attribute\RequestParam;
 use Psr\Log\LoggerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpClient\HttpClient;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Buchin\Badwords\Badwords;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 
 #[Route('/issue')]
 class IssueController extends AbstractController
 {
+
+    private int $newIssueCount = 0;
+
+    public function incrementNewIssueCount(): void
+    {
+        $this->newIssueCount++;
+    }
+
+    public function resetNewIssueCount(): void
+    {
+        $this->newIssueCount = 0;
+    }
+
+    public function isNew(Issue $issue): bool
+    {
+        $creationDate = $issue->getCreationDate();
+        $oneDayAgo = (new \DateTime())->modify('-24 hours');
+
+        return $creationDate > $oneDayAgo;
+    }
+
     #[Route('/', name: 'app_issue_index', methods: ['GET'])]
     #[IsGranted(IssueVoter::LIST_ALL)]
     public function index(IssueRepository $issueRepository, AuthorizationCheckerInterface $authChecker): Response
     {
         $user = $this->getUser();
 
-        $criteria = [];
         // Check user role and set criteria accordingly
-        if ($authChecker->isGranted('ROLE_ADMIN')) {
-            // For admins, no additional criteria needed, fetch all issues
-        } else {
-            // For patients, fetch issues associated with the current patient
-            $criteria['user'] = $user;
+        if ($user instanceof Patient) {
+            return $this->render('issue/index.html.twig');
         }
 
         // Fetch issues based on criteria
-        $issues = $issueRepository->findBy($criteria);
+        $issues = $issueRepository->findAll();
 
         // Render the appropriate template
-        $template = $authChecker->isGranted('ROLE_ADMIN') ? 'issue/index_admin.html.twig' : 'issue/index.html.twig';
-
-        return $this->render($template, [
+        return $this->render('issue/index_admin.html.twig', [
             'issues' => $issues,
         ]);
+    }
+
+    #[Route('/api/categorize', name: 'app_issue_categorize', methods: ['POST'])]
+    #[IsGranted(IssueVoter::LIST_ALL)]
+    public function categorize(
+        #[RequestParam('content')] string $content,
+        IssueCategorizer                  $issueCategorizer
+    ): Response
+    {
+        $category = $issueCategorizer->categorize($content);
+        return $this->json(['category' => $category]);
+    }
+
+    #[Route('/api/translate', name: 'app_issue_translate', methods: ['POST'])]
+    #[IsGranted(IssueVoter::LIST_ALL)]
+    public function translate(#[RequestParam] string $content, HttpClientInterface $httpClient): Response
+    {
+        $API_TOKEN = $_ENV['HF_API_TOKEN'] ?? null;
+
+        if (!$API_TOKEN) {
+            return new JsonResponse(['error' => 'API token not found'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        $response = $httpClient->request(
+            'POST',
+            'https://api-inference.huggingface.co/models/Helsinki-NLP/opus-mt-en-fr',
+            [
+                'headers' => ['Authorization' => 'Bearer ' . $API_TOKEN],
+                'json' => ['inputs' => $content]
+            ]
+        );
+
+        $data = $response->toArray();
+        $translation = $data[0]['translation_text'] ?? null;
+
+        if (!$translation) {
+            return new JsonResponse(['error' => 'Translation failed'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        return $this->json(['translation' => $translation]);
     }
 
 
@@ -59,16 +121,29 @@ class IssueController extends AbstractController
         $form = $this->createForm(IssueType::class, $issue);
         $form->handleRequest($request);
 
+        $badWordDetected = false;
+
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getUser()->addIssue($issue);
+            // Check the content for bad words
+            $content = $form->get('content')->getData();
+            $isDirty = Badwords::isDirty($content);
 
-            // Set creation date to current date and time
-            $issue->setCreationDate(new \DateTimeImmutable());
+            if ($isDirty) {
+                // If bad words are found, set badWordDetected to true
+                $badWordDetected = true;
+            } else {
 
-            $entityManager->persist($issue);
-            $entityManager->flush();
+                // Set other issue properties
+                $issue->setUser($this->getUser());
+                $issue->setCreationDate(new \DateTimeImmutable());
 
-            return $this->redirectToRoute('app_issue_index', [], Response::HTTP_SEE_OTHER);
+                $entityManager->persist($issue);
+                $entityManager->flush();
+
+                $this->incrementNewIssueCount();
+
+                return $this->redirectToRoute('app_issue_index', [], Response::HTTP_SEE_OTHER);
+            }
         }
 
         $response = new Response(
@@ -79,7 +154,8 @@ class IssueController extends AbstractController
 
         return $this->render('issue/add.html.twig', [
             'issue' => $issue,
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'badWordDetected' => $badWordDetected
         ], $response);
     }
 
@@ -129,7 +205,6 @@ class IssueController extends AbstractController
     }
 
 
-
     public function getCategories(IssueRepository $issueRepository): Response
     {
         // Fetch the categories from your Issue repository
@@ -138,6 +213,29 @@ class IssueController extends AbstractController
         // Return a JSON response with the categories
         return $this->json($categories);
     }
+
+    #[Route('/latest', name: 'app_issue_latest', methods: ['GET'])]
+    public function latest(IssueRepository $issueRepository): Response
+    {
+        // Fetch the latest issue
+        $latestIssue = $issueRepository->findOneBy([], ['creationDate' => 'DESC']);
+
+        // Return the issue as a JSON response
+        return $this->json($latestIssue);
+    }
+
+    #[Route('/search', name: 'app_issue_search', methods: ['GET'])]
+    public function search(IssueRepository $issueRepository, Request $request): Response
+    {
+        $category = $request->query->get('category');
+
+        $issues = $issueRepository->findBy(array_filter(['category' => $category ?: null]));
+
+
+        return $this->json($issues);
+    }
+
+
 }
 
 

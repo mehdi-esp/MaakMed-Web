@@ -4,19 +4,28 @@
         <div class="card-body">
             <header class="card-title">
                 <div class="grid gap-1 place-items-center container">
-                    {% for role in ['doctor', 'patient'] %}
-                        {% if not is_granted('ROLE_' ~ (role|upper)) %}
-                            <span {{ stimulus_controller("popover", {url: path("_app_visit_userinfo", {username: attribute(visit, role).username})}) }}>
-                                {{ role|capitalize }}:
-                                <span data-action="mouseenter->popover#show mouseleave->popover#hide"
-                                      class="dropdown dropdown-top dropdown-hover"><a
-                                            class="link link-hover link-primary truncate"
-                                            data-turbo-action="replace"
-                                            href="{{ path('app_visit_index', {(role): attribute(visit, role).id}) }}"
-                                    >{{ attribute(visit, role).fullName }}</a></span>
-                            </span>
-                        {% endif %}
-                    {% endfor %}
+                    {% if 'ROLE_DOCTOR' not in app.user.roles %}
+                        <span {{ stimulus_controller("popover", {url: path("_app_visit_userinfo", {username: visit.doctor.username})}) }}>
+                            Doctor:
+                            <span data-action="mouseenter->popover#show mouseleave->popover#hide"
+                                  class="dropdown dropdown-top dropdown-hover"><a
+                                    class="link link-hover link-primary truncate"
+                                    data-turbo-action="replace"
+                                    href="{{ path('app_visit_index', {'doctor': visit.doctor.id}) }}"
+                            >{{ visit.doctor.fullName }}</a></span>
+                        </span>
+                    {% endif %}
+                    {% if 'ROLE_PATIENT' not in app.user.roles %}
+                        <span {{ stimulus_controller("popover", {url: path("_app_visit_userinfo", {username: visit.patient.username})}) }}>
+                            Patient:
+                            <span data-action="mouseenter->popover#show mouseleave->popover#hide"
+                                  class="dropdown dropdown-top dropdown-hover"><a
+                                    class="link link-hover link-primary truncate"
+                                    data-turbo-action="replace"
+                                    href="{{ path('app_visit_index', {'patient': visit.patient.id}) }}"
+                            >{{ visit.patient.fullName }}</a></span>
+                        </span>
+                    {% endif %}
                 </div>
             </header>
             <div class="flex justify-center space-x-4">
@@ -34,7 +43,7 @@
             </div>
             <div class="card-actions justify-center mt-auto">
                 <ul class="menu menu-horizontal bg-base-200 rounded-box mt-6">
-                    {% if is_granted('ROLE_DOCTOR') %}
+                    {% if 'ROLE_DOCTOR' in app.user.roles %}
                         <li>
                             <a href="{{ path('app_visit_edit', {'id': visit.id}) }}" class="link link-primary tooltip"
                                data-tip="Edit">
@@ -67,7 +76,7 @@
                         </a>
                     </li>
                     <li>
-                        <a data-turbo="false" href="{{ path('app_visit_export', {'id': visit.id}) }}"
+                        <a href="{{ path('app_visit_export', {'id': visit.id}) }}" target="_blank"
                            class="link link-info tooltip"
                            data-tip="Export">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"

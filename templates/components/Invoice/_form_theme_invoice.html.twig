@@ -17,7 +17,22 @@
         </tbody>
     </table>
     {%- if skip_add_button|default(false) is same as(false) and button_add is defined and not button_add.rendered -%}
-        {{ form_widget(button_add, {attr: {class: 'btn btn-secondary'}}) }}
+        {%- set label -%}
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2"
+                 stroke="currentColor" class="w-6 h-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+            </svg>
+        {%- endset -%}
+        <div class="grid py-4">
+            {{ form_widget(
+                button_add,
+                {
+                    label: label,
+                    label_html: true,
+                    attr: {class: 'btn btn-circle btn-info place-self-center'}
+                }
+            ) }}
+        </div>
     {%- endif -%}
 {%- endblock -%}
 

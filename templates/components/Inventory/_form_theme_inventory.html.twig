@@ -19,8 +19,7 @@
             </table>
         </div>
         {%- if skip_add_button|default(false) is same as(false) and button_add is defined and not button_add.rendered -%}
-            {{ form_widget(button_add, {attr: {class: 'btn btn-secondary'}}) }}
-        {%- endif -%}
+            {{ form_widget(button_add, {attr: {class: 'btn primary'}}) }}        {%- endif -%}
     </div>
 
 {%- endblock -%}

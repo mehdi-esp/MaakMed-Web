@@ -9,24 +9,33 @@ use App\Entity\User;
 use App\Entity\Visit;
 use App\Form\VisitType;
 use App\Security\Voter\VisitVoter;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManagerInterface;
+use Jungi\FrameworkExtraBundle\Attribute\QueryParam;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use WhiteOctober\BreadcrumbsBundle\Model\Breadcrumbs;
 use Nucleos\DompdfBundle\Wrapper\DompdfWrapperInterface;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 #[Route('/visit')]
 class VisitController extends AbstractController
 {
+    public function __construct(
+        private readonly Breadcrumbs $breadcrumbs,
+    ) {
+    }
+
     #[Route('/', name: 'app_visit_index', methods: ['GET'])]
     #[IsGranted(VisitVoter::LIST_ALL)]
-    public function index(Breadcrumbs $breadcrumbs): Response
+    public function index(): Response
     {
-        $breadcrumbs->addRouteItem("Visits", "app_visit_index");
+        $this->breadcrumbs->addRouteItem("Visits", "app_visit_index");
         return $this->render('visit/index.html.twig');
     }
 
@@ -35,7 +44,7 @@ class VisitController extends AbstractController
     public function userInfoPopover(User $subject): Response
     {
         if (!$subject instanceof Patient && !$subject instanceof Doctor) {
-            return new Response(status: Response::HTTP_NOT_FOUND);
+            throw $this->createNotFoundException('No such user.');
         }
         /** @var Doctor|Patient|Admin $user */
         $user = $this->getUser();
@@ -45,10 +54,10 @@ class VisitController extends AbstractController
         $count = match (true) {
             $user instanceof Admin => $subject->getVisits()->count(),
             $user instanceof Doctor => $subject->getVisits()
-                ->filter(fn (Visit $visit) => $visit->getDoctor() === $user)
+                ->matching(Criteria::create()->where(Criteria::expr()->eq('doctor', $user)))
                 ->count(),
             $user instanceof Patient => $subject->getVisits()
-                ->filter(fn (Visit $visit) => $visit->getPatient() === $user)
+                ->matching(Criteria::create()->where(Criteria::expr()->eq('patient', $user)))
                 ->count(),
         };
 
@@ -62,11 +71,10 @@ class VisitController extends AbstractController
     public function new(
         Request $request,
         EntityManagerInterface $entityManager,
-        Breadcrumbs $breadcrumbs
     ): Response {
 
-        $breadcrumbs->addRouteItem("Visits", "app_visit_index");
-        $breadcrumbs->addRouteItem("New", "app_visit_new");
+        $this->breadcrumbs->addRouteItem("Visits", "app_visit_index");
+        $this->breadcrumbs->addRouteItem("New", "app_visit_new");
 
         /** @var Doctor $doctor */
         $doctor = $this->getUser();
@@ -100,10 +108,10 @@ class VisitController extends AbstractController
 
     #[Route('/{id}', name: 'app_visit_show', methods: ['GET'])]
     #[IsGranted(VisitVoter::VIEW, subject: 'visit')]
-    public function show(Visit $visit, Breadcrumbs $breadcrumbs): Response
+    public function show(Visit $visit): Response
     {
-        $breadcrumbs->addRouteItem("Visits", "app_visit_index");
-        $breadcrumbs->addRouteItem($visit->getId(), "app_visit_show", ["id" => $visit->getId()]);
+        $this->breadcrumbs->addRouteItem("Visits", "app_visit_index");
+        $this->breadcrumbs->addRouteItem($visit->getId(), "app_visit_show", ["id" => $visit->getId()]);
         return $this->render('visit/show.html.twig', [
             'visit' => $visit,
         ]);
@@ -115,11 +123,10 @@ class VisitController extends AbstractController
         Request $request,
         Visit $visit,
         EntityManagerInterface $entityManager,
-        Breadcrumbs $breadcrumbs
     ): Response {
-        $breadcrumbs->addRouteItem("Visits", "app_visit_index");
-        $breadcrumbs->addRouteItem($visit->getId(), "app_visit_show", ["id" => $visit->getId()]);
-        $breadcrumbs->addRouteItem("Edit", "app_visit_edit", ["id" => $visit->getId()]);
+        $this->breadcrumbs->addRouteItem("Visits", "app_visit_index");
+        $this->breadcrumbs->addRouteItem($visit->getId(), "app_visit_show", ["id" => $visit->getId()]);
+        $this->breadcrumbs->addRouteItem("Edit", "app_visit_edit", ["id" => $visit->getId()]);
 
         $form = $this->createForm(VisitType::class, $visit);
         $form->handleRequest($request);
@@ -163,5 +170,37 @@ class VisitController extends AbstractController
     ): StreamedResponse {
         $html = $this->renderView("pdf/visit.html.twig", ['visit' => $visit]);
         return $wrapper->getStreamResponse($html, "MaakMed-Visit-{$visit->getId()}.pdf");
+    }
+
+    #[Route('/api/encyclopedia', name: 'app_visit_encyclopedia', methods: ['GET'])]
+    #[IsGranted('ROLE_DOCTOR')]
+    public function encyclopediaArticle(
+        #[QueryParam] string $term,
+        HttpClientInterface $httpClient,
+    ): Response {
+        $baseUrl = 'https://wsearch.nlm.nih.gov/ws/query';
+        $queryParams = [
+            'db' => 'healthTopics',
+            'term' => $term,
+            'retmax' => 1,
+        ];
+        $response = $httpClient->request('GET', $baseUrl, ['query' => $queryParams]);
+        $content = $response->getContent();
+        $crawler = new Crawler($content);
+        $nlmSearchResult = $crawler->filter('nlmSearchResult');
+        $count = (int)$nlmSearchResult->filter("count")->text(0, true);
+        if ($count === 0) {
+            return $this->json(
+                ["error" => "No results found for the term '$term'."],
+            );
+        }
+        try {
+            $summary = $nlmSearchResult->filter('document content[name="FullSummary"]')->text();
+        } catch (\InvalidArgumentException  $e) {
+            return $this->json(
+                ["error" => "No results found for the term '$term'."],
+            );
+        }
+        return $this->json(["summary" => $summary]);
     }
 }

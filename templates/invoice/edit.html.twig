@@ -5,13 +5,17 @@
 {% block title %}Edit Invoice{% endblock %}
 
 {% block body %}
-  <main class="container px-4 mx-auto">
-    <div class="prose"><h2>Edit Invoice</h2></div>
+    <main class="container px-4 mx-auto py-4">
+        <div class="flex space-x-5 items-center">
+            <a title="To list" class="btn btn-sm btn-ghost btn-secondary" href="{{ path('app_invoice_index') }}">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
+                </svg>
+            </a>
+            <div class="prose"><h2>Edit Invoice</h2></div>
+        </div>
 
-    <twig:Invoice:Form form="{{ form }}" initialFormData="{{ invoice }}" button_label="Update"/>
+        <twig:Invoice:Form form="{{ form }}" initialFormData="{{ invoice }}" button_label="Update"/>
 
-    <a class="link link-secondary" href="{{ path('app_invoice_index') }}">back to list</a>
-
-    {{ include('invoice/_delete_form.html.twig') }}
-  </main>
+    </main>
 {% endblock %}

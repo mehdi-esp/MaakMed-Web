@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Security\Voter\MedicationVoter;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 
 #[Route('/medication')]
@@ -87,5 +88,24 @@ class MedicationController extends AbstractController
         }
 
         return $this->redirectToRoute('app_medication_index', [], Response::HTTP_SEE_OTHER);
+    }
+    #[Route('/{id}/summarize', name: 'app_medication_summarize', methods: ['POST', 'GET'])]
+    public function summarize(Request $request, Medication $medication, HttpClientInterface $client): Response
+    {
+        $response = $client->request('POST', 'https://api.deepgram.com/v1/read?summarize=true&language=en', [
+            'headers' => [
+                'Authorization' => 'Token ***REMOVED***',
+                'Content-Type' => 'application/json',
+            ],
+            'json' => ['text' => $medication->getDescription()],
+        ]);
+
+        $content = $response->getContent();
+        $contentArray = json_decode($content, true);
+        $summaryText = $contentArray['results']['summary']['text'];
+
+        return $this->render('medication/summary.html.twig', [
+            'summaryText' => $summaryText,
+        ]);
     }
 }

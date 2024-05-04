@@ -107,11 +107,19 @@ final class Listing extends AbstractController
     {
         $user = $this->getUser();
 
-        $visibilityCriterion = match (true) {
-            $user instanceof Doctor => ['doctor' => $user],
-            $user instanceof Patient => ['patient' => $user],
-            $user instanceof Admin => []
-        };
+        $qb = $this->visitRepository
+            ->createQueryBuilder('v')
+            ->join('v.doctor', 'd')
+            ->join('v.patient', 'p')
+            ->addSelect('d')
+            ->addSelect('p');
+
+
+        if ($user instanceof Doctor) {
+            $qb->andWhere('d = :doctor')->setParameter('doctor', $user);
+        } elseif ($user instanceof Patient) {
+            $qb->andWhere('p = :patient')->setParameter('patient', $user);
+        }
 
         $filters = array_filter([
             'patient' => $this->patient,
@@ -119,10 +127,12 @@ final class Listing extends AbstractController
             'type' => $this->category
         ]);
 
-        $criteria = array_merge($visibilityCriterion, $filters);
+        foreach ($filters as $key => $value) {
+            $qb->andWhere("v.$key = :$key")->setParameter($key, $value);
+        }
 
-        $orderBy = [$this->orderBy => $this->orderDir];
+        $qb->orderBy('v.' . $this->orderBy, $this->orderDir);
 
-        return $this->visitRepository->findBy($criteria, $orderBy);
+        return $qb->getQuery()->getResult();
     }
 }

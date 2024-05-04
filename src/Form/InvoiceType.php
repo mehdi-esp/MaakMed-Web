@@ -61,7 +61,7 @@ class InvoiceType extends AbstractType
             /** @var Invoice $invoice */
             $invoice = $form->getData();
 
-            if (!isset($data['invoiceEntries']) && !$invoice) {
+            if (!isset($data['invoiceEntries']) || !$invoice) {
                 return;
             }
 
