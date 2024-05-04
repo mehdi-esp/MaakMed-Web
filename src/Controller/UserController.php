@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,9 +21,8 @@ class UserController extends AbstractController
     }
 
     #[Route('/user/{id}/ban', name: 'user_ban', methods: ["POST"])]
-    public function ban(Request $request, User $user): Response
+    public function ban(EntityManagerInterface $entityManager, User $user): Response
     {
-        $entityManager = $this->getDoctrine()->getManager();
         $entityManager->remove($user);
         $entityManager->flush();
 
