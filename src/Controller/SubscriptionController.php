@@ -157,7 +157,7 @@ class SubscriptionController extends AbstractController
                           ]);
                       if ($existingSubscription) {
                           $this->addFlash('warning', 'You already have an active or pending subscription.');
-                          return $this->redirectToRoute('app_insurance_plan_ListPlans');
+                          return $this->redirectToRoute('app_insurancePlan_list');
                       }
                $pendingSubscriber = $entityManager->getRepository(Subscription::class)
                            ->findOneBy([
@@ -297,7 +297,7 @@ class SubscriptionController extends AbstractController
 
         if (!$subscription) {
             $this->addFlash('warning', 'No active or pending subscription found for this plan.');
-            return $this->redirectToRoute('app_insurance_plan_ListPlans');
+            return $this->redirectToRoute('app_insurancePlan_list');
         }
 
         $subscription->setStatus('canceling');
@@ -307,7 +307,7 @@ class SubscriptionController extends AbstractController
         $this->addFlash('message', 'Subscription is being canceled.');
         $this->addFlash('status', 'success');
 
-        return $this->redirectToRoute('app_insurance_plan_ListPlans');
+        return $this->redirectToRoute('app_insurancePlan_list');
     }
 
       #[Route('/success', name: 'app_subscription_success', methods: ['GET'])]
