@@ -61,9 +61,7 @@ class PharmacyP extends AbstractType
                         'message' => 'The email "{{ value }}" is not a valid email.'
 
                     ]),
-                    new NotBlank([
-                        'message' => 'Please enter your email',
-                    ]),
+
                 ],
             ])
             ->add('address', options: [
@@ -92,9 +90,7 @@ class PharmacyP extends AbstractType
                         'max' => 8,
                         'exactMessage' => 'Your phone number must be exactly {{ limit }} characters long',
                     ]),
-                    new NotBlank([
-                        'message' => 'Please enter your number',
-                    ]),
+
                 ],
             ]);
     }
