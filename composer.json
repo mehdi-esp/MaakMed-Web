@@ -22,6 +22,7 @@
         "jungi/framework-extra-bundle": "^1.4",
         "kambo/huggingface-php": "^0.1.0",
         "knplabs/knp-menu-bundle": "^3.4",
+        "knplabs/knp-paginator-bundle": "*",
         "knplabs/knp-time-bundle": "^2.2",
         "mhujer/breadcrumbs-bundle": "^1.5",
         "nelmio/cors-bundle": "^2.4",
