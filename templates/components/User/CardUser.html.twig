@@ -10,7 +10,7 @@
         </figure>
         <div class="card-body w-[10rem]">
             <h2 class="card-title text-[#0069AC] truncate"> Username: <a class="link link-hover"
-                                                                href="{{ path('user_profile', {username: user.username}) }}">{{ user.username }}</a>
+                                                                         href="{{ path('user_profile', {username: user.username}) }}">{{ user.username }}</a>
             </h2>
             <p style="color: red; font-size: 0.8em; font-style: italic;"> Role: {{ user.roleName }}</p>
             {% if user.email is not null %}
