@@ -52,7 +52,6 @@ class RegistrationController extends AbstractController
                     continue;
                 }
 
-                dump($form->getData());
 
                 $user = $form->getData();
                 $user->setPassword(
@@ -70,10 +69,6 @@ class RegistrationController extends AbstractController
         }
 
         $views = array_map(fn (FormInterface $form) => $form->createView(), $forms);
-        $response = new Response(
-            status: array_filter($forms, fn ($form) => $form->isSubmitted())
-                ? Response::HTTP_UNPROCESSABLE_ENTITY : Response::HTTP_OK,
-        );
 
         $response = new Response(
             status: array_filter($forms, fn ($form) => $form->isSubmitted())
