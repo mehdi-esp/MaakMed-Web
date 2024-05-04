@@ -25,6 +25,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Buchin\Badwords\Badwords;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 
 #[Route('/issue')]
@@ -82,22 +83,29 @@ class IssueController extends AbstractController
     }
 
     #[Route('/api/translate', name: 'app_issue_translate', methods: ['POST'])]
-    public function translate(Request $request): Response
+    public function translate(#[RequestParam] string $content, HttpClientInterface $httpClient): Response
     {
-        $content = $request->get('content');
-        $API_TOKEN = getenv('API_TOKEN'); // Get API token from environment variable
+        $API_TOKEN = $_ENV['HF_API_TOKEN'] ?? null;
 
-        $client = HttpClient::create();
-        $response = $client->request('POST', 'https://api-inference.huggingface.co/models/Helsinki-NLP/opus-mt-en-fr', [
-            'headers' => [
-                'Authorization' => 'Bearer ' . $API_TOKEN,
-                'Content-Type' => 'application/json'
-            ],
-            'body' => json_encode(['inputs' => $content])
-        ]);
+        if (!$API_TOKEN) {
+            return new JsonResponse(['error' => 'API token not found'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        $response = $httpClient->request(
+            'POST',
+            'https://api-inference.huggingface.co/models/Helsinki-NLP/opus-mt-en-fr',
+            [
+                'headers' => ['Authorization' => 'Bearer ' . $API_TOKEN],
+                'json' => ['inputs' => $content]
+            ]
+        );
 
         $data = $response->toArray();
-        $translation = $data[0]['translation']['text'];
+        $translation = $data[0]['translation_text'] ?? null;
+
+        if (!$translation) {
+            return new JsonResponse(['error' => 'Translation failed'], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
 
         return $this->json(['translation' => $translation]);
     }

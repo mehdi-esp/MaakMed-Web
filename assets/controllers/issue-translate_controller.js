@@ -4,24 +4,21 @@ import {Controller} from '@hotwired/stimulus';
 export default class extends Controller {
     static targets = ['content']
 
-    static values = { token: String }
+    static values = { url: String }
 
     connect() {
     }
 
     async translate() {
-        const url = 'https://api-inference.huggingface.co/models/Helsinki-NLP/opus-mt-en-fr';
-        const token = '***REMOVED***';
-
         const content = this.contentTarget.textContent;
-        const response = await fetch(url, {
-            method: 'POST', headers: {
-                'Content-Type': 'application/json', 'Authorization': `Bearer ${this.tokenValue}`
-            }, body: JSON.stringify({inputs: content})
-        });
+
+        const form = new FormData();
+        form.append('content', content)
+
+        const response = await fetch(this.urlValue, { method: 'POST', body: form });
+
         const json = await response.json();
-        console.log(json);
-        const translation = json[0].translation_text;
+        const { translation } = json;
         this.contentTarget.textContent = translation;
     }
 }

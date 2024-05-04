@@ -3,7 +3,7 @@
     {
         class:"group rounded-xl overflow-hidden shadow",
         "data-category":"issue.category",
-        ...stimulus_controller("issue-translate", { token: app.request.server.get('HF_API_TOKEN') })
+        ...stimulus_controller("issue-translate", { url: path('app_issue_translate') })
     }) }}
 >
     <div class="sm:flex">
