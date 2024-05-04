@@ -20,7 +20,10 @@ export default class extends Controller {
         }
 
         handleClick(function(planId, planCost) {
-            let formActionUrl = "http://127.0.0.1:8000/subscription/"+planId+"/"+planCost;
+            let formActionUrl = "http://127.0.0.1:8000/subscription/subscribe";
+            const form = new FormData();
+            form.append('planId', planId);
+            form.append('amount', planCost);
             function generateQrCode(url) {
                 let canvas = document.getElementById('qr-code-canvas');
 
@@ -36,7 +39,7 @@ export default class extends Controller {
             if (redirectButton) {
                 redirectButton.addEventListener('click', function(event) {
                     event.preventDefault();
-                    fetch(formActionUrl)
+                    fetch(formActionUrl, { method: 'POST', body: form})
                         .then(response => {
                             if (!response.ok) {
                                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -66,7 +69,7 @@ export default class extends Controller {
                             qrCodeModal.appendChild(canvas);
                             qrCodeModal.showModal();
 
-                            fetch(formActionUrl)
+                            fetch(formActionUrl, { method: 'POST', body: form })
                                 .then(response => {
                                     if (!response.ok) {
                                         throw new Error(`HTTP error! status: ${response.status}`);

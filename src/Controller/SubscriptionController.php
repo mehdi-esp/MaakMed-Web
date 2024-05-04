@@ -23,6 +23,7 @@ use Doctrine\ORM\Query;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Jungi\FrameworkExtraBundle\Attribute\RequestParam;
 use WhiteOctober\BreadcrumbsBundle\Model\Breadcrumbs;
 
 #[Route('/subscription')]
@@ -135,9 +136,9 @@ class SubscriptionController extends AbstractController
         $entityManager->flush();
         return $this->redirectToRoute('app_subscription_list');
     }
-    #[Route('/{planId<\d+>}/{amount}', name: 'app_subscription_Activate',methods: ['GET','POST'])]
+    #[Route('/subscribe', name: 'app_subscription_Activate',methods: ['GET','POST'])]
     #[IsGranted("ROLE_PATIENT")]
-    public function Subscribe(int $planId, float $amount, EntityManagerInterface $entityManager): JsonResponse|RedirectResponse
+    public function Subscribe(#[RequestParam] int $planId, #[RequestParam] float $amount, EntityManagerInterface $entityManager): JsonResponse|RedirectResponse
     {
          \Stripe\Stripe::setApiKey($_ENV['STRIPE_KEY']);
          $user = $this->getUser();
@@ -279,9 +280,9 @@ class SubscriptionController extends AbstractController
         $entityManager->flush();
         return new Response('Subscription activated successfully');
     }
-    #[Route('/{planId}/cancel', name: 'app_subscription_Cancel',methods: ['POST'])]
+    #[Route('/cancel', name: 'app_subscription_Cancel',methods: ['POST'])]
     #[IsGranted("ROLE_PATIENT")]
-    public function cancelSubscription(int $planId, EntityManagerInterface $entityManager): Response
+    public function cancelSubscription(#[RequestParam] int $planId, EntityManagerInterface $entityManager): Response
     {
         $user = $this->getUser();
         if (!$user instanceof Patient) {
