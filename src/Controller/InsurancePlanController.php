@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\InsurancePlan;
+use App\Entity\Patient;
 use App\Form\InsurancePlanType;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
@@ -10,8 +11,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use WhiteOctober\BreadcrumbsBundle\Model\Breadcrumbs;
 
+#[Route('/plan')]
 class InsurancePlanController extends AbstractController
 {
     public function __construct(
@@ -19,25 +22,27 @@ class InsurancePlanController extends AbstractController
             ) {
             }
 
-    #[Route('/listInsurancePlan', name: 'app_insurancePlan_list', methods: ['GET'])]
-    #[IsGranted('ROLE_ADMIN')]
+    #[Route('/', name: 'app_insurancePlan_list', methods: ['GET'])]
+    #[Security("is_granted('ROLE_ADMIN') or is_granted('ROLE_PATIENT')")]
     public function listIP(Request $request, EntityManagerInterface $entityManager): Response
     {
         $this->breadcrumbs->addRouteItem("Plans", "app_insurancePlan_list");
-
         $repository = $entityManager->getRepository(InsurancePlan::class);
-
+        $user = $this->getUser();
+         if ($user instanceof Patient) {
+             $plans = $entityManager->getRepository(InsurancePlan::class)->findAll();
+             return $this->render('insurance_plan/ListPlansPatient.html.twig', [
+                     'plans' => $plans,
+             ]);
+         }
         $searchTerm = $request->query->get('searchTerm');
         $costFilter = $request->query->get('costFilter');
         $ceilingFilter = $request->query->get('ceilingFilter');
-
         $queryBuilder = $repository->createQueryBuilder('ip');
-
         if ($searchTerm) {
             $queryBuilder->andWhere('ip.name LIKE :searchTerm')
                 ->setParameter('searchTerm', $searchTerm . '%');
         }
-
         if ($costFilter) {
             if ($costFilter === 'high') {
                 $queryBuilder->orderBy('ip.cost', 'DESC');
@@ -45,7 +50,6 @@ class InsurancePlanController extends AbstractController
                 $queryBuilder->orderBy('ip.cost', 'ASC');
             }
         }
-
         if ($ceilingFilter) {
             if ($ceilingFilter === '>') {
                 $queryBuilder->andWhere('ip.ceiling >= 1000');
@@ -53,16 +57,13 @@ class InsurancePlanController extends AbstractController
                 $queryBuilder->andWhere('ip.ceiling < 1000');
             }
         }
-
         $insurancePlans = $queryBuilder->getQuery()->getResult();
         return $this->render('insurancePlan/listInsurancePlan.html.twig', [
             'insurancePlans' => $insurancePlans,
         ]);
     }
 
-
-
-    #[Route('/addInsurancePlan', name: 'app_insurancePlan_add', methods: ['GET','POST'])]
+    #[Route('/new', name: 'app_insurancePlan_add', methods: ['GET','POST'])]
     #[IsGranted('ROLE_ADMIN')]
     public function add(Request $req,EntityManagerInterface $entityManager): Response
     {
@@ -90,7 +91,7 @@ class InsurancePlanController extends AbstractController
 
         ], $response);
     }
-    #[Route('/{id}/IPedit', name: 'app_insurancePlan_edit', methods: ['GET','POST'])]
+    #[Route('/{id}/edit', name: 'app_insurancePlan_edit', methods: ['GET','POST'])]
     #[IsGranted('ROLE_ADMIN')]
     public function edit(Request $req, InsurancePlan $ip, EntityManagerInterface $entityManager): Response
     {
@@ -117,7 +118,7 @@ class InsurancePlanController extends AbstractController
         ], $response);
     }
 
-    #[Route('/{id}/IPdelete', name: 'app_insurancePlan_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'app_insurancePlan_delete', methods: ['POST'])]
     #[IsGranted('ROLE_ADMIN')]
     public function delete(Request $req, InsurancePlan $ip, EntityManagerInterface $entityManager): Response
     {
@@ -125,22 +126,5 @@ class InsurancePlanController extends AbstractController
         $entityManager->flush();
         return $this->redirectToRoute('app_insurancePlan_list', [], Response::HTTP_SEE_OTHER);
     }
-      #[Route('/insurance/plan', name: 'app_insurance_plan')]
-        public function index(): Response
-        {
-            return $this->render('insurance_plan/index.html.twig', [
-                'controller_name' => 'InsurancePlanController',
-            ]);
-        }
-        #[Route('/ListPlans', name: 'app_insurance_plan_ListPlans')]
-        public function listPlansPatient(EntityManagerInterface $entityManager):Response
-        {
-        $this->breadcrumbs->addRouteItem("Plans", "app_insurance_plan_ListPlans");
-            $plans = $entityManager->getRepository(InsurancePlan::class)->findAll();
-                $user = $this->getUser(); // Get the current user
-                return $this->render('insurance_plan/ListPlansPatient.html.twig', [
-                    'plans' => $plans,
-                    'user' => $user,
-                ]);
-        }
+
 }

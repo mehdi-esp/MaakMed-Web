@@ -25,7 +25,7 @@
               {% endfor %}
           {% endfor %}
       </div>
-      <!-- Open the modal using ID.showModal() method -->
+
 
       <dialog id="my_modal_1" class="modal">
           <div class="modal-box">
@@ -46,7 +46,7 @@
               <h3 class="font-bold text-lg">Your QR Code</h3>
               <p class="py-4">Scan this QR code to proceed</p>
               <div class="modal-content">
-                  <!-- The QR code should be rendered inside this canvas element -->
+
                   <canvas id="qr-code-canvas"></canvas>
               </div>
               <div class="modal-action">
@@ -68,7 +68,7 @@
             <div class="p-4 xl:w-1/4 md:w-1/2 w-full">
                 <div class="h-full p-6 rounded-lg border-2 border-primary flex flex-col relative overflow-hidden">
                     {% set isSubscribed = false %}
-                    {% for subscription in user.subscriptions %}
+                    {% for subscription in app.user.subscriptions %}
                         {% if subscription.plan == plan and (subscription.status == 'active') %}
                             {% set isSubscribed = true %}
                         {% endif %}
@@ -109,7 +109,6 @@
 
                         <button type="button"
                                 id="subscribe-button"
-{#                                class="flex items-center mt-auto text-white  border-0 py-2 px-4 w-full focus:outline-none rounded"#}
                                 class="btn btn-primary mt-3"
                                 data-subscribe-button="true"
                                 onclick="my_modal_1.showModal()"
