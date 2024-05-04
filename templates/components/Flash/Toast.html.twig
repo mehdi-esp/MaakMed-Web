@@ -1,7 +1,10 @@
-<div {{ attributes.defaults({class: "toast"}) }} data-turbo-temporary>
-    {% for label, messages in app.flashes(["error", "warning", "success", "info"]) %}
-        {% for message in messages %}
-            <twig:Flash:Alert label="{{ label }}" message="{{ message }}"/>
+{% set flashes = app.flashes(["error", "warning", "success", "info"]) %}
+{% if flashes is not empty %}
+    <div {{ attributes.defaults({class: "toast"}) }} data-turbo-temporary>
+        {% for label, messages in flashes %}
+            {% for message in messages %}
+                <twig:Flash:Alert label="{{ label }}" message="{{ message }}"/>
+            {% endfor %}
         {% endfor %}
-    {% endfor %}
-</div>
+    </div>
+{% endif %}
