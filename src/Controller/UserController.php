@@ -2,6 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
+use App\Repository\UserRepository;
+use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,5 +18,16 @@ class UserController extends AbstractController
     {
         return $this->render('user/index.html.twig');
     }
-}
 
+    #[Route('/user/{id}/ban', name: 'user_ban', methods: ["POST"])]
+    public function ban(Request $request, User $user): Response
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->remove($user);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_user');
+    }
+
+
+}
