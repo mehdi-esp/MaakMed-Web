@@ -2,8 +2,12 @@
 
 namespace App\Repository;
 
+use App\Entity\Doctor;
+use App\Entity\Patient;
+use App\Entity\Pharmacy;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -38,19 +42,67 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();
     }
-     public function findIdByEmail(string $email): ?int
-            {
-                $patient = $this->createQueryBuilder('p')
-                    ->select('p.id')
-                    ->where('p.email = :email')
-                    ->setParameter('email', $email)
-                    ->getQuery()
-                    ->getOneOrNullResult();
 
-                return $patient ? $patient['id'] : null;
-            }
+    public function findIdByEmail(string $email): ?int
+    {
+        $patient = $this->createQueryBuilder('p')
+            ->select('p.id')
+            ->where('p.email = :email')
+            ->setParameter('email', $email)
+            ->getQuery()
+            ->getOneOrNullResult();
 
-//    /**
+        return $patient ? $patient['id'] : null;
+    }
+
+    public function getUsersWithEmail(): int
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+        SELECT COUNT(*)
+        FROM user
+        WHERE type IN ("doctor", "patient", "pharmacy")
+        AND email IS NOT NULL
+    ';
+
+        try {
+            return $conn->executeQuery($sql)->fetchOne();
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+
+    public function getUnverifiedUsers(): int
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+        SELECT COUNT(*)
+        FROM user
+        WHERE type IN ("doctor", "patient", "pharmacy")
+        AND email IS NOT NULL
+        AND is_verified = FALSE
+    ';
+        return (int)$conn->executeQuery($sql)->fetchOne();
+    }
+    public function getUsersWithNumber(): int
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = '
+        SELECT COUNT(*)
+        FROM user
+        WHERE type IN ("doctor", "patient", "pharmacy")
+        AND number IS NOT NULL
+    ';
+
+        try {
+            return $conn->executeQuery($sql)->fetchOne();
+        } catch (\Exception $e) {
+            return 0;
+        }
+    }
 //     * @return User[] Returns an array of User objects
 //     */
 //    public function findByExampleField($value): array
