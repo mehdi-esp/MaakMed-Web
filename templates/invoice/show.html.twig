@@ -7,7 +7,6 @@
 {% block body %}
     <main class="container mx-auto py-4">
         <section class="flex items-center flex-col">
-            <div class="prose mb-8 mt-4"><h1>Invoice #{{ invoice.id }}</h1></div>
             <twig:Invoice:Card invoice="{{ invoice }}"/>
         </section>
     </main>

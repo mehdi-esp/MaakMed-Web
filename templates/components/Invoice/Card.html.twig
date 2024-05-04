@@ -3,7 +3,12 @@
 <div {{ attributes }}>
     <!-- Card -->
     <article
-            class="card card-bordered w-[25rem] sm:w-[30rem] md:w-[35rem] lg:w-[40rem] xl:w-[45rem] bg-white shadow-md">
+            class="
+            card card-bordered
+            {{ (app.request.pathInfo != path("app_invoice_show",{id: invoice.id})) ?
+            'w-[25rem] sm:w-[30rem] md:w-[35rem] lg:w-[40rem] xl:w-[45rem]' }}
+            bg-white shadow-md"
+    >
         <div class="card-body">
 
             <header class="flex flex-col justify-center items-center px-4 gap-y-4">
@@ -65,7 +70,7 @@
                 </time>
             </header>
             <!-- Table -->
-            <div class="overflow-auto h-40 md:h-60 mt-6">
+            <div class="overflow-auto {{ (app.request.pathInfo != path("app_invoice_show",{id: invoice.id})) ? 'h-40 md:h-60' }} mt-6">
                 <table class="table">
                     <!-- head -->
                     <thead>
