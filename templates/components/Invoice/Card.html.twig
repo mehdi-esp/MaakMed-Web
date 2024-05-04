@@ -47,13 +47,13 @@
                     <!-- End Buttons -->
                 </div>
                 <div class="container flex justify-evenly items-center">
-                        {% if "ROLE_PATIENT" not in app.user.roles %}
+                    {% if "ROLE_PATIENT" not in app.user.roles %}
                         <dl class="text-center">
                             <dt>Issued to:</dt>
                             <dd><a class="link link-hover link-accent">{{ invoice.patient.fullName }}</a></dd>
                         </dl>
                     {% endif %}
-                        {% if "ROLE_PHARMACY" not in app.user.roles %}
+                    {% if "ROLE_PHARMACY" not in app.user.roles %}
                         <dl class="text-center">
                             <dt>Issued by:</dt>
                             <dd><a class="link link-hover link-accent">{{ invoice.pharmacy.name }}</a></dd>
