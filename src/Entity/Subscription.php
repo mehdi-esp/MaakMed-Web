@@ -97,4 +97,12 @@ class Subscription
 
         return $this;
     }
+     public function getPlanOccurrences(): array
+        {
+            $qb = $this->createQueryBuilder('s')
+                ->select('s.plan as plan, COUNT(s.id) as occurrences')
+                ->groupBy('s.plan');
+
+            return $qb->getQuery()->getResult();
+        }
 }

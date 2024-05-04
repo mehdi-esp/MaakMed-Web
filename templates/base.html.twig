@@ -60,7 +60,7 @@
                     <li class="text-sm leading-6 font-semibold text-slate-700"><a href="{{ path("app_prescription_index") }}">Prescription</a></li>
                     <li class="text-sm leading-6 font-semibold text-slate-700"><a href="{{ path("app_visit_index") }}">Visit</a></li>
                     <li class="text-sm leading-6 font-semibold text-slate-700"><a href="{{ path("app_invoice_index") }}">Invoice</a></li>
-                    <li class="text-sm leading-6 font-semibold text-slate-700"><a href="{{ path("app_insurance_plan_ListPlans") }}">My plans</a></li>
+                    <li class="text-sm leading-6 font-semibold text-slate-700"><a href="{{ path("app_insurancePlan_list") }}">My plans</a></li>
                     <li class="text-sm leading-6 font-semibold text-slate-700"><a href="{{ path("app_issue_index") }}">Issue</a></li>
                 {% elseif is_granted('ROLE_DOCTOR') %}
                     <li class="text-sm leading-6 font-semibold text-slate-700"><a href="{{ path("app_medication_index") }}">Medication</a></li>
