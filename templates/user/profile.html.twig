@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-        {% block title %}Profile{% endblock %}
+{% block title %}Profile{% endblock %}
 
         {% block body %}
 
@@ -45,16 +45,25 @@
                                     {% endif %}
                                     <br>
                                     <br>
-                                    <div class="mt-4 space-x-4">
-                                        <a href="{{ path('profile_edit') }}"
-                                           class="btn btn-secondary border border-transparent text-sm leading-4 font-medium rounded-md text-white  hover: focus:outline-none focus:ring-2 focus:ring-offset-2 ">
-                                            Edit Profile
-                                        </a>
-                                        <a href="{{ path('password_change') }}"
-                                           class="btn btn-primary border border-transparent text-sm leading-4 font-medium rounded-md text-white  hover: focus:outline-none focus:ring-2 focus:ring-offset-2 ">
-                                            Change Password
-                                        </a>
-                                    </div>
+                                    {% if app.user is same as(user) %}
+                                        <div class="mt-4 space-x-4" style="display: flex; align-items: center;">
+                                            <a href="{{ path('profile_edit') }}"
+                                               class="btn btn-secondary border border-transparent text-sm leading-4 font-medium rounded-md text-white  hover: focus:outline-none focus:ring-2 focus:ring-offset-2 ">
+                                                Edit Profile
+                                            </a>
+                                            <a href="{{ path('password_change') }}"
+                                               class="btn btn-primary border border-transparent text-sm leading-4 font-medium rounded-md text-white  hover: focus:outline-none focus:ring-2 focus:ring-offset-2 ">
+                                                Change Password
+                                            </a>
+                                            <form action="{{ path('app_account_delete') }}" method="post">
+                                                <button type="submit"
+                                                        class="btn border border-transparent text-sm leading-4 font-medium rounded-md text-white  hover: focus:outline-none focus:ring-2 focus:ring-offset-2 "
+                                                        style="background-color: red;">
+                                                    Delete Account
+                                                </button>
+                                            </form>
+                                        </div>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -86,7 +95,7 @@
                                     <br>
                                     {% if app.user is same as(user) %}
 
-                                        <div class="mt-4 space-x-4">
+                                        <div class="mt-4 space-x-4" style="display: flex; align-items: center;">
                                             <a href="{{ path('profile_edit') }}"
                                                class="btn btn-secondary border border-transparent text-sm leading-4 font-medium rounded-md text-white  hover: focus:outline-none focus:ring-2 focus:ring-offset-2 ">
                                                 Edit Profile
@@ -95,7 +104,15 @@
                                                class="btn btn-primary border border-transparent text-sm leading-4 font-medium rounded-md text-white  hover: focus:outline-none focus:ring-2 focus:ring-offset-2 ">
                                                 Change Password
                                             </a>
+                                            <form action="{{ path('app_account_delete') }}" method="post">
+                                                <button type="submit"
+                                                        class="btn border border-transparent text-sm leading-4 font-medium rounded-md text-white  hover: focus:outline-none focus:ring-2 focus:ring-offset-2 "
+                                                        style="background-color: red;">
+                                                    Delete Account
+                                                </button>
+                                            </form>
                                         </div>
+
                                     {% endif %}
                                 </div>
                             </div>
@@ -138,8 +155,6 @@
                             </div>
                         </div>
                     </div>
-
-
                 {% elseif 'ROLE_PHARMACY' in user.roles %}
                     <div class="flex justify-center items-center min-h-screen ">
                         <div class="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl m-4">
@@ -164,30 +179,30 @@
                                     {% endif %}
                                     <br>
                                     <br>
-                                    <div class="mt-4 space-x-4">
-                                        <a href="{{ path('profile_edit') }}"
-                                           class="btn btn-secondary border border-transparent text-sm leading-4 font-medium rounded-md text-white  hover: focus:outline-none focus:ring-2 focus:ring-offset-2 ">
-                                            Edit Profile
-                                        </a>
-                                        <a href="{{ path('password_change') }}"
-                                           class="btn btn-primary border border-transparent text-sm leading-4 font-medium rounded-md text-white  hover: focus:outline-none focus:ring-2 focus:ring-offset-2 ">
-                                            Change Password
-                                        </a>
-                                    </div>
+                                    {% if app.user is same as(user) %}
+                                        <div class="mt-4 space-x-4">
+                                            <a href="{{ path('profile_edit') }}"
+                                               class="btn btn-secondary border border-transparent text-sm leading-4 font-medium rounded-md text-white  hover: focus:outline-none focus:ring-2 focus:ring-offset-2 ">
+                                                Edit Profile
+                                            </a>
+                                            <a href="{{ path('password_change') }}"
+                                               class="btn btn-primary border border-transparent text-sm leading-4 font-medium rounded-md text-white  hover: focus:outline-none focus:ring-2 focus:ring-offset-2 ">
+                                                Change Password
+                                            </a>
+                                            <form action="{{ path('app_account_delete') }}" method="post">
+                                                <button type="submit"
+                                                        class="btn border border-transparent text-sm leading-4 font-medium rounded-md text-white  hover: focus:outline-none focus:ring-2 focus:ring-offset-2 "
+                                                        style="background-color: red;">
+                                                    Delete Account
+                                                </button>
+                                            </form>
+                                        </div>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
                     </div>
-
-
-
-
                 {% endif %}
                 <br> <br> <br>
             </div>
         {% endblock %}
-
-
-
-
-

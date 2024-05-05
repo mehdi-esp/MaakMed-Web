@@ -1,0 +1,80 @@
+<div {{ attributes.defaults({...stimulus_controller("popover"), class: "grid place-items-center"}) }}>
+    <div class="py-3 font-bold">
+        Showing top {{ max }} most visited doctors
+    </div>
+    <div class="join">
+        {% if max > 3 %}
+            <button
+                type="button"
+                data-model="max"
+                data-value="{{ max - 1 }}"
+                data-action="live#update"
+                class="join-item text-info"
+                title="Less"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="w-6 h-6"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M5 12h14"
+                    />
+                </svg>
+            </button>
+        {% endif %}
+        {% if max < 5 %}
+            <button
+                type="button"
+                data-model="max"
+                data-value="{{ max + 1 }}"
+                data-action="live#update"
+                class="join-item text-info"
+                title="More"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="w-6 h-6"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+                    />
+                </svg>
+            </button>
+        {% endif %}
+    </div>
+    <div class="stats overflow-visible shadow">
+        {% for entry in computed.doctorsSortedByVisitCount[:max] %}
+            <div class="stat">
+                <div class="stat-title font-bold">
+                    <span class="text-primary">#{{ loop.index }}</span>
+                    <div class="dropdown dropdown-hover">
+                        <a
+                            class="link link-hover link-accent"
+                            href="{{ path('user_profile', {username: entry[0].doctor.username}) }}"
+                            >{{ entry[0].doctor.fullName }}</a
+                        >
+                        <div class="dropdown-content z-[1]">
+                            <twig:User:CardUser user="{{ entry[0].doctor }}" />
+                        </div>
+                    </div>
+                </div>
+                <div class="stat-value">{{ entry.visitCount }} visits</div>
+                <div class="stat-desc text-accent" title="specialization">
+                    {{ entry[0].doctor.specialization }}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>

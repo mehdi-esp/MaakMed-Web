@@ -52,8 +52,6 @@ class RegistrationController extends AbstractController
                     continue;
                 }
 
-                dump($form->getData());
-
                 $user = $form->getData();
                 $user->setPassword(
                     $userPasswordHasher->hashPassword(
@@ -70,10 +68,6 @@ class RegistrationController extends AbstractController
         }
 
         $views = array_map(fn (FormInterface $form) => $form->createView(), $forms);
-        $response = new Response(
-            status: array_filter($forms, fn ($form) => $form->isSubmitted())
-                ? Response::HTTP_UNPROCESSABLE_ENTITY : Response::HTTP_OK,
-        );
 
         $response = new Response(
             status: array_filter($forms, fn ($form) => $form->isSubmitted())
@@ -82,33 +76,5 @@ class RegistrationController extends AbstractController
 
         return $this->render('registration/register.html.twig', ['forms' => $views], $response);
     }
-    #[Route('/verify/email', name: 'app_verify_email')]
-    public function verifyUserEmail(Request $request, TranslatorInterface $translator, UserRepository $userRepository): Response
-    {
-        $id = $request->query->get('id');
 
-        if (null === $id) {
-            return $this->redirectToRoute('app_register');
-        }
-
-        $user = $userRepository->find($id);
-
-        if (null === $user) {
-            return $this->redirectToRoute('app_register');
-        }
-
-        // validate email confirmation link, sets User::isVerified=true and persists
-        try {
-            $this->emailVerifier->handleEmailConfirmation($request, $user);
-        } catch (VerifyEmailExceptionInterface $exception) {
-            $this->addFlash('verify_email_error', $translator->trans($exception->getReason(), [], 'VerifyEmailBundle'));
-
-            return $this->redirectToRoute('app_register');
-        }
-
-        // @TODO Change the redirect on success and handle or remove the flash message in your templates
-        $this->addFlash('success', 'Your email address has been verified.');
-
-        return $this->redirectToRoute('app_register');
-    }
 }
