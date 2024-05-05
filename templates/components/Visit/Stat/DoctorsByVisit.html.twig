@@ -59,16 +59,11 @@
             <div class="stat">
                 <div class="stat-title font-bold">
                     <span class="text-primary">#{{ loop.index }}</span>
-                    <div class="dropdown dropdown-hover">
-                        <a
-                            class="link link-hover link-accent"
-                            href="{{ path('user_profile', {username: entry[0].doctor.username}) }}"
-                            >{{ entry[0].doctor.fullName }}</a
-                        >
-                        <div class="dropdown-content z-[1]">
-                            <twig:User:CardUser user="{{ entry[0].doctor }}" />
-                        </div>
-                    </div>
+                    <a
+                        class="link link-hover link-accent"
+                        href="{{ path('user_profile', {username: entry[0].doctor.username}) }}"
+                        >{{ entry[0].doctor.fullName }}</a
+                    >
                 </div>
                 <div class="stat-value">{{ entry.visitCount }} visits</div>
                 <div class="stat-desc text-accent" title="specialization">
