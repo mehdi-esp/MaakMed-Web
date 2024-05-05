@@ -22,10 +22,15 @@ class UserController extends AbstractController
 
     #[Route('/user/{id}/ban', name: 'user_ban', methods: ["POST"])]
     #[IsGranted('ROLE_ADMIN')]
-    public function ban(EntityManagerInterface $entityManager, User $user): Response
-    {
-        $entityManager->remove($user);
-        $entityManager->flush();
+    public function ban(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        User $user,
+    ): Response {
+        if ($this->isCsrfTokenValid('ban' . $user->getId(), $request->request->get('_token'))) {
+            $entityManager->remove($user);
+            $entityManager->flush();
+        }
 
         return $this->redirectToRoute('app_user');
     }
