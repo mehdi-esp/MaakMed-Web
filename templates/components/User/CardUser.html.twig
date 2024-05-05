@@ -20,9 +20,7 @@
 
 
             {% if 'ROLE_DOCTOR' in user.roles or 'ROLE_PATIENT' in user.roles or 'ROLE_PHARMACY' in user.roles %}
-                {% if user.isVerified %}
-                    <p style="color: green;">This user has verified his email.</p>
-                {% else %}
+                {% if user.email is not null and not user.isVerified %}
                     <p style="color: red;">This user hasn't verified his email yet.</p>
                 {% endif %}
             {% endif %}
