@@ -103,7 +103,10 @@ class UserTypeDistribution
             ]
         ];
 
-        $roles = array_keys($rolesCount);
+        $roles = array_map(
+            fn (string $role) => mb_convert_case(str_replace('ROLE_', '', $role), MB_CASE_TITLE),
+            array_keys($rolesCount)
+        );
 
         return ['labels' => $roles, 'datasets' => $sets];
     }
