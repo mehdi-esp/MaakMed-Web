@@ -28,8 +28,10 @@ class UserController extends AbstractController
         User $user,
     ): Response {
         if ($this->isCsrfTokenValid('ban' . $user->getId(), $request->request->get('_token'))) {
+            $username = $user->getUsername();
             $entityManager->remove($user);
             $entityManager->flush();
+            $this->addFlash('info', "User {$username} has been banned.");
         }
 
         return $this->redirectToRoute('app_user');
