@@ -111,7 +111,9 @@
                     </ul>
                 </div>
             {% else %}
-                <a href="{{ path("app_login") }}" class="btn text-lg text-primary btn-ghost">Login</a>
+                {% if app.request.attributes.get('_route') != 'app_login' %}
+                    <a href="{{ path("app_login") }}" class="btn text-lg text-primary btn-ghost">Login</a>
+                {% endif %}
                 {% if app.request.attributes.get('_route') in ['app_home', 'app_login'] %}
                     <a href="{{ path("app_register") }}" class="btn text-lg text-primary btn-ghost">Sign up</a>
                 {% endif %}
