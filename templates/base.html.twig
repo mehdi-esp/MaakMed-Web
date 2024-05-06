@@ -33,17 +33,24 @@
                               d="M4 6h16M4 12h8m-8 6h16"/>
                     </svg>
                 </div>
-                <ul tabindex="0"
-                    class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
-                    <li><a>Item 1</a></li>
-                    <li>
-                        <a>Parent</a>
-                        <ul class="p-2">
-                            <li><a>Submenu 1</a></li>
-                            <li><a>Submenu 2</a></li>
-                        </ul>
-                    </li>
-                    <li><a>Item 3</a></li>
+                <ul class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                    {% if not app.user %}
+                        {# TODO: Visitor #}
+                    {% elseif is_granted('ROLE_PATIENT') %}
+                        <li class="text-sm leading-6 font-semibold text-slate-700"><a href="{{ path("app_prescription_index") }}">Prescription</a></li>
+                        <li class="text-sm leading-6 font-semibold text-slate-700"><a href="{{ path("app_visit_index") }}">Visit</a></li>
+                        <li class="text-sm leading-6 font-semibold text-slate-700"><a href="{{ path("app_invoice_index") }}">Invoice</a></li>
+                        <li class="text-sm leading-6 font-semibold text-slate-700"><a href="{{ path("app_insurancePlan_list") }}">My plans</a></li>
+                        <li class="text-sm leading-6 font-semibold text-slate-700"><a href="{{ path("app_issue_index") }}">Issue</a></li>
+                    {% elseif is_granted('ROLE_DOCTOR') %}
+                        <li class="text-sm leading-6 font-semibold text-slate-700"><a href="{{ path("app_medication_index") }}">Medication</a></li>
+                        <li class="text-sm leading-6 font-semibold text-slate-700"><a href="{{ path("app_prescription_index") }}">Prescription</a></li>
+                        <li class="text-sm leading-6 font-semibold text-slate-700"><a href="{{ path("app_visit_index") }}">Visit</a></li>
+                    {% elseif is_granted('ROLE_PHARMACY') %}
+                        <li class="text-sm leading-6 font-semibold text-slate-700"><a href="{{ path("app_medication_index") }}">Medication</a></li>
+                        <li class="text-sm leading-6 font-semibold text-slate-700"><a href="{{ path("app_inventory_index") }}">Inventory</a></li>
+                        <li class="text-sm leading-6 font-semibold text-slate-700"><a href="{{ path("app_invoice_index") }}">Invoice</a></li>
+                    {% endif %}
                 </ul>
             </div>
             <a href="{{ path("app_home") }}" class="btn btn-ghost text-primary text-2xl">MaakMed</a>
