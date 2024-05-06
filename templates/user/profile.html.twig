@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends is_granted('ROLE_ADMIN') ? 'base_admin.html.twig' : 'base.html.twig' %}
 
 {% set with_flash_messages = true %}
 
