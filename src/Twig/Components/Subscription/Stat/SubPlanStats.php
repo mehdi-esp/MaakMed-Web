@@ -29,17 +29,17 @@ class SubPlanStats
         )
         {
         }
-        public function getPlanWithMostSubscribers(): array
+        public function getPlanWithMostSubscribers(): ?array
             {
                 return $this->SubscriptionRepository->getPlanWithMostSubscribers();
             }
 
-            public function getPlanWithMostCanceledStatus(): array
+            public function getPlanWithMostCanceledStatus(): ?array
             {
                 return $this->SubscriptionRepository->getPlanWithMostCanceledStatus();
             }
 
-            public function getPlanWithMostCancelingStatus(): array
+            public function getPlanWithMostCancelingStatus(): ?array
             {
                 return $this->SubscriptionRepository->getPlanWithMostCancelingStatus();
             }
