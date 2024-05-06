@@ -118,7 +118,7 @@
 
 {% block flash_messages %}
     {% if (with_flash_messages ?? false) is same as(true) %}
-        <twig:Flash:Toast class="z-[80]"/>
+        <twig:Flash:Toast class="z-[80] toast-center sm:toast-end"/>
     {% endif %}
 {% endblock %}
 {% block body %}{% endblock %}
