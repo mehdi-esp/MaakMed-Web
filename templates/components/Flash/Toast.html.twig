@@ -1,5 +1,5 @@
 {% set flashes = app.flashes(["error", "warning", "success", "info"]) %}
-{% if flashes is not empty %}
+{% if flashes|filter(null) is not empty %}
     <div {{ attributes.defaults({class: "toast"}) }} data-turbo-temporary>
         {% for label, messages in flashes %}
             {% for message in messages %}
