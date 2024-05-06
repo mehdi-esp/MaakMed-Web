@@ -54,16 +54,6 @@
                                 </svg>
                             </a>
                         </li>
-                        <li>
-                            <button onclick="{{ "visit_delete_modal_" ~ visit.id }}.showModal()"
-                                    class="link link-error tooltip" data-tip="Delete">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                     stroke-width="1.5" stroke="currentColor" class="size-5">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                          d="M15 12H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
-                                </svg>
-                            </button>
-                        </li>
                     {% endif %}
                     <li>
                         <a href="{{ path('app_visit_show', {'id': visit.id}) }}" class="link link-secondary tooltip"
@@ -86,6 +76,18 @@
                             </svg>
                         </a>
                     </li>
+                    {% if 'ROLE_DOCTOR' in app.user.roles %}
+                        <li>
+                            <button onclick="{{ "visit_delete_modal_" ~ visit.id }}.showModal()"
+                                    class="link link-error tooltip" data-tip="Delete">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                     stroke-width="1.5" stroke="currentColor" class="size-5">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                          d="M15 12H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                                </svg>
+                            </button>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
