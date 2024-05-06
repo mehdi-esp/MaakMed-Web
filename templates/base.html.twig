@@ -130,6 +130,11 @@
         <twig:Flash:Toast class="z-[80] toast-center sm:toast-end"/>
     {% endif %}
 {% endblock %}
-{% block body %}{% endblock %}
+<div class="min-h-[100vh]">{% block body %}{% endblock %}</div>
+<footer class="footer footer-center p-4">
+  <aside>
+    <p>Copyright © {{ 'now'|date('Y') }} - All rights reserved by <span class="font-bold">MaakMed</span></p>
+  </aside>
+</footer>
 </body>
 </html>
