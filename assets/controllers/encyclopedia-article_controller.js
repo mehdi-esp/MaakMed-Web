@@ -29,7 +29,8 @@ export default class extends Controller {
     'writingArea',
     'tooltip',
     'modal',
-    'article'
+    'article',
+    'loading'
   ];
 
   static debounces = [
@@ -145,7 +146,9 @@ export default class extends Controller {
       this.#showModal();
       return;
     }
+    this.loadingTarget.classList.remove('hidden');
     const result = await this.fetchArticle(sel);
+    this.loadingTarget.classList.add('hidden');
     if (result.error) {
       // TODO: handle
       return;

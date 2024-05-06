@@ -79,4 +79,10 @@
             <button>close</button>
         </form>
     </dialog>
+    <div class="toast toast-middle toast-center hidden" {{ stimulus_target("encyclopedia-article", "loading") }}>
+        <div class="grid place-items-center space-y-4">
+          <span class="loading loading-bars loading-md"></span>
+          <span>Retrieving article...</span>
+        </div>
+    </div>
 </div>
