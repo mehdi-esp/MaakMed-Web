@@ -93,13 +93,13 @@
                 <path d="M20 6L9 17l-5-5"></path>
               </svg>
             </span>{{ plan.description}}
-                    <p class="text-xs text-gray-500 mt-3"> Reimburesment rate: {{ plan.reimbursementRate }}</p>
+                    <p class="text-xs text-gray-500 mt-3"> Reimburesment Rate: {{ plan.reimbursementRate }}</p>
                     <p class="text-xs text-gray-500 mt-3"> Plan Ceiling: {{ plan.ceiling }}</p>
                     </p>
                     {% if isSubscribed %}
                         <form method="POST" action="{{ path('app_subscription_Cancel') }}">
                             <input type="hidden" name="planId" value="{{ plan.id }}">
-                            <button type="submit" class="flex items-center mt-auto text-white bg-red-500 border-0 py-2 px-4 w-full focus:outline-none hover:bg-red-600 rounded">
+                            <button type="submit" class="flex btn items-center mt-3 text-white bg-red-500 border-0 py-2 px-4 w-full focus:outline-none hover:bg-red-600 rounded">
                                 Cancel
                                 <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="w-4 h-4 ml-auto" viewBox="0 0 24 24">
                                     <path d="M6 18L18 6M6 6l12 12"></path>
