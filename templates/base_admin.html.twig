@@ -249,7 +249,12 @@
     {% endif %}
 {% endblock %}
 <div class="w-full pt-10 px-4 sm:px-6 md:px-8 lg:ps-72">
-{% block body %}{% endblock %}
+  <div class="min-h-[80vh]">{% block body %}{% endblock %}</div>
+  <footer class="footer footer-center p-4">
+    <aside>
+      <p>Copyright © {{ 'now'|date('Y') }} - All rights reserved by <span class="font-bold">MaakMed</span></p>
+    </aside>
+  </footer>
 </div>
 </body>
 </html>
