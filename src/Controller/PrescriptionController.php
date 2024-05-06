@@ -20,11 +20,17 @@ use App\Entity\Prescription;
 use App\Repository\VisitRepository;
 use App\Form\PrescriptionType;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use WhiteOctober\BreadcrumbsBundle\Model\Breadcrumbs;
 
 
 #[Route('/prescription')]
 class PrescriptionController extends AbstractController
 {
+    public function __construct(
+        private readonly Breadcrumbs $breadcrumbs,
+    ) {
+
+    }
     #[Route('/', name: 'app_prescription_index', methods: ['GET'])]
     #[IsGranted(PrescriptionVoter::LIST_ALL)]
     public function index(
@@ -32,6 +38,8 @@ class PrescriptionController extends AbstractController
         Request                $request
     ): Response
     {
+        $this->breadcrumbs->addRouteItem("Prescriptions", "app_prescription_index");
+
         /** @var Doctor|Admin|Patient $user */
         $user = $this->getUser();
 
@@ -43,6 +51,8 @@ class PrescriptionController extends AbstractController
     #[IsGranted("ROLE_DOCTOR")]
     public function new(Request $request, EntityManagerInterface $em, VisitRepository $visitRepository): Response
     {
+        $this->breadcrumbs->addRouteItem("Prescriptions", "app_prescription_index");
+        $this->breadcrumbs->addRouteItem("New", "app_prescription_new");
         $visitsWithoutPrescription = $visitRepository->createQueryBuilder('v')
             ->leftJoin('v.prescription', 'p')
             ->where('p.id IS NULL')
@@ -82,6 +92,9 @@ class PrescriptionController extends AbstractController
     #[IsGranted(PrescriptionVoter::VIEW, subject: 'prescription')]
     public function show(Prescription $prescription): Response
     {
+
+        $this->breadcrumbs->addRouteItem("Prescriptions", "app_prescription_index");
+        $this->breadcrumbs->addRouteItem($prescription->getId(), "app_prescription_show", ["id" => $prescription->getId()]);
         return $this->render('prescription/show.html.twig', [
             'prescription' => $prescription,
         ]);
@@ -91,6 +104,9 @@ class PrescriptionController extends AbstractController
     #[IsGranted(PrescriptionVoter::MANAGE, subject: 'prescription')]
     public function edit(Request $request, Prescription $prescription, EntityManagerInterface $entityManager): Response
     {
+        $this->breadcrumbs->addRouteItem("Prescriptions", "app_prescription_index");
+        $this->breadcrumbs->addRouteItem($prescription->getId(), "app_prescription_show", ["id" => $prescription->getId()]);
+        $this->breadcrumbs->addRouteItem("Edit", "app_prescription_edit", ["id" => $prescription->getId()]);
         if ($request->getMethod() === 'POST') {
             $payload = $request->request->all();
             $payload['prescription']['submitted'] = true;
