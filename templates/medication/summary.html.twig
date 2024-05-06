@@ -1,6 +1,6 @@
 {# templates/medication/summary.html.twig #}
 
-{% extends 'base.html.twig' %}
+{% extends is_granted('ROLE_ADMIN') ? 'base_admin.html.twig' : 'base.html.twig' %}
 
 {% block title %}Summary{% endblock %}
 
