@@ -20,7 +20,7 @@ export default class extends Controller {
         }
 
         handleClick(function(planId, planCost) {
-            let formActionUrl = "http://127.0.0.1:8000/subscription/subscribe";
+            let formActionUrl = "/subscription/subscribe";
             const form = new FormData();
             form.append('planId', planId);
             form.append('amount', planCost);
