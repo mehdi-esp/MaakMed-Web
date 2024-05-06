@@ -7,7 +7,7 @@
 {% block body %}
     <!-- Page Heading -->
 
-    <main>
+    <main class="mb-8">
       <section class="p-4 rounded-lg min-h-96 mb-4 border-b border-2">
           <div class="prose mb-4"><h2 class="text-4xl">Users</h2></div>
           <div class="grid place-items-center">
@@ -23,6 +23,23 @@
           <twig:Visit:Stat:DoctorsByVisit class="grid place-items-center" loading="lazy" />
       </section>
       <section class="p-4 rounded-lg min-h-96 mb-4 border-b border-2">
+          <div class="prose mb-4"><h2 class="text-4xl">Medications</h2></div>
+          <twig:Medication:Chart:InsuredCount loading="lazy" />
+      </section>
+      <section class="p-4 rounded-lg min-h-64 mb-4 border-b border-2">
+          <div class="prose mb-4"><h2 class="text-4xl">Issues</h2></div>
+          <div class="grid place-items-center">
+              <twig:Issue:Stat:General loading="lazy" />
+          </div>
+      </section>
+      <section class="p-4 rounded-lg min-h-64 mb-4 border-b border-2">
+          <div class="prose mb-4"><h2 class="text-4xl">Plans and subscriptions</h2></div>
+          <div class="grid space-y-4 place-items-center mb-8">
+              <twig:Subscription:Stat:SubPlanStats loading="lazy" />
+              <twig:Subscription:Stat:SubPlanStatsBAC loading="lazy" />
+          </div>
+          <twig:Subscription:Chart:SubPlanBarChart class="grid place-items-center" loading="lazy" />
+          <twig:Subscription:Chart:SubPlanPieChart class="grid place-items-center" loading="lazy" />
       </section>
     </main>
 {% endblock %}
