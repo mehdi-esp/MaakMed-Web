@@ -154,11 +154,14 @@ class SubscriptionController extends AbstractController
                $existingSubscription = $entityManager->getRepository(Subscription::class)
                           ->findOneBy([
                               'patient' => $user,
-                              'status' => ['active']
+                              'status' => ['active', 'canceling']
                           ]);
                       if ($existingSubscription) {
-                          $this->addFlash('warning', 'You already have an active or pending subscription.');
-                          return $this->redirectToRoute('app_insurancePlan_list');
+                          $this->addFlash('warning', 'You already have an active or a subscription in canceling status.');
+//                           return $this->redirectToRoute('app_insurancePlan_list');
+                          $jsonResponse = ['url' => $this->generateUrl('app_insurancePlan_list')];
+                                                     return new JsonResponse($jsonResponse);
+
                       }
                $pendingSubscriber = $entityManager->getRepository(Subscription::class)
                            ->findOneBy([
