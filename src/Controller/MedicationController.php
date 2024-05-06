@@ -13,15 +13,21 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Security\Voter\MedicationVoter;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use WhiteOctober\BreadcrumbsBundle\Model\Breadcrumbs;
 
 
 #[Route('/medication')]
 class MedicationController extends AbstractController
 {
+    public function __construct(
+        private readonly Breadcrumbs $breadcrumbs,
+    ) {
+
+    }
 #[Route('/', name: 'app_medication_index', methods: ['GET'])]
     public function index(MedicationRepository $medicationRepository): Response
-    {    /** @var Doctor|Admin|Pharmacy $user */
-        $user = $this->getUser();
+    {
+        $this->breadcrumbs->addRouteItem("Medications", "app_medication_index");
 
         return $this->render('medication/index.html.twig' );
     }
@@ -30,6 +36,8 @@ class MedicationController extends AbstractController
     #[IsGranted("ROLE_ADMIN")]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+        $this->breadcrumbs->addRouteItem("Medications", "app_medication_index");
+        $this->breadcrumbs->addRouteItem("New", "app_medication_new");
         $medication = new Medication();
         $form = $this->createForm(MedicationType::class, $medication);
         $form->handleRequest($request);
@@ -58,6 +66,10 @@ class MedicationController extends AbstractController
     #[IsGranted("ROLE_ADMIN")]
     public function edit(Request $request, Medication $medication, EntityManagerInterface $entityManager): Response
     {
+        $this->breadcrumbs->addRouteItem("Medications", "app_medication_index");
+        $this->breadcrumbs->addItem($medication->getId());
+        $this->breadcrumbs->addRouteItem("Edit", "app_medication_edit", ["id" => $medication->getId()]);
+
         $form = $this->createForm(MedicationType::class, $medication);
         $form->handleRequest($request);
 
@@ -92,6 +104,10 @@ class MedicationController extends AbstractController
     #[Route('/{id}/summarize', name: 'app_medication_summarize', methods: ['POST', 'GET'])]
     public function summarize(Request $request, Medication $medication, HttpClientInterface $client): Response
     {
+
+        $this->breadcrumbs->addRouteItem("Medications", "app_medication_index");
+        $this->breadcrumbs->addItem($medication->getId());
+        $this->breadcrumbs->addRouteItem("Summarization  " , "app_medication_summarize", ["id" => $medication->getId()]);
         $response = $client->request('POST', 'https://api.deepgram.com/v1/read?summarize=true&language=en', [
             'headers' => [
                 'Authorization' => 'Token ***REMOVED***',
