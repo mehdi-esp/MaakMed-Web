@@ -10,13 +10,19 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use WhiteOctober\BreadcrumbsBundle\Model\Breadcrumbs;
 
 class UserController extends AbstractController
 {
+    public function __construct(
+        private readonly Breadcrumbs $breadcrumbs )
+    {
+    }
     #[Route('/user/list', name: 'app_user')]
     #[IsGranted('ROLE_ADMIN')]
     public function index(): Response
     {
+        $this->breadcrumbs->addRouteItem("Users", "app_user");
         return $this->render('user/index.html.twig');
     }
 

@@ -31,13 +31,15 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\Notifier\Message\SmsMessage;
 use Symfony\Component\Notifier\TexterInterface;
+use WhiteOctober\BreadcrumbsBundle\Model\Breadcrumbs;
 
 class ProfileController extends AbstractController
 {
 
 
-    public function __construct(private readonly MailerInterface $mailer, private readonly EmailVerifier $emailVerifier)
+    public function __construct(private readonly MailerInterface $mailer, private readonly EmailVerifier $emailVerifier, private readonly Breadcrumbs $breadcrumbs,)
     {
+
     }
 
     #[Route("/profile", name: "profile")]
@@ -46,6 +48,7 @@ class ProfileController extends AbstractController
     {
         /** @var User $currentUser */
         $currentUser = $this->getUser();
+        $this->breadcrumbs->addItem("My Profile");
         return $this->render('user/profile.html.twig', ['user' => $currentUser]);
     }
 
@@ -53,6 +56,8 @@ class ProfileController extends AbstractController
     #[Route("/profile/edit", name: "profile_edit", methods: ["GET", "POST"])]
     public function editProfile(Request $request, EntityManagerInterface $entityManager)
     {
+        $this->breadcrumbs->addRouteItem("My Profile", "profile");
+        $this->breadcrumbs->addRouteItem("Edit", "profile_edit");
         $currentUser = $this->getUser();
         if (!$currentUser) {
             return $this->redirectToRoute('app_login');
@@ -99,6 +104,11 @@ class ProfileController extends AbstractController
     #[IsGranted("ROLE_USER")]
     public function userProfile(User $user): Response
     {
+        if ($this->getUser() instanceof Admin) {
+            $this->breadcrumbs->addRouteItem("Users", "app_user");
+        }
+        $this->breadcrumbs->addItem("Profile");
+        $this->breadcrumbs->addItem($user->getUsername(), "user_profile", ['username' => $user->getUsername()]);
         if ($user === $this->getUser()) {
             return $this->redirectToRoute("profile");
         }
@@ -195,6 +205,7 @@ class ProfileController extends AbstractController
         $this->addFlash('success', 'Your email has been verified.');
         return $this->redirectToRoute('profile');
     }
+
     #[Route('/account/delete', name: 'app_account_delete', methods: ['POST'])]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function deleteAccount(Request                $request,

@@ -11,10 +11,15 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use WhiteOctober\BreadcrumbsBundle\Model\Breadcrumbs;
 
 
 class SecurityController extends AbstractController
 {
+    public function __construct(
+        private readonly Breadcrumbs $breadcrumbs )
+    {
+    }
     #[Route(path: '/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils, Request $request): Response
     {
@@ -43,6 +48,10 @@ class SecurityController extends AbstractController
         UserPasswordHasherInterface $userPasswordHasher,
         EntityManagerInterface $entityManager,
     ): Response {
+        $this->breadcrumbs->addRouteItem("My Profile", "profile");
+        $this->breadcrumbs->addRouteItem("Change Password", "password_change");
+
+
         // Create a form
         $form = $this->createForm(ChangePasswordType::class);
         $form->handleRequest($request);
