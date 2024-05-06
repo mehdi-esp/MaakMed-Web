@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Service\InventoryService;
+use WhiteOctober\BreadcrumbsBundle\Model\Breadcrumbs;
 
 
 #[Route('/inventory')]
@@ -18,14 +19,17 @@ class InventoryController extends AbstractController
 {
     private $inventoryService;
 
-    public function __construct( InventoryService $inventoryService)
+    public function __construct( InventoryService $inventoryService, private readonly Breadcrumbs $breadcrumbs)
     {
         $this->inventoryService = $inventoryService;
+
     }
     #[Route('/', name: 'app_inventory_index', methods: ['GET'])]
     #[IsGranted('ROLE_PHARMACY')]
     public function index(InventoryEntryRepository $inventoryRepository): Response
     {
+        $this->breadcrumbs->addRouteItem("Inventory", "app_inventory_index");
+
         /** @var Pharmacy $user */
 
 //        $user = $this->getUser();
