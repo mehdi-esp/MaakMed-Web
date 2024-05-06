@@ -47,7 +47,7 @@ export default class extends Controller {
     },
   ];
 
-  cache = {};
+  cache = new Map();
 
 
   connect() {
@@ -141,8 +141,8 @@ export default class extends Controller {
   async showArticle(event) {
     const sel = this.#textAreaSelection(this.writingAreaTarget);
     if (!sel) return;
-    if (this.cache[sel]) {
-      this.articleTarget.innerHTML = this.cache[sel];
+    if (this.cache.has(sel)) {
+      this.articleTarget.innerHTML = this.cache.get(sel);
       this.#showModal();
       return;
     }
@@ -154,7 +154,7 @@ export default class extends Controller {
       return;
     }
 
-    this.cache[sel] = result.summary;
+    this.cache.set(sel, result.summary);
 
     this.articleTarget.innerHTML = result.summary;
 
