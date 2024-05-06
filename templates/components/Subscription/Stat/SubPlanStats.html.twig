@@ -1,4 +1,4 @@
-<div {{ attributes }}>
+<div {{ attributes.defaults({class: "flex flex-col gap-2 sm:flex-row items-center"}) }}>
     <div class="stats stats-vertical lg:stats-horizontal shadow">
         {% for revenue in computed.TotalRevenuePerPlan %}
             <div class="stat ">
@@ -8,7 +8,7 @@
             </div>
         {% endfor %}
     </div>
-    <div class="stats shadow">
+    <div class="stats stats-vertical lg:stats-horizontal shadow">
         {% if computed.planWithMostSubscribers %}
             <div class="stat">
                 <div class="stat-title">Plan with the most Active Subscribers</div>
