@@ -21,7 +21,7 @@ class IssueUpdateType  extends AbstractType
             ->add('content', TextType::class, [
                 'constraints' => [
                     new NotBlank(),
-                    new Length(['max' => 10]),
+                    new Length(['max' => 200]),
                     new Regex([
                         'pattern' => '/^[a-zA-Z0-9 ]*$/',
                         'message' => 'Only letters, numbers and spaces are allowed',
