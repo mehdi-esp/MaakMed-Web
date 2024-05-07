@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Invoice{% endblock %}
+{% block title %}New Prescription{% endblock %}
 
 {% block body %}
     <main class="container px-4 mx-auto">
-        <div class="prose"><h2>Create new Invoice</h2></div>
+        <div class="prose"><h2>Create new Prescription</h2></div>
 
         <twig:Prescription:Form form="{{ form }}" initialFormData="{{ prescription }}"/>
 
