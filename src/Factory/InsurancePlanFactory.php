@@ -67,7 +67,7 @@ final class InsurancePlanFactory extends ModelFactory
             'ceiling' => self::faker()->randomFloat(nbMaxDecimals: 2, min: 100, max: $cost - 100),
             'cost' => $cost,
             'description' => self::faker()->realTextBetween(30, 35),
-            'name' => self::faker()->domainWord(),
+            'name' => mb_convert_case(self::faker()->domainWord(), MB_CASE_TITLE),
             'reimbursementRate' => self::faker()->randomFloat(nbMaxDecimals: 2, min: 0.1, max: 0.8),
         ];
     }
