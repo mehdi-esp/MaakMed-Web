@@ -5,9 +5,8 @@
 {% block title %}Summary{% endblock %}
 
 {% block body %}
-    <div id="notification" class="fixed inset-0 flex items-center justify-center flex-col">
         <div class="alert alert-success alert-dismissible mb-4">
-            <div class="flex-1">
+            <div class="text-wrap">
                 <label>{{ summaryText }}</label>
             </div>
             <button class="btn btn-sm btn-ghost" onclick="this.parentElement.remove()">
@@ -17,5 +16,4 @@
             </button>
         </div>
         <a href="{{ path('app_medication_index') }}" class="btn btn-primary">Back to List</a>
-    </div>
 {% endblock %}
