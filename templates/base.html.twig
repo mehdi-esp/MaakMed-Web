@@ -25,6 +25,7 @@
 <header class="sticky lg:z-50 backdrop-blur transition-colors duration-500 top-0 left-0 w-full bg-base-100/80 lg:border-b lg:border-slate-900/10 z-50 px-4 sm:px-8 lg:px-16 xl:px-40 2xl:px-64">
     <nav class="navbar">
         <div class="navbar-start">
+            {% if  app.user %}
             <div class="dropdown">
                 <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
@@ -53,6 +54,8 @@
                     {% endif %}
                 </ul>
             </div>
+            {% endif %}
+
             <a href="{{ path("app_home") }}" class="btn btn-ghost text-primary text-2xl">MaakMed</a>
             <div>{{ wo_render_breadcrumbs() }}</div>
         </div>
