@@ -64,7 +64,7 @@ final class IssueFactory extends ModelFactory
     {
         return [
             'category' => self::faker()->randomElement(['Pharmacy','Doctor','Medication','Other']),
-            'content' => self::faker()->words(20, true),
+            'content' => self::faker()->realTextBetween(20, 100),
             'creationDate' => self::faker()->dateTime( '-1 year'),
             'title' => self::faker()->words(3,true),
             'user' => PatientFactory::randomOrCreate(),
