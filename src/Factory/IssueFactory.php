@@ -63,10 +63,10 @@ final class IssueFactory extends ModelFactory
     protected function getDefaults(): array
     {
         return [
-            'category' => self::faker()->randomElement(['Pharmacy','Doctor','Medication','Other']),
+            'category' => self::faker()->randomElement(['Pharmacy', 'Doctor', 'Medication', 'Other']),
             'content' => self::faker()->realTextBetween(20, 100),
-            'creationDate' => self::faker()->dateTime( '-1 year'),
-            'title' => self::faker()->words(3,true),
+            'creationDate' => self::faker()->dateTime('-1 year'),
+            'title' => self::faker()->words(3, true),
             'user' => PatientFactory::randomOrCreate(),
         ];
     }
