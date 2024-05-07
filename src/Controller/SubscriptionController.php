@@ -240,13 +240,16 @@ class SubscriptionController extends AbstractController
         if ($event->type === 'checkout.session.completed') {
             $data = $event->data->object;
             $email = $data->customer_details->email;
+
             $this->sendEmailConfirmation($email);
             $userRepository = $entityManager->getRepository(\App\Entity\User::class);
-            $userId = $userRepository->findIdByEmail($email);
-            if (!$userId) {
+            $userId = $userRepository->findOneByEmail($email)?->getId();
 
+            if (!$userId) {
+         
                 return new JsonResponse(['error' => 'Patient not found'], Response::HTTP_NOT_FOUND);
             }
+
             $this->activateSubscription($userId, $entityManager);
         }
 
