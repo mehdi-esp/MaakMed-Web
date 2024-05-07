@@ -65,7 +65,7 @@ final class MedicationFactory extends ModelFactory
         return [
             'description' => self::faker()->realTextBetween(500, 1000),
             'insured' => self::faker()->boolean(),
-            'name' => self::faker()->word(),
+            'name' => mb_convert_case(self::faker()->word(), MB_CASE_TITLE),
         ];
     }
 
