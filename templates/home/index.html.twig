@@ -22,7 +22,9 @@
             <p class="text-blue-100 text-xl md:text-2xl leading-snug mt-4">
               Find Everything You Need Under One Roof
               Your insurance plan is tailored to match your unique needs, lifestyle, and goals perfectly. Let us assist you every step of the way!"</p>
+            {%  if app.user is null%}
             <a href="{{ path("app_register") }}" class="px-8 py-4 bg-teal-600 text-white rounded inline-block mt-8 font-semibold">Get Started</a>
+         {% endif %}
           </div>
         </div>
       </section>
