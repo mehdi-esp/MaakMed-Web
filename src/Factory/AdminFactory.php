@@ -71,7 +71,7 @@ final class AdminFactory extends ModelFactory
                 self::faker()->email() :
                 null,
             'password' => '$argon2id$v=19$m=60000,t=10,p=1$QzTKHfbykCeiBGHWysm69A$1WJomjBrzNMEPlsCC3qNoWYlzNxDlcf5H/hvZ24fBT4',
-            'username' => self::faker()->userName()
+            'username' => self::faker()->unique()->userName(),
         ];
     }
 

@@ -67,7 +67,7 @@ final class PharmacyFactory extends ModelFactory
     protected function getDefaults(): array
     {
         return [
-            'username' => self::faker()->userName(),
+            'username' => self::faker()->unique()->userName(),
             'password' => '$argon2id$v=19$m=60000,t=10,p=1$TjSKKV96qv4HXeNnJ+U03Q$Pviu3e7sfB+CVwUm40BjzJBJO3gDrWa9FPxozf/CdDQ',
             'name' => self::faker()->company(),
             'address' => self::faker()->streetAddress(),

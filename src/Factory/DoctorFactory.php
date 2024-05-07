@@ -67,7 +67,7 @@ final class DoctorFactory extends ModelFactory
     protected function getDefaults(): array
     {
         return [
-            'username' => self::faker()->userName(),
+            'username' => self::faker()->unique()->userName(),
             'password' => '$argon2id$v=19$m=60000,t=10,p=1$fkVyGE1vA0D1beaAwIImQA$MGy6K20us4GHBG3dlHlHOvEqxVfsAbZp9j1+5vchaWw',
             'email' => self::faker()->boolean(60) ?
                 self::faker()->email() :

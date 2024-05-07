@@ -66,7 +66,7 @@ final class PrescriptionFactory extends ModelFactory
             'visit' => VisitFactory::randomOrCreate(),
             'confirmed' => false,
             'creationDate' => self::faker()->dateTime('-5 years'),
-            'medications' => PrescriptionEntryFactory::randomRange(1,5),
+            'medications' => PrescriptionEntryFactory::randomRange(0, 0),
         ];
     }
 

@@ -67,7 +67,7 @@ final class PatientFactory extends ModelFactory
     protected function getDefaults(): array
     {
         return [
-            'username' => self::faker()->userName(),
+            'username' => self::faker()->unique()->userName(),
             'password' => '$argon2id$v=19$m=60000,t=10,p=1$qbc4hRMMFwXwHAPYC67K8w$IqUnTi0THYHsgHtF5d4wHCEB9qt3UDts5F7adWiC3rc',
             'email' => self::faker()->boolean(30) ?
                 self::faker()->email() :
