@@ -241,16 +241,14 @@ class SubscriptionController extends AbstractController
             $data = $event->data->object;
             $email = $data->customer_details->email;
 
-            $this->sendEmailConfirmation($email);
             $userRepository = $entityManager->getRepository(\App\Entity\User::class);
             $userId = $userRepository->findOneByEmail($email)?->getId();
-
+            $this->activateSubscription($userId, $entityManager);
             if (!$userId) {
-         
                 return new JsonResponse(['error' => 'Patient not found'], Response::HTTP_NOT_FOUND);
             }
+            $this->sendEmailConfirmation($email);
 
-            $this->activateSubscription($userId, $entityManager);
         }
 
         return new JsonResponse(['status' => 'success']);
@@ -266,7 +264,6 @@ class SubscriptionController extends AbstractController
     }
     public function activateSubscription(int $patientId, EntityManagerInterface $entityManager): Response
     {
-    error_log('In activateSubscription method for patient ID: ' . $patientId);
     $patient = $entityManager->getRepository(Patient::class)->find($patientId);
     if (!$patient) {
         throw $this->createNotFoundException('The patient does not exist');
