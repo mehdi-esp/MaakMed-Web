@@ -67,7 +67,7 @@ final class VisitFactory extends ModelFactory
     {
         return [
             'date' => self::faker()->dateTimeBetween('-5 years'),
-            'diagnosis' => self::faker()->realText(),
+            'diagnosis' => self::faker()->realTextBetween(20, 100),
             'doctor' => DoctorFactory::randomOrCreate(),
             'patient' => PatientFactory::randomOrCreate(),
             'type' => self::faker()->randomElement(VisitCategory::cases()),
