@@ -9,6 +9,7 @@
         "@symfony/ux-chartjs": "file:vendor/symfony/ux-chartjs/assets",
         "@symfony/ux-live-component": "file:vendor/symfony/ux-live-component/assets",
         "@symfony/ux-turbo": "file:vendor/symfony/ux-turbo/assets",
+        "@symfony/ux-typed": "file:vendor/symfony/ux-typed/assets",
         "@symfony/webpack-encore": "^4.0.0",
         "@tailwindcss/forms": "^0.5.7",
         "@tailwindcss/typography": "^0.5.10",
@@ -21,6 +22,7 @@
         "regenerator-runtime": "^0.13.9",
         "tailwindcss": "^3.4.1",
         "tom-select": "^2.2.2",
+        "typed.js": "^2.0",
         "webpack": "^5.74.0",
         "webpack-cli": "^4.10.0",
         "webpack-notifier": "^1.15.0"

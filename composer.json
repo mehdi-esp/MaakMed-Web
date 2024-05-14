@@ -67,6 +67,7 @@
         "symfony/ux-chartjs": "^2.16",
         "symfony/ux-live-component": "^2.16",
         "symfony/ux-turbo": "^2.16",
+        "symfony/ux-typed": "^2.17",
         "symfony/validator": "5.4.*",
         "symfony/web-link": "5.4.*",
         "symfony/webpack-encore-bundle": "^2.1",
