@@ -26,11 +26,15 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Buchin\Badwords\Badwords;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-
+use WhiteOctober\BreadcrumbsBundle\Model\Breadcrumbs;
 
 #[Route('/issue')]
 class IssueController extends AbstractController
 {
+    public function __construct(
+        private readonly Breadcrumbs $breadcrumbs,
+    ) {
+    }
 
     private int $newIssueCount = 0;
 
@@ -56,6 +60,7 @@ class IssueController extends AbstractController
     #[IsGranted(IssueVoter::LIST_ALL)]
     public function index(IssueRepository $issueRepository, AuthorizationCheckerInterface $authChecker): Response
     {
+        $this->breadcrumbs->addRouteItem('Issues', 'app_issue_index');
         $user = $this->getUser();
 
         // Check user role and set criteria accordingly
@@ -117,6 +122,8 @@ class IssueController extends AbstractController
     #[IsGranted('ROLE_PATIENT')]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+        $this->breadcrumbs->addRouteItem('Issues', 'app_issue_index');
+        $this->breadcrumbs->addRouteItem('New', 'app_addIssue');
         $issue = new Issue();
         $form = $this->createForm(IssueType::class, $issue);
         $form->handleRequest($request);
@@ -163,6 +170,10 @@ class IssueController extends AbstractController
     #[IsGranted(IssueVoter::EDIT, subject: 'issue')]
     public function edit(Request $request, Issue $issue, EntityManagerInterface $entityManager, LoggerInterface $logger): Response
     {
+        $this->breadcrumbs->addRouteItem('Issues', 'app_issue_index');
+        $this->breadcrumbs->addItem($issue->getId());
+        $this->breadcrumbs->addRouteItem('Edit', 'app_issue_edit', ['id' => $issue->getId()]);
+
         $form = $this->createForm(IssueUpdateType::class, $issue);
         $form->handleRequest($request);
 

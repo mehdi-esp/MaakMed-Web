@@ -27,15 +27,23 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use DateTime;
+use WhiteOctober\BreadcrumbsBundle\Model\Breadcrumbs;
 
 
 #[Route('/issueResponse')]
 class IssueResponseController extends AbstractController
 {
+    public function __construct(
+        private readonly Breadcrumbs $breadcrumbs,
+    ) {
+    }
+
     #[Route('/', name: 'app_issue_response_index', methods: ['GET'])]
     #[IsGranted('ROLE_ADMIN')]
     public function index(IssueResponseRepository $responseRepository): Response
     {
+        $this->breadcrumbs->addRouteItem('Responses', 'app_issue_response_index');
+
         // Fetch all responses along with their associated issues
         $responses = $responseRepository->findAllWithIssues();
 
@@ -49,6 +57,10 @@ class IssueResponseController extends AbstractController
     #[IsGranted('ROLE_ADMIN')]
     public function new(Request $request, EntityManagerInterface $entityManager, $issueId): Response
     {
+        $this->breadcrumbs->addRouteItem('Issues', 'app_issue_index');
+        $this->breadcrumbs->addItem($issueId);
+        $this->breadcrumbs->addRouteItem('Respond', 'app_add_issue_response', ['issueId' => $issueId]);
+
         // Fetch the issue by ID
         $issue = $entityManager->getRepository(Issue::class)->find($issueId);
         $user = $this->getUser();
@@ -84,6 +96,10 @@ class IssueResponseController extends AbstractController
     #[IsGranted(IssueResponseVoter::EDIT, subject: 'Iresponse')]
     public function editResponse(Request $request, IssueResponse $Iresponse, EntityManagerInterface $entityManager, LoggerInterface $logger): Response
     {
+        $this->breadcrumbs->addRouteItem('Responses', 'app_issue_response_index');
+        $this->breadcrumbs->addItem($Iresponse->getId());
+        $this->breadcrumbs->addRouteItem('Edit', 'app_issue_response_edit', ['id' => $Iresponse->getId()]);
+
         $form = $this->createForm(IssueResponseType::class, $Iresponse);
         $form->handleRequest($request);
 
@@ -131,6 +147,9 @@ class IssueResponseController extends AbstractController
     #[Route('/show-response/{id}', name: 'app_show_response', methods: ['GET'])]
     public function showResponse(IssueResponse $issueResponse): Response
     {
+        $this->breadcrumbs->addRouteItem('Responses', 'app_issue_response_index');
+        $this->breadcrumbs->addItem($issueResponse->getId());
+
         return $this->render('issueResponse/show_response.html.twig', [
             'response' => $issueResponse,
         ]);
