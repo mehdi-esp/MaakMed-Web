@@ -63,10 +63,10 @@ final class PrescriptionEntryFactory extends ModelFactory
     protected function getDefaults(): array
     {
         return [
-            'instructions' => self::faker()->text(),
+            'instructions' => self::faker()->realText(20),
             'medication' => MedicationFactory::randomOrCreate(),
             // 'prescription' => PrescriptionFactory::new(),
-            'quantity' => self::faker()->randomNumber(),
+            'quantity' => self::faker()->numberBetween(1, 6),
         ];
     }
 
