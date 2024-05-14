@@ -207,10 +207,19 @@ class AppFixtures extends Fixture
             'medications' => PrescriptionEntryFactory::randomRange(0, 0),
         ]);
 
+        $instructions = [
+            'Take one pill every 6 hours',
+            'Take with food',
+            'Take with a full glass of water',
+            'Take two pills every 8 hours',
+            'Take one pill every 12 hours',
+        ];
+
         foreach (array_rand(array_flip($meds), rand(2, count($meds))) as $medName) {
             PrescriptionEntryFactory::createOne([
                 'prescription' => $prescription,
                 'medication' => MedicationFactory::findOrCreate(['name' => $medName]),
+                'instructions' => $instructions[array_rand($instructions)],
             ]);
         }
 
