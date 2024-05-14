@@ -201,6 +201,8 @@ class AppFixtures extends Fixture
                 'doctor' => DoctorFactory::find(['username' => 'nawal']),
                 'patient' => PatientFactory::new()
             ]);
+
+            VisitFactory::createMany(40);
         });
 
         // Prescriptions
