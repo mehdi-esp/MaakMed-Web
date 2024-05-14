@@ -30,6 +30,7 @@
                             <!-- Delete button -->
                             <form action="{{ path('app_issue_response_delete', {'id': response.id}) }}" method="post" onsubmit="return confirm('Are you sure you want to delete this response?')">
                                 <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ response.id) }}">
+                                <button type="submit" class="btn btn-sm btn-error">Delete</button>
                             </form>
                         </td>
                     </tr>
