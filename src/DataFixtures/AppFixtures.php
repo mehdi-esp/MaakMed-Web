@@ -158,12 +158,14 @@ class AppFixtures extends Fixture
             'invoiceEntries' => InvoiceEntryFactory::randomRange(0, 0),
         ]);
 
-        foreach (array_rand(array_flip($meds), rand(intdiv(count($meds), 2), count($meds))) as $medName) {
-            InvoiceEntryFactory::createOne([
-                'invoice' => $invoice,
-                'medication' => MedicationFactory::findOrCreate(['name' => $medName]),
-            ]);
-        }
+        Factory::delayFlush(function () use ($meds, $invoice) {
+            foreach (array_rand(array_flip($meds), rand(intdiv(count($meds), 2), count($meds))) as $medName) {
+                InvoiceEntryFactory::createOne([
+                    'invoice' => $invoice,
+                    'medication' => MedicationFactory::findOrCreate(['name' => $medName]),
+                ]);
+            }
+        });
 
 
         // Subscriptions and patients
@@ -207,30 +209,34 @@ class AppFixtures extends Fixture
             'medications' => PrescriptionEntryFactory::randomRange(0, 0),
         ]);
 
-        $instructions = [
-            'Take one pill every 6 hours',
-            'Take with food',
-            'Take with a full glass of water',
-            'Take two pills every 8 hours',
-            'Take one pill every 12 hours',
-        ];
+        Factory::delayFlush(function () use ($meds, $prescription) {
+            $instructions = [
+                'Take one pill every 6 hours',
+                'Take with food',
+                'Take with a full glass of water',
+                'Take two pills every 8 hours',
+                'Take one pill every 12 hours',
+            ];
 
-        foreach (array_rand(array_flip($meds), rand(2, count($meds))) as $medName) {
-            PrescriptionEntryFactory::createOne([
-                'prescription' => $prescription,
-                'medication' => MedicationFactory::findOrCreate(['name' => $medName]),
-                'instructions' => $instructions[array_rand($instructions)],
-            ]);
-        }
+            foreach (array_rand(array_flip($meds), rand(2, count($meds))) as $medName) {
+                PrescriptionEntryFactory::createOne([
+                    'prescription' => $prescription,
+                    'medication' => MedicationFactory::findOrCreate(['name' => $medName]),
+                    'instructions' => $instructions[array_rand($instructions)],
+                ]);
+            }
+        });
 
         // Inventory
 
-        foreach ($meds as $medName) {
-            InventoryEntryFactory::createOne([
-                'medication' => MedicationFactory::findOrCreate(['name' => $medName]),
-                'pharmacy' => PharmacyFactory::find(['username' => 'fortis']),
-            ]);
-        }
+        Factory::delayFlush(function () use ($meds) {
+            foreach ($meds as $medName) {
+                InventoryEntryFactory::createOne([
+                    'medication' => MedicationFactory::findOrCreate(['name' => $medName]),
+                    'pharmacy' => PharmacyFactory::find(['username' => 'fortis']),
+                ]);
+            }
+        });
 
         // Issues
 
