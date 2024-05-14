@@ -21,7 +21,7 @@
                     <a href="{{ path('app_medication_summarize', {'id': medication.id}) }}" class="btn btn-primary">Summarize</a>
                     <form action="{{ path('app_medication_delete', {'id': medication.id}) }}" method="post" >
                         <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ medication.id) }}">
-                        <button class="btn btn-ghost text-danger join-item" type="submit">
+                        <button class="btn btn-ghost text-error join-item" type="submit">
                             delete
                         </button>
                     </form>
