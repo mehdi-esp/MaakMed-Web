@@ -63,10 +63,10 @@ final class InvoiceEntryFactory extends ModelFactory
     protected function getDefaults(): array
     {
         return [
-            'cost' => self::faker()->randomFloat(nbMaxDecimals: 2, min: 5, max: 200),
+            'cost' => self::faker()->randomFloat(nbMaxDecimals: 2, min: 3, max: 22),
             'invoice' => null,
             'medication' => MedicationFactory::randomOrCreate(),
-            'quantity' => self::faker()->randomNumber(),
+            'quantity' => self::faker()->numberBetween(1, 6),
         ];
     }
 
