@@ -48,7 +48,7 @@ class AppFixtures extends Fixture
             ]);
 
             PharmacyFactory::createOne([
-                'name' => 'Fortis Pharmacy',
+                'name' => 'Fortis',
                 'username' => 'fortis'
             ]);
 
