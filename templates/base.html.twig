@@ -92,7 +92,7 @@
                     </div>
                     <ul tabindex="0"
                         class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
-                        {% if app.user is defined and app.user.isVerified is defined and not app.user.isVerified %}
+                        {% if app.user is defined and app.user.email|default(null) is not null and app.user.isVerified is defined and not app.user.isVerified %}
                             <li>
                                 <a data-turbo-method="POST" href="{{ path('app_verify_email') }}" class="justify-between">
                                     Verify email
