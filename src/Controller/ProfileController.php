@@ -157,7 +157,7 @@ class ProfileController extends AbstractController
     {
         $address = $this->getUser()->getEmail();
         $email = (new TemplatedEmail())
-            ->from(new Address('***REMOVED***', 'Email Verification'))
+            ->from(new Address('maakmed@noreply.tn', 'Email Verification'))
             ->to($address)
             ->subject('Please Confirm your Email')
             ->htmlTemplate('registration/confirmation_email.html.twig')

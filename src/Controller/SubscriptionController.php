@@ -256,7 +256,7 @@ class SubscriptionController extends AbstractController
     public function sendEmailConfirmation(string $address): void
     {
         $email = (new TemplatedEmail())
-            ->from(new Address('***REMOVED***', 'Payment Confirmation MaakMed'))
+            ->from(new Address('maakmed@noreply.tn', 'Payment Confirmation MaakMed'))
             ->to($address)
             ->subject('Payment Confirmation MaakMed')
             ->htmlTemplate('subscription/confirmationPayment.html.twig');
