@@ -11,6 +11,23 @@
    npm ci
    composer i
    ```
+3. Define corresponding keys for each API function to ensure its activation.
+
+    - Mailing & SMS:
+        + `MAILER_DSN`
+        + `TWILIO_DSN`
+    - **Turnstile**:
+        + `TURNSTILE_KEY`
+        + `TURNSTILE_SECRET`
+    - **Stripe**:
+        + `STRIPE_KEY`
+        + `ENDPOINT_SECRET`
+    - **HuggingFace**:
+        + `HF_API_TOKEN`
+    - **File.io**:
+        + `FILE_IO_API_KEY`
+    - **DeepGram**
+        + `DEEPGRAM_TOKEN`
 
 ### Running in development
 1. Start the Symfony local dev server

@@ -110,7 +110,7 @@ class MedicationController extends AbstractController
         $this->breadcrumbs->addRouteItem("Summarization  " , "app_medication_summarize", ["id" => $medication->getId()]);
         $response = $client->request('POST', 'https://api.deepgram.com/v1/read?summarize=true&language=en', [
             'headers' => [
-                'Authorization' => 'Token ***REMOVED***',
+                'Authorization' => "Token {$_ENV['DEEPGRAM_TOKEN']}",
                 'Content-Type' => 'application/json',
             ],
             'json' => ['text' => $medication->getDescription()],

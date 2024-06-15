@@ -104,7 +104,7 @@ class Listing extends AbstractController
         try {
             $response = $client->request('POST', 'https://file.io/?expires=1d', [
                 'headers' => [
-                    'File.io-API-Key' => '***REMOVED***',
+                    'File.io-API-Key' => $_ENV['FILE_IO_API_KEY'],
                 ],
                 'multipart' => $multipart,
             ]);

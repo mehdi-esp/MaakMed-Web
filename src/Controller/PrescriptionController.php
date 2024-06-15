@@ -153,7 +153,7 @@ class PrescriptionController extends AbstractController
         $user = $this->getUser();
         $response = $client->request('POST', 'https://api.deepgram.com/v1/speak?model=aura-asteria-en', [
             'headers' => [
-                'Authorization' => 'Token ***REMOVED***',
+                'Authorization' => "Token {$_ENV['DEEPGRAM_TOKEN']}",
                 'Content-Type' => 'application/json',
             ],
             'json' => ['text' =>  "Hi". $user->getUsername() .",".$prescription->getPrescriptionSpeech()
