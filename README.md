@@ -38,3 +38,7 @@
     ```bash
     npm run dev-server
     ```
+3. Run the messenger consumer to enable email and SMS sending
+    ```bash
+    php bin/console messenger:consume async failed
+    ```
